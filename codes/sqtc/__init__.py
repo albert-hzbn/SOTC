@@ -34,6 +34,7 @@ from .phonons import PhononCalculator
 from .vasp_io import VASPWriter, VASPReader
 from .mock_forces import LennardJonesForces
 from .postprocessor import SQTCPostProcessor, SQTCRunLoader
+from .gpaw_io import GPAWForceCalculator
 
 __version__ = "0.1.0"
 __all__ = [
@@ -49,4 +50,5 @@ __all__ = [
     "LennardJonesForces",
     "SQTCPostProcessor",
     "SQTCRunLoader",
+    "GPAWForceCalculator",
 ]
