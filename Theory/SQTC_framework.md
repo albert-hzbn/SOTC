@@ -132,7 +132,9 @@ Compute the target $\bar{C}_k^{target}(\mathbf{R}, T)$ using one of:
 
 **(a) Perturbative route (cheapest):**
 Use harmonic phonons from the primitive cell + lowest-order phonon self-energy correction:
+
 $$\bar{C}_2^{target}(\mathbf{R}, T) \approx \bar{C}_2^{harm}(\mathbf{R}, T) + \delta\bar{C}_2^{anh}(\mathbf{R}, T)$$
+
 where $\delta\bar{C}_2^{anh}$ comes from the leading anharmonic self-energy diagram (one-loop bubble).
 
 **(b) AIMD seed route (moderate cost):**
@@ -263,7 +265,9 @@ The purposefully designed displacements in SQTC cells ensure the quadratic displ
 ### 5.1 Reduction to Known Limits
 
 **Limit 1: $T \to 0$.** Thermal amplitudes $Q_{\mathbf{q}s} \to Q_{\mathbf{q}s}^{ZPM}$ (zero-point motion). The SQTC cell recovers the harmonic force constants and $\mathcal{Q}_{SQTC} \to 0$ for any cell commensurate with the phonon wavevectors. The implementation uses the exact quantum formula throughout:
+
 $$Q_{\mathbf{q}s}(T) = \sqrt{\frac{\hbar}{2\omega_{\mathbf{q}s}}\coth\!\left(\frac{\hbar\omega_{\mathbf{q}s}}{2k_BT}\right)}$$
+
 which reduces to $Q_{\mathbf{q}s}^{ZPM} = \sqrt{\hbar/2\omega_{\mathbf{q}s}}$ as $T \to 0$ (zero-point fluctuations persist), and to $\sqrt{k_BT}/\omega_{\mathbf{q}s}$ at high $T$ (classical limit). The ZPE is computed as $\sum_{\mathbf{q}s}\hbar\omega_{\mathbf{q}s}/2$ and is fully quantum in all current results.
 
 **Limit 2: Harmonic crystal.** $\bar{C}_3 = \bar{C}_4^{cum} = 0$ exactly. A single SQTC cell with normal-coordinate amplitudes $Q_{\mathbf{q}s}^{harm}(T)$ reproduces the full phonon spectrum without self-consistency iteration.

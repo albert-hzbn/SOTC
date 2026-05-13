@@ -768,15 +768,19 @@ The eigenvalues $\omega_{\mathbf{q}s}^2(T)$ are the **temperature-renormalized p
 Given the phonon frequencies $\{\omega_{\mathbf{q}s}\}$ on a Monkhorst-Pack $\mathbf{q}$-mesh, the thermodynamic properties are computed with fully quantum Bose-Einstein statistics:
 
 **Heat capacity at constant volume:**
+
 $$C_V(T) = k_B \sum_{\mathbf{q}s} \left(\frac{x_{\mathbf{q}s}}{\sinh x_{\mathbf{q}s}}\right)^2, \quad x_{\mathbf{q}s} = \frac{\hbar\omega_{\mathbf{q}s}}{2k_BT}$$
 
 **Zero-point energy per formula unit:**
+
 $$\text{ZPE} = \sum_{\mathbf{q}s} \frac{\hbar\omega_{\mathbf{q}s}}{2}$$
 
 **Vibrational entropy:**
+
 $$S_{vib}(T) = k_B \sum_{\mathbf{q}s} \left[x_{\mathbf{q}s}\coth x_{\mathbf{q}s} - \ln(2\sinh x_{\mathbf{q}s})\right]$$
 
 **Vibrational free energy:**
+
 $$F_{vib}(T) = k_B T \sum_{\mathbf{q}s} \ln\!\left(2\sinh x_{\mathbf{q}s}\right)$$
 
 All four quantities are implemented in `sqtc/phonons.py` and output by the postprocessor to `thermal_summary.json`. Only modes with $\omega > 0$ contribute (imaginary modes are excluded from thermal sums and their count is reported as `unstable`).
@@ -786,11 +790,13 @@ All four quantities are implemented in `sqtc/phonons.py` and output by the postp
 Two estimators are computed:
 
 **Spectral (second-moment) Debye temperature** — robust, temperature-independent:
+
 $$\Theta_D^{spec} = \frac{\hbar}{k_B}\sqrt{\frac{5}{3}\langle\omega^2\rangle}, \quad \langle\omega^2\rangle = \frac{1}{N_{pos}}\sum_{\mathbf{q}s,\,\omega>0}\omega_{\mathbf{q}s}^2$$
 
 This estimator is well-defined for any phonon spectrum and is the primary reported Debye temperature.
 
 **Calorimetric Debye temperature** — inverts the Debye $C_V$ integral at temperature $T$:
+
 $$C_V^{Debye}(T, \Theta_D) = 9n_bk_B\left(\frac{T}{\Theta_D}\right)^3\!\int_0^{\Theta_D/T}\!\frac{x^4 e^x}{(e^x-1)^2}dx \stackrel{!}{=} C_V^{SQTC}(T)$$
 
 solved by bisection. This estimator is ill-conditioned when $T \gg \Theta_D$ (Dulong-Petit plateau) and is reported per temperature point as `TD_caloric`.
@@ -964,6 +970,7 @@ Since the SQTC ensemble must match $N_{corr}$ effective constraints using $3n$ f
 $$K_{min}(T) \propto \frac{N_{corr}(T)}{3n} \propto T^{-3}$$
 
 At $T = 1000$ K vs $T = 300$ K, the ensemble size advantage is:
+
 $$\frac{K_{min}(300\text{ K})}{K_{min}(1000\text{ K})} = \left(\frac{1000}{300}\right)^3 \approx 37$$
 
 A factor of $\sim$37 fewer configurations at 1000 K. Meanwhile, stochastic methods (TDEP/SSCHA) need *more* configurations at high $T$ (force variance $\sigma_F^2 \propto k_BT$ grows, requiring more snapshots to achieve the same regression accuracy). This double advantage — fewer SQTC configurations needed at high $T$ while stochastic methods need more — is why **SQTC is most powerful precisely where conventional methods struggle most**.
@@ -1030,6 +1037,7 @@ This chapter works through a complete SQTC calculation for a one-dimensional dia
 **Structure:** Two atoms per unit cell, masses $M_1 = 2m$ and $M_2 = m$ (like C-O), lattice constant $a = 2$ Å, unit cell length $2a = 4$ Å.
 
 **IFCs:** Nearest-neighbour only (simplest case):
+
 $$\Phi_{12}^{xx}(a) = -k = -5 \text{ eV/Å}^2, \quad \Phi_{11}^{xx}(0) = \Phi_{22}^{xx}(0) = k = 5 \text{ eV/Å}^2$$
 
 (Acoustic sum rule satisfied: $\Phi_{11}^{xx}(0) + \Phi_{12}^{xx}(a) + \Phi_{12}^{xx}(-a) = k - k - k + \text{second neighbour... }$, we keep nearest-neighbour only for illustration.)
@@ -1652,16 +1660,19 @@ A realistic SQTC calculation using DFT-PBE + SCAN functional on a 40-atom superc
 ## Appendix A: Key Mathematical Results Used
 
 ### A.1 Geometric Series
+
 $$\sum_{n=0}^\infty x^n = \frac{1}{1-x}, \quad |x|<1$$
 
 Derivative: $\sum_{n=0}^\infty n x^n = \frac{x}{(1-x)^2}$ (used in Bose-Einstein derivation, Chapter 3)
 
 ### A.2 Hyperbolic Functions
+
 $$\coth(x) = \frac{e^x + e^{-x}}{e^x - e^{-x}}, \quad \cosh(x) = \frac{e^x + e^{-x}}{2}, \quad \sinh(x) = \frac{e^x - e^{-x}}{2}$$
 
 Identity: $\coth(x) = \cosh(x)/\sinh(x)$. Used in Chapter 4 to simplify $2n_B + 1$.
 
 ### A.3 Fourier Transform Conventions (Crystal)
+
 $$f(\mathbf{R}) = \frac{1}{N}\sum_\mathbf{q} \tilde{f}(\mathbf{q})\, e^{i\mathbf{q}\cdot\mathbf{R}}, \quad \tilde{f}(\mathbf{q}) = \sum_\mathbf{R} f(\mathbf{R})\, e^{-i\mathbf{q}\cdot\mathbf{R}}$$
 
 Orthogonality: $\frac{1}{N}\sum_\mathbf{q} e^{i\mathbf{q}\cdot(\mathbf{R}-\mathbf{R}')} = \delta_{\mathbf{R},\mathbf{R}'}$
@@ -2398,12 +2409,15 @@ The number of pairings of $2m$ objects is $(2m-1)!! = (2m-1)(2m-3)\cdots 3 \cdot
 **Explicit results (used in the free energy calculations):**
 
 *2-point:* (1 pairing: $(12)$)
+
 $$\langle u_i u_j\rangle = C_{ij}$$
 
 *4-point:* (3 pairings: $(12)(34)$, $(13)(24)$, $(14)(23)$)
+
 $$\langle u_i u_j u_k u_l\rangle = C_{ij}C_{kl} + C_{ik}C_{jl} + C_{il}C_{jk}$$
 
 *6-point:* (15 pairings)
+
 $$\langle u_i u_j u_k u_l u_m u_n\rangle = C_{ij}C_{kl}C_{mn} + C_{ij}C_{km}C_{ln} + C_{ij}C_{kn}C_{lm} + \cdots \quad \text{(15 terms)}$$
 
 These factorisation rules transform multi-point averages into sums of products of 2-point correlators — reducing the computation of any anharmonic correction to algebra with the covariance matrix $\mathbf{C}(T)$.
