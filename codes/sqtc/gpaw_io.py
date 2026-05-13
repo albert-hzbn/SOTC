@@ -18,7 +18,7 @@ Usage
     from sqtc.gpaw_io import GPAWForceCalculator
 
     calc = GPAWForceCalculator(
-        species=['Al'] * 32,
+        species=['Al'],   # tiled to supercell size automatically
         cutoff=450,
         xc='PBE',
         kpts=(2, 2, 2),
@@ -60,9 +60,13 @@ class GPAWForceCalculator:
     Parameters
     ----------
     species : list of str
-        Chemical symbols for all atoms in the supercell, in the same order
-        as the positions array passed to compute().  For a monatomic 32-atom
-        fcc Al cell: ``['Al'] * 32``.
+        Chemical symbols for one formula unit (or the full supercell).
+        For a monatomic system just pass ``['Al']``; the list is tiled
+        automatically to match the number of atoms in each call to
+        compute() / energy().  For a two-atom compound use the primitive
+        ordering, e.g. ``['Na', 'Cl']``.  If a full-length list is
+        supplied it is used as-is (but must be an exact multiple of the
+        positions length).
     cutoff : float [eV]
         Plane-wave energy cutoff.
     xc : str
@@ -165,8 +169,24 @@ class GPAWForceCalculator:
     def _make_atoms(self, positions: np.ndarray, cell: np.ndarray):
         from ase import Atoms
 
+        n = len(positions)
+        n_template = len(self.species)
+        if n == n_template:
+            symbols = self.species
+        elif n % n_template == 0:
+            # Tile the unit-cell species list to match the supercell size.
+            repeats = n // n_template
+            symbols = self.species * repeats
+        else:
+            raise ValueError(
+                f"GPAWForceCalculator: positions length ({n}) is not a multiple "
+                f"of the species template length ({n_template}). "
+                f"Pass species for one formula unit, e.g. species=['Al'] or "
+                f"species=['Na', 'Cl']."
+            )
+
         return Atoms(
-            symbols=self.species,
+            symbols=symbols,
             positions=positions,
             cell=cell,
             pbc=True,

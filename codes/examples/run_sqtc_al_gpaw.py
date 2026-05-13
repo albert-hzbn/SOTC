@@ -64,13 +64,11 @@ prim_pos_al = np.array([[0.0, 0.0, 0.0]])
 WORK_DIR = Path("sqtc_al_gpaw_run")
 
 # ── GPAW calculator ───────────────────────────────────────────────────────────
-# species list will have N_SC entries; GPAWForceCalculator is constructed with
-# the same species ordering as the SQTC supercell.  Because SQTCRunner tiles
-# the primitive cell and repeats elements_per_atom for each tile, a list of
-# ['Al'] repeated N_SC times is correct.
+# Pass one formula unit; GPAWForceCalculator tiles it to the actual supercell
+# size chosen by SQTCRunner (which may differ slightly from N_SC).
 
 gpaw_calc = GPAWForceCalculator(
-    species=["Al"] * N_SC,
+    species=["Al"],  # tiled automatically to match supercell
     cutoff=450.0,
     xc="PBE",
     kpts=(2, 2, 2),

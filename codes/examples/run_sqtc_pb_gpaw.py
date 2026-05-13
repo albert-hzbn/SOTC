@@ -116,7 +116,7 @@ def make_gpaw_calc(subdir: Path) -> GPAWForceCalculator:
     """Return a fresh GPAWForceCalculator writing output to *subdir*."""
     subdir.mkdir(parents=True, exist_ok=True)
     return GPAWForceCalculator(
-        species=["Pb"] * N_SC,
+        species=["Pb"],  # tiled automatically to match supercell
         cutoff=350.0,
         xc="PBE",
         kpts=(2, 2, 2),
