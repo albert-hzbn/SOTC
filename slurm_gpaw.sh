@@ -40,19 +40,21 @@ export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 export OMP_PLACES=cores
 export OMP_PROC_BIND=close
 
-# GPAW requires a PAW dataset directory.  Set GPAW_SETUP_PATH to the directory
-# containing the GPAW PAW setup files (e.g. gpaw-setups-0.9.20000).
-# Install with:  gpaw install-data /path/to/setups
-export GPAW_SETUP_PATH="${GPAW_SETUP_PATH:-/u/alli/Softwares/gpaw-setups}"
-
-# Activate the project virtual environment (contains gpaw, ase, numpy, scipy).
-source /u/alli/calculations/sqtc/.venv/bin/activate
+# Use the dedicated conda environment that ships GPAW + all SQTC dependencies.
+# Created with:
+#   module load python-waterboa/2025.06
+#   conda create -n sqtc_gpaw -c conda-forge python=3.13 gpaw ase scipy numpy \
+#                matplotlib spglib pytest
+#
+# PAW setups are bundled inside the gpaw_data package (no GPAW_SETUP_PATH needed).
+module load python-waterboa/2025.06
+eval "$(conda shell.bash hook)"
+conda activate sqtc_gpaw
 
 # Verify GPAW is available
 python3 -c "import gpaw; print(f'GPAW {gpaw.__version__} loaded')" || {
-    echo "ERROR: GPAW not found in .venv.  Install with:"
-    echo "  .venv/bin/pip install gpaw"
-    echo "  .venv/bin/gpaw install-data \$GPAW_SETUP_PATH"
+    echo "ERROR: GPAW not found in conda env sqtc_gpaw."
+    echo "Recreate with:  conda create -n sqtc_gpaw -c conda-forge python=3.13 gpaw ase scipy numpy matplotlib spglib"
     exit 1
 }
 
