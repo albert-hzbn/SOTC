@@ -1,0 +1,49 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# ── Virtual environment ───────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+
+# ── VASP calculation run directories ─────────────────────────────────────────
+# These contain large OUTCAR / CHG / WAVECAR files (100s of MB)
+sqtc_*_run/
+
+# ── SLURM job output ──────────────────────────────────────────────────────────
+job.err.*
+job.out.*
+
+# ── Generated plots and large data at repo root ───────────────────────────────
+*.png
+*.pdf
+*.npz
+
+# Allow plots that live inside codes/ (e.g. test reference images)
+!codes/**/*.png
+!codes/**/*.pdf
+
+# ── Editor / OS ───────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ── Jupyter ───────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ── Misc ─────────────────────────────────────────────────────────────────────
+*.bak
+*.tmp

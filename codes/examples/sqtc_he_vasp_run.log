@@ -1,0 +1,24 @@
+
+======================================================================
+ SQTC Example: Solid ⁴He (hcp, 25 bar) — DFT (VASP PBE+D3)
+======================================================================
+  VASP command : mpirun -np 16 /home/albert/softwares/vasp/vasp.5.4.4/bin/vasp_std
+  Pseudopot.   : /home/albert/softwares/vasp/Pseudopotentials/PAW_PBE/He/POTCAR
+
+── Debye model predictions (harmonic reference) ──
+  T=0.5 K: C_V_Debye= 0.014  C_V_exp=0.6  J/(mol·K)
+  T=1.0 K: C_V_Debye= 0.111  C_V_exp=2.3  J/(mol·K)
+  T=1.6 K: C_V_Debye= 0.453  C_V_exp=7.5  J/(mol·K)
+  T=2.0 K: C_V_Debye= 0.882  C_V_exp=11.8  J/(mol·K)
+
+── SQTC run (DFT PBE+D3 forces via VASP) ──
+  ξ_T = 7.4 Å  (Debye estimate at T=1.6 K)
+
+============================================================
+SQTC run: He, T=1.6 K, T_D=26.0 K
+============================================================
+  Supercell: 6 prim. cells, 12 atoms
+  H = [[3, 1, 0], [0, 2, 0], [0, 0, 1]]
+
+── Iteration 1/15 ──
+  Optimising 5 displacement configurations ...
