@@ -53,7 +53,12 @@ The displacements are small compared to the interatomic spacing (typically 1–1
 
 The total potential energy $V(\{\mathbf{R}_i\})$ depends on all atomic positions. We expand it in a Taylor series around equilibrium. Let $u_i^\alpha$ mean the $\alpha$-component ($\alpha = x, y, z$) of the displacement of atom $i$:
 
-$$V = V_0 + \underbrace{\sum_{i,\alpha} \frac{\partial V}{\partial u_i^\alpha}\bigg|_0 u_i^\alpha}_{\text{Term 1}} + \underbrace{\frac{1}{2}\sum_{i,j}\sum_{\alpha,\beta} \frac{\partial^2 V}{\partial u_i^\alpha \partial u_j^\beta}\bigg|_0 u_i^\alpha u_j^\beta}_{\text{Term 2}} + \underbrace{\frac{1}{6}\sum_{i,j,k}\sum_{\alpha,\beta,\gamma} \frac{\partial^3 V}{\partial u_i^\alpha \partial u_j^\beta \partial u_k^\gamma}\bigg|_0 u_i^\alpha u_j^\beta u_k^\gamma}_{\text{Term 3}} + \cdots$$
+$$\begin{aligned}
+V = V_0
+&+ \underbrace{\sum_{i,\alpha} \frac{\partial V}{\partial u_i^\alpha}\bigg|_0 u_i^\alpha}_{\text{Term 1}} \\[4pt]
+&+ \underbrace{\frac{1}{2}\sum_{i,j}\sum_{\alpha,\beta} \frac{\partial^2 V}{\partial u_i^\alpha \partial u_j^\beta}\bigg|_0 u_i^\alpha u_j^\beta}_{\text{Term 2}} \\[4pt]
+&+ \underbrace{\frac{1}{6}\sum_{i,j,k}\sum_{\alpha,\beta,\gamma} \frac{\partial^3 V}{\partial u_i^\alpha \partial u_j^\beta \partial u_k^\gamma}\bigg|_0 u_i^\alpha u_j^\beta u_k^\gamma}_{\text{Term 3}} + \cdots
+\end{aligned}$$
 
 **Explanation of each term:**
 
@@ -721,7 +726,7 @@ Applying this projection — controlled by the `symmetrize_bonds` parameter — 
 
 The postprocessor auto-assigns the correct default based on structure type and element set; the stored value from `sqtc_results.json` always takes precedence for new runs.
 
-### 12.4 Multi-Snapshot Regression (SQTC Ensemble)
+### 12.5 Multi-Snapshot Regression (SQTC Ensemble)
 
 For $K$ SQTC snapshots, stack the equations:
 
@@ -1689,12 +1694,12 @@ This minimises the sum of squared residuals. The solution is unique when $\mathb
 | $A_{\mathbf{q}s}^{harm}(T) = \sqrt{\frac{\hbar}{2\omega_{\mathbf{q}s}}\coth\!\left(\frac{\hbar\omega_{\mathbf{q}s}}{2k_BT}\right)}$ | Harmonic amplitude | 11 |
 | $\mathcal{Q}_{SQTC} = \sum_k\lambda_k\sum_\mathbf{R} w_k(\mathbf{R})\left[\bar{C}_k^{SQTC}-\bar{C}_k^{target}\right]^2$ | SQTC objective | 9 |
 | $\mathbf{p}^* = (\mathbf{G}^T\mathbf{G})^{-1}\mathbf{G}^T\mathbf{F}$ | IFC least-squares solution | 12 |
-| $\Delta^{(n)} = \|C_2^{(n+1)} - C_2^{(n)}\|_2 < \epsilon_{conv}$ | Self-consistency criterion | 14 |
+| $\Delta^{(n)} = \lVert C_2^{(n+1)} - C_2^{(n)} \rVert_2 < \epsilon_{conv}$ | Self-consistency criterion | 14 |
 | $F_{var} \leq F_0 + \langle\hat{H}-\hat{H}_0\rangle_0$ | Gibbs-Bogoliubov variational bound | 18 |
 | $F_{harm}^{SQTC}(T) = k_BT\sum_{\mathbf{q}s}\ln[2\sinh(\hbar\omega_{\mathbf{q}s}^*/2k_BT)]$ | SQTC harmonic free energy | 19 |
 | $\langle u_i u_j u_k u_l\rangle_\mathcal{D} = C_{ij}C_{kl}+C_{ik}C_{jl}+C_{il}C_{jk}$ | Wick's theorem (4-point) | 20 |
 | $\Delta F_4^{var} = \frac{1}{8}\sum_{ijkl,\alpha\beta\gamma\delta}\Xi_{ijkl}^{\alpha\beta\gamma\delta}C_{ij}^{\alpha\beta}C_{kl}^{\gamma\delta}$ | Tadpole (4IFC) free energy correction | 20 |
-| $\Delta F_3^{pert} = -\frac{\hbar^3}{16N^2k_BT}\sum_{\mathbf{q}s\mathbf{q}'s'\mathbf{q}''s''}\frac{|V_3|^2(2n+1)^3}{\omega\omega'\omega''}\delta_{\mathbf{q}+\mathbf{q}'+\mathbf{q}'',\mathbf{G}}$ | Sunset (3IFC) free energy correction | 21 |
+| $\Delta F_3^{pert} = -\frac{\hbar^3}{16N^2k_BT}\sum_{\mathbf{q}s,\mathbf{q}'s',\mathbf{q}''s''}\frac{\lvert V_3\rvert^2(2n+1)^3}{\omega\omega'\omega''}\delta_{\mathbf{q}+\mathbf{q}'+\mathbf{q}'',\mathbf{G}}$ | Sunset (3IFC) free energy correction | 21 |
 | $F_{SQTC} = F_{harm}[\boldsymbol{\Phi}^*(T)]+\Delta F_4^{var}+\Delta F_3^{pert}$ | Full SQTC anharmonic free energy | 22 |
 
 ---
@@ -1752,7 +1757,12 @@ The displacements are small — typically 1–10% of the spacing between atoms. 
 
 The total potential energy $V$ of the crystal depends on all atomic positions. We expand it as a **Taylor series** around the equilibrium configuration $\{\mathbf{R}_i^0\}$. Using multi-variable calculus, a Taylor expansion in the small quantities $u_i^\alpha$:
 
-$$V(\{\mathbf{R}_i^0 + \mathbf{u}_i\}) = V(\{\mathbf{R}_i^0\}) + \sum_{i,\alpha} \frac{\partial V}{\partial u_i^\alpha}\bigg|_{\text{equil}} u_i^\alpha + \frac{1}{2}\sum_{i,j}\sum_{\alpha,\beta} \frac{\partial^2 V}{\partial u_i^\alpha\, \partial u_j^\beta}\bigg|_{\text{equil}} u_i^\alpha u_j^\beta + \frac{1}{6}\sum_{i,j,k}\sum_{\alpha,\beta,\gamma} \frac{\partial^3 V}{\partial u_i^\alpha\, \partial u_j^\beta\, \partial u_k^\gamma}\bigg|_{\text{equil}} u_i^\alpha u_j^\beta u_k^\gamma + \cdots$$
+$$\begin{aligned}
+V(\{\mathbf{R}_i^0 + \mathbf{u}_i\}) = V(\{\mathbf{R}_i^0\})
+&+ \sum_{i,\alpha} \frac{\partial V}{\partial u_i^\alpha}\bigg|_{\text{equil}} u_i^\alpha \\[4pt]
+&+ \frac{1}{2}\sum_{i,j}\sum_{\alpha,\beta} \frac{\partial^2 V}{\partial u_i^\alpha\, \partial u_j^\beta}\bigg|_{\text{equil}} u_i^\alpha u_j^\beta \\[4pt]
+&+ \frac{1}{6}\sum_{i,j,k}\sum_{\alpha,\beta,\gamma} \frac{\partial^3 V}{\partial u_i^\alpha\, \partial u_j^\beta\, \partial u_k^\gamma}\bigg|_{\text{equil}} u_i^\alpha u_j^\beta u_k^\gamma + \cdots
+\end{aligned}$$
 
 **Each term explained:**
 
