@@ -61,8 +61,16 @@ python3 -c "from ase.calculators.espresso import Espresso; print('ASE Espresso O
 mpirun -np 1 /u/alli/Softwares/qe-7.5/bin/pw.x --version 2>/dev/null | head -1
 
 # ── Parse optional argument ───────────────────────────────────────────────────
+# Accept:  sbatch slurm_qe.sh al
+#          sbatch slurm_qe.sh --only al
 
-ONLY=${1:-all}
+ONLY="all"
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --only) ONLY="$2"; shift 2 ;;
+        *)      ONLY="$1"; shift   ;;
+    esac
+done
 
 # ── Run ───────────────────────────────────────────────────────────────────────
 

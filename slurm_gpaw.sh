@@ -59,9 +59,16 @@ python3 -c "import gpaw; print(f'GPAW {gpaw.__version__} loaded')" || {
 }
 
 # ── Parse optional argument ───────────────────────────────────────────────────
-# Pass --only <target> as the first script argument to run a subset.
+# Accept:  sbatch slurm_gpaw.sh al
+#          sbatch slurm_gpaw.sh --only al
 
-ONLY=${1:-all}   # default: run everything
+ONLY="all"
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --only) ONLY="$2"; shift 2 ;;
+        *)      ONLY="$1"; shift   ;;
+    esac
+done
 
 # ── Run ───────────────────────────────────────────────────────────────────────
 
