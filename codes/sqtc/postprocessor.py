@@ -683,6 +683,31 @@ def _parse_outcar_forces(path: Path, n_atoms: int) -> np.ndarray:
     return forces[:n_atoms]
 
 
+def _parse_qe_pwo(path: Path) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """
+    Read a Quantum ESPRESSO pw.x output file via ASE.
+
+    Returns
+    -------
+    positions : (n_atoms, 3) float [Å]
+    forces    : (n_atoms, 3) float [eV/Å]
+    cell      : (3, 3) float [Å]  (row vectors)
+    """
+    try:
+        from ase.io import read as _ase_read
+    except ImportError as exc:
+        raise ImportError(
+            "ASE is required to read QE output files. "
+            "Install it with: pip install ase"
+        ) from exc
+    atoms = _ase_read(str(path), format="espresso-out", index=-1)
+    return (
+        atoms.get_positions().copy(),
+        atoms.get_forces().copy(),
+        np.array(atoms.cell),
+    )
+
+
 def _build_eq_positions(
     sc_cell: np.ndarray,
     prim_cell: np.ndarray,
@@ -761,9 +786,8 @@ class SQTCRunLoader:
     """
     Load force/displacement data from a completed SQTC work directory.
 
-    Reads ``POSCAR`` + ``OUTCAR`` from every ``iter_*/snap_*/`` sub-folder,
-    re-fits the IFCs using the same parameters as the original run, and
-    returns a :class:`SQTCPostProcessor`.
+    Supports both VASP (``POSCAR`` + ``OUTCAR``) and Quantum ESPRESSO
+    (``espresso.pwo``) snapshot formats.
 
     Parameters
     ----------
@@ -781,6 +805,12 @@ class SQTCRunLoader:
                        potentially better IFC fit).  If False, only use the
                        iteration indicated by ``selected_iteration`` in
                        ``sqtc_results.json``.
+    calculator       : ``'auto'`` (default), ``'vasp'``, or ``'qe'``.
+                       ``'auto'`` detects the format by checking snap directory
+                       contents.
+    qe_scratch_dir   : path to the ``QEForceCalculator`` workdir containing
+                       ``snap_NNNN/espresso.pwo`` files.  Defaults to
+                       ``work_dir/qe_scratch`` when ``calculator='qe'``.
     """
 
     def __init__(
@@ -796,6 +826,8 @@ class SQTCRunLoader:
         label: str = "",
         T_design: Optional[float] = None,
         use_all_iters: bool = True,
+        calculator: str = "auto",
+        qe_scratch_dir: Optional[Union[str, Path]] = None,
     ):
         self.work_dir         = Path(work_dir)
         self.prim_cell        = np.asarray(prim_cell, dtype=float)
@@ -808,6 +840,8 @@ class SQTCRunLoader:
         self.label            = label or self.work_dir.stem
         self.T_design         = T_design
         self.use_all_iters    = use_all_iters
+        self.calculator       = calculator.lower()
+        self.qe_scratch_dir   = Path(qe_scratch_dir) if qe_scratch_dir else None
 
     def _load_results_json(self) -> Optional[Dict]:
         p = self.work_dir / "sqtc_results.json"
@@ -828,7 +862,42 @@ class SQTCRunLoader:
             dirs = sorted(self.work_dir.glob("iter_*/"))[-1:]
         return [d for d in dirs if d.is_dir()]
 
+    def _qe_scratch_path(self) -> Path:
+        """Resolve the QE scratch directory (defaults to work_dir/qe_scratch)."""
+        return self.qe_scratch_dir if self.qe_scratch_dir else self.work_dir / "qe_scratch"
+
+    def _auto_detect_calculator(self) -> str:
+        """
+        Inspect the run directory to determine calculator type.
+
+        Checks for VASP POSCAR files first, then QE espresso.pwo files.
+        Returns ``'vasp'`` or ``'qe'``.
+        """
+        vasp_snaps = list(self.work_dir.glob("iter_*/snap_*/POSCAR"))
+        if vasp_snaps:
+            return "vasp"
+        qe_snaps = list(self._qe_scratch_path().glob("snap_*/espresso.pwo"))
+        if qe_snaps:
+            return "qe"
+        raise RuntimeError(
+            f"Cannot detect calculator type in {self.work_dir}: "
+            "no iter_*/snap_*/POSCAR (VASP) or qe_scratch/snap_*/espresso.pwo (QE) found."
+        )
+
     def build(self) -> "SQTCPostProcessor":
+        """
+        Auto-dispatch to the appropriate loader based on ``self.calculator``.
+
+        Detects VASP vs QE automatically when ``calculator='auto'`` (default).
+        """
+        calc = self.calculator
+        if calc == "auto":
+            calc = self._auto_detect_calculator()
+        if calc == "qe":
+            return self._build_from_qe()
+        return self._build_from_vasp()
+
+    def _build_from_vasp(self) -> "SQTCPostProcessor":
         """
         Load POSCAR/OUTCAR snapshots, fit IFCs, build PhononCalculator, and
         return a ready-to-use :class:`SQTCPostProcessor`.
@@ -978,6 +1047,137 @@ class SQTCRunLoader:
         rep = ifc.fit_report(displacements_list, forces_list)
 
         print(f"  [{self.label}] Loaded {n_loaded} snaps  "
+              f"RMSE={rep['rmse_ev_ang']:.5f} eV/Å  R²={rep['r2']:.5f}  "
+              f"rank={rep['rank']}")
+
+        phonon_calc = PhononCalculator(
+            ifc_extractor=ifc,
+            prim_positions=self.prim_pos,
+            prim_cell=self.prim_cell,
+            masses_amu=np.array(self.masses_amu),
+        )
+
+        return SQTCPostProcessor(
+            phonon_calc=phonon_calc,
+            label=self.label,
+            elements=self.elements,
+            T_design=self.T_design,
+        )
+
+    def _build_from_qe(self) -> "SQTCPostProcessor":
+        """
+        Load QE ``espresso.pwo`` snapshots, fit IFCs, and return a
+        ready-to-use :class:`SQTCPostProcessor`.
+
+        Snapshot layout (written by :class:`QEForceCalculator`)::
+
+            <qe_scratch_dir>/
+                snap_0000/espresso.pwo   ← equilibrium (F_eq ≈ 0)
+                snap_0001/espresso.pwo   ← displaced config 1
+                snap_0002/espresso.pwo   ← displaced config 2
+                …
+
+        The first snap whose forces satisfy ``|F|_max < 0.1 eV/Å`` is treated
+        as the equilibrium; its forces are subtracted from all others so that
+        the IFC regression receives ΔF = F(u) − F(eq).
+
+        Because QEForceCalculator tiles species in the runner's natural order
+        (not alphabetically sorted like VASP), no species-reordering is needed.
+        """
+        saved = self._load_results_json()
+        if self.T_design is None and saved is not None:
+            self.T_design = saved.get("T", 300.0)
+
+        qe_scratch = self._qe_scratch_path()
+        all_snap_dirs = sorted(qe_scratch.glob("snap_*/"))
+        pwo_dirs = [d for d in all_snap_dirs if (d / "espresso.pwo").exists()]
+
+        if not pwo_dirs:
+            raise RuntimeError(
+                f"No espresso.pwo files found under {qe_scratch}. "
+                "Check that QEForceCalculator.workdir matches --qe-scratch-dir."
+            )
+
+        # Read all snaps and identify equilibrium (smallest |F|_max)
+        snap_data: List[Tuple[np.ndarray, np.ndarray, np.ndarray]] = []  # (pos, forces, cell)
+        for snap_dir in pwo_dirs:
+            try:
+                pos, forces, cell = _parse_qe_pwo(snap_dir / "espresso.pwo")
+                snap_data.append((pos, forces, cell))
+            except Exception as e:
+                print(f"  [SQTCRunLoader] Skip {snap_dir.name} (pwo): {e}")
+
+        if not snap_data:
+            raise RuntimeError(f"No readable espresso.pwo snapshots under {qe_scratch}")
+
+        # The equilibrium snap is snap_0000 by construction (runner calls
+        # _equilibrium_forces before _evaluate_forces).  If the first snap has
+        # tiny forces, use it; otherwise fall back to searching.
+        def _f_max(forces):
+            return float(np.abs(forces).max())
+
+        eq_idx = 0
+        if _f_max(snap_data[0][1]) > 0.5:  # unexpectedly large → search
+            eq_idx = int(np.argmin([_f_max(s[1]) for s in snap_data]))
+            print(f"  [SQTCRunLoader] Equilibrium snap detected as snap_{eq_idx:04d} "
+                  f"(|F|_max={_f_max(snap_data[eq_idx][1]):.4f} eV/Å)")
+
+        eq_pos, F_eq, sc_cell_ref = snap_data[eq_idx]
+        n_atoms = len(eq_pos)
+        n_b = len(self.masses_amu)
+
+        # Rebuild ideal equilibrium positions from primitive cell
+        eq_positions, H = _build_eq_positions(sc_cell_ref, self.prim_cell, self.prim_pos)
+        masses_sc = np.tile(self.masses_amu, n_atoms // n_b)
+
+        if len(eq_positions) != n_atoms:
+            raise RuntimeError(
+                f"Reconstructed {len(eq_positions)} atoms, expected {n_atoms}.  "
+                f"H={H.tolist()}"
+            )
+
+        # Collect displaced snaps
+        displacements_list: List[np.ndarray] = []
+        forces_list:        List[np.ndarray] = []
+        n_loaded = 0
+
+        for i, (snap_pos, snap_forces, snap_cell) in enumerate(snap_data):
+            if i == eq_idx:
+                continue  # skip equilibrium snap itself
+            if len(snap_pos) != n_atoms:
+                continue  # mismatched supercell size
+
+            # Displacement with minimum-image convention
+            u = snap_pos - eq_positions
+            cell_inv = np.linalg.inv(sc_cell_ref)
+            frac = u @ cell_inv
+            frac -= np.round(frac)
+            u = frac @ sc_cell_ref
+
+            # Force difference ΔF = F(u) − F(eq)
+            delta_F = snap_forces - F_eq
+
+            displacements_list.append(u)
+            forces_list.append(delta_F)
+            n_loaded += 1
+
+        if n_loaded == 0:
+            raise RuntimeError(f"No valid displaced QE snapshots found in {qe_scratch}")
+
+        # Fit IFCs
+        ifc = IFCExtractor(
+            supercell_positions=eq_positions,
+            supercell_cell=sc_cell_ref,
+            masses_amu=masses_sc,
+            r_cutoff=self.r_cutoff,
+            symmetrise=True,
+            ridge_alpha=self.ridge_alpha,
+            symmetrize_bonds=self.symmetrize_bonds,
+        )
+        ifc.fit(displacements_list, forces_list)
+        rep = ifc.fit_report(displacements_list, forces_list)
+
+        print(f"  [{self.label}] Loaded {n_loaded} QE snaps  "
               f"RMSE={rep['rmse_ev_ang']:.5f} eV/Å  R²={rep['r2']:.5f}  "
               f"rank={rep['rank']}")
 
@@ -1154,32 +1354,61 @@ def _detect_structure_spglib(sc_cell: np.ndarray,
     return None
 
 
-def _auto_detect_run_params(run_dir: Path, structure: str):
+def _auto_detect_run_params(run_dir: Path, structure: str,
+                            qe_scratch_dir: Optional[Path] = None):
     """
     Derive equilibrium lattice parameter, element symbols, standard atomic
-    masses, and T_design from the POSCAR + sqtc_results.json in *run_dir*.
+    masses, and T_design from snapshots + sqtc_results.json in *run_dir*.
+
+    Supports both VASP (``POSCAR``) and QE (``espresso.pwo``) snapshots.
+
+    Parameters
+    ----------
+    run_dir        : SQTC run directory.
+    structure      : crystal structure string.
+    qe_scratch_dir : path to QE scratch dir; used when no POSCARs are found.
 
     Returns
     -------
     lattice  : list of float [Ang] -- [a] or [a, c] for hcp
-    elements : list of str         -- unique species in POSCAR order
+    elements : list of str         -- unique species in snapshot order
     masses   : list of float [amu]
     T_design : float | None
     """
+    # ── Try VASP POSCAR first ─────────────────────────────────────────────────
     poscars = sorted(run_dir.glob("iter_*/snap_*/POSCAR"))
-    if not poscars:
-        raise FileNotFoundError(
-            f"No POSCAR files found under {run_dir}/iter_*/snap_*/"
-        )
-    cell, species, _ = _parse_poscar(poscars[0])
-
-    # Unique elements in POSCAR order
-    seen: List[str] = []
-    for s in species:
-        if s not in seen:
-            seen.append(s)
-    elements = seen
-    n_total = len(species)
+    if poscars:
+        cell, species, _ = _parse_poscar(poscars[0])
+        # Unique elements in POSCAR order
+        seen: List[str] = []
+        for s in species:
+            if s not in seen:
+                seen.append(s)
+        elements = seen
+        n_total = len(species)
+    else:
+        # ── Fall back to QE espresso.pwo ──────────────────────────────────────
+        scratch = qe_scratch_dir or (run_dir / "qe_scratch")
+        pwos = sorted(scratch.glob("snap_*/espresso.pwo"))
+        if not pwos:
+            raise FileNotFoundError(
+                f"No POSCAR files found under {run_dir}/iter_*/snap_*/ and "
+                f"no espresso.pwo files found under {scratch}/snap_*/"
+            )
+        pos, _, cell = _parse_qe_pwo(pwos[0])
+        # Element symbols from espresso.pwo via ASE
+        try:
+            from ase.io import read as _ase_read
+            _atoms = _ase_read(str(pwos[0]), format="espresso-out", index=-1)
+            _syms = _atoms.get_chemical_symbols()
+        except Exception:
+            _syms = ["X"] * len(pos)
+        seen_qe: List[str] = []
+        for s in _syms:
+            if s not in seen_qe:
+                seen_qe.append(s)
+        elements = seen_qe
+        n_total = len(_syms)
 
     # Primitive cell volume
     V_sc = abs(float(np.linalg.det(cell)))
@@ -1311,6 +1540,14 @@ def _cli_main():
 
       python codes/sqtc/postprocessor.py --run-dir sqtc_si_vasp_run \\
           --structure zincblende --lattice 5.43 --elements Si Si --mass 28.085 28.085
+
+      # Quantum ESPRESSO run (auto-detects QE from qe_scratch/ sub-directory):
+      python codes/sqtc/postprocessor.py --run-dir sqtc_al_qe_run \\
+          --calculator qe --structure fcc
+
+      python codes/sqtc/postprocessor.py --run-dir sqtc_al_qe_run \\
+          --calculator qe --qe-scratch-dir sqtc_al_qe_run/qe_scratch \\
+          --structure fcc --lattice 4.05 --elements Al --mass 26.982 --T-design 300
     """,
         )
         # Required
@@ -1319,11 +1556,11 @@ def _cli_main():
         parser.add_argument("--structure",   default=None,
                             choices=["fcc","bcc","sc","hcp","rocksalt","zincblende"],
                             help="Crystal structure type [auto-detected via spglib if omitted]")
-        # Auto-detected from POSCAR when omitted
+        # Auto-detected from POSCAR/pwo when omitted
         parser.add_argument("--lattice",     nargs="+", type=float, default=None,
-                            help="Lattice constant(s) in Angstrom [auto-detected from POSCAR]")
+                            help="Lattice constant(s) in Angstrom [auto-detected from snapshot]")
         parser.add_argument("--elements",    nargs="+", default=None,
-                            help="Element symbol(s) per basis atom [auto-detected from POSCAR]")
+                            help="Element symbol(s) per basis atom [auto-detected from snapshot]")
         parser.add_argument("--mass",        nargs="+", type=float, default=None,
                             help="Atomic mass(es) in amu [auto-detected via standard masses]")
         # Optional
@@ -1352,23 +1589,57 @@ def _cli_main():
                             help="q-mesh for DOS + band structure (default: 30 30 30)")
         parser.add_argument("--out-dir",     default=None,
                             help="Output directory (default: <run-dir>/postproc)")
+        parser.add_argument("--calculator",  default="auto",
+                            choices=["auto", "vasp", "qe"],
+                            help="Force calculator type: 'auto' (default), 'vasp', or 'qe'")
+        parser.add_argument("--qe-scratch-dir", default=None,
+                            help="Path to QEForceCalculator workdir containing snap_NNNN/ "
+                                 "sub-directories (default: <run-dir>/qe_scratch)")
         args = parser.parse_args()
 
         run_dir = Path(args.run_dir)
         if not run_dir.is_dir():
             parser.error(f"Run directory not found: {run_dir}")
 
+        qe_scratch_dir = Path(args.qe_scratch_dir) if args.qe_scratch_dir else None
+
+        # Resolve calculator type early so auto-detect can choose the right files
+        calculator = args.calculator
+        if calculator == "auto":
+            _has_vasp = bool(list(run_dir.glob("iter_*/snap_*/POSCAR"))[:1])
+            _qe_root = qe_scratch_dir or (run_dir / "qe_scratch")
+            _has_qe  = bool(list(_qe_root.glob("snap_*/espresso.pwo"))[:1])
+            if _has_vasp:
+                calculator = "vasp"
+            elif _has_qe:
+                calculator = "qe"
+            # else: leave as 'auto' — SQTCRunLoader will raise a clear error
+
         # ── Auto-detect structure via spglib if --structure not supplied ──────
         structure = args.structure
         if structure is None:
-            _poscar_paths = sorted(run_dir.glob("iter_*/snap_*/POSCAR"))
-            if not _poscar_paths:
+            _sc_cell = _sc_species = None
+            if calculator in ("vasp", "auto"):
+                _poscar_paths = sorted(run_dir.glob("iter_*/snap_*/POSCAR"))
+                if _poscar_paths:
+                    _sc_cell, _sc_species, _ = _parse_poscar(_poscar_paths[0])
+            if _sc_cell is None and calculator in ("qe", "auto"):
+                _qe_root = qe_scratch_dir or (run_dir / "qe_scratch")
+                _pwos = sorted(_qe_root.glob("snap_*/espresso.pwo"))
+                if _pwos:
+                    try:
+                        from ase.io import read as _ase_read
+                        _atoms = _ase_read(str(_pwos[0]), format="espresso-out", index=-1)
+                        _sc_cell = np.array(_atoms.cell)
+                        _sc_species = _atoms.get_chemical_symbols()
+                    except Exception:
+                        pass
+            if _sc_cell is None:
                 parser.error(
-                    "No iter_*/snap_*/POSCAR found; cannot auto-detect structure. "
+                    "No snapshots found; cannot auto-detect structure. "
                     "Please supply --structure {fcc,bcc,sc,hcp,rocksalt,zincblende}."
                 )
-            _sc_cell, _species, _ = _parse_poscar(_poscar_paths[0])
-            structure = _detect_structure_spglib(_sc_cell, _species)
+            structure = _detect_structure_spglib(_sc_cell, _sc_species)
             if structure is None:
                 parser.error(
                     "spglib could not identify the crystal structure automatically. "
@@ -1380,7 +1651,7 @@ def _cli_main():
         # ── Auto-detect missing lattice / elements / mass / T_design ─────────
         try:
             auto_lattice, auto_elements, auto_masses, auto_T, auto_rcutoff, auto_ridge, auto_sym_bonds = \
-                _auto_detect_run_params(run_dir, structure)
+                _auto_detect_run_params(run_dir, structure, qe_scratch_dir=qe_scratch_dir)
         except Exception as exc:
             parser.error(f"Auto-detection failed: {exc}")
 
@@ -1409,12 +1680,15 @@ def _cli_main():
         print(f"\n{'='*68}")
         print(f"  SQTC PostProcessor -- {label}")
         print(f"{'='*68}")
-        print(f"  run_dir   : {run_dir}")
-        print(f"  structure : {structure}  a={lattice}")
-        print(f"  elements  : {elements}   masses={masses} amu")
-        print(f"  T_design  : {T_design} K")
-        print(f"  r_cutoff  : {r_cutoff} A   ridge_alpha={ridge_alpha}   symmetrize_bonds={symmetrize_bonds}")
-        print(f"  out_dir   : {out_dir}")
+        print(f"  run_dir    : {run_dir}")
+        print(f"  calculator : {calculator}")
+        if calculator == "qe":
+            print(f"  qe_scratch : {qe_scratch_dir or run_dir / 'qe_scratch'}")
+        print(f"  structure  : {structure}  a={lattice}")
+        print(f"  elements   : {elements}   masses={masses} amu")
+        print(f"  T_design   : {T_design} K")
+        print(f"  r_cutoff   : {r_cutoff} A   ridge_alpha={ridge_alpha}   symmetrize_bonds={symmetrize_bonds}")
+        print(f"  out_dir    : {out_dir}")
 
         # Load + fit
         loader = SQTCRunLoader(
@@ -1423,6 +1697,7 @@ def _cli_main():
             r_cutoff=r_cutoff, ridge_alpha=ridge_alpha,
             symmetrize_bonds=symmetrize_bonds, label=label,
             T_design=T_design, use_all_iters=True,
+            calculator=calculator, qe_scratch_dir=qe_scratch_dir,
         )
         pp = loader.build()
 
