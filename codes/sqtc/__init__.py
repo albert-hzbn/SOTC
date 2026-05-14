@@ -35,6 +35,7 @@ from .vasp_io import VASPWriter, VASPReader
 from .mock_forces import LennardJonesForces
 from .postprocessor import SQTCPostProcessor, SQTCRunLoader
 from .gpaw_io import GPAWForceCalculator
+from .qe_io import QEForceCalculator
 
 __version__ = "0.1.0"
 __all__ = [
@@ -51,4 +52,5 @@ __all__ = [
     "SQTCPostProcessor",
     "SQTCRunLoader",
     "GPAWForceCalculator",
+    "QEForceCalculator",
 ]
