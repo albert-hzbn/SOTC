@@ -1589,6 +1589,8 @@ def _cli_main():
                             help="q-mesh for DOS + band structure (default: 30 30 30)")
         parser.add_argument("--out-dir",     default=None,
                             help="Output directory (default: <run-dir>/postproc)")
+        parser.add_argument("--sigma-thz",   type=float, default=0.1,
+                            help="Gaussian broadening for phonon DOS [THz] (default: 0.1)")
         parser.add_argument("--calculator",  default="auto",
                             choices=["auto", "vasp", "qe"],
                             help="Force calculator type: 'auto' (default), 'vasp', or 'qe'")
@@ -1708,8 +1710,8 @@ def _cli_main():
         q_dos = tuple(args.q_mesh_dos)
 
         # Compute
-        print(f"\n  Computing phonon band structure + DOS  (q={q_dos}) ...")
-        phonon_data = pp.compute_phonons(q_mesh=q_dos, n_bins=500, sigma_thz=0.06)
+        print(f"\n  Computing phonon band structure + DOS  (q={q_dos}, sigma={args.sigma_thz} THz) ...")
+        phonon_data = pp.compute_phonons(q_mesh=q_dos, n_bins=500, sigma_thz=args.sigma_thz)
 
         print(f"  Computing thermal properties  "
               f"(q={q_cv}, T={T_values[0]:.0f}-{T_values[-1]:.0f} K) ...")
