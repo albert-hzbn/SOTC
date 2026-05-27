@@ -218,7 +218,7 @@ class SOTCRunner:
         enumerator = HNFEnumerator(
             self.prim_cell, self.n_b,
             n_min=max(2, n_prim_cells - 2),
-            n_max=n_prim_cells + 4,
+            n_max=n_prim_cells,
         )
 
         # Generate more candidates so that NN-complete supercells are found.
