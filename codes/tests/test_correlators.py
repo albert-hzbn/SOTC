@@ -15,8 +15,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 import numpy as np
 import pytest
 
-from sqtc.correlators import DebyeCorrelator
-from sqtc.constants import HBAR, KB, AMU_TO_KG, R_GAS
+from sotc.correlators import DebyeCorrelator
+from sotc.constants import HBAR, KB, AMU_TO_KG, R_GAS
 
 # He parameters
 T_D = 26.0

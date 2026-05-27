@@ -1,6 +1,20 @@
+# SOTC — Python dependencies
+# Install with:  pip install -r requirements.txt
+#
+# Python >= 3.9 is required.
+
+# Core numerics
 numpy>=1.24
 scipy>=1.10
+
+# Plotting
 matplotlib>=3.7
+
+# Crystal symmetry analysis (structure auto-detection, bond symmetrisation)
 spglib>=2.1
+
+# Atomic Simulation Environment — used by the QE force calculator (ASE Espresso)
 ase>=3.22
+
+# Testing
 pytest>=7.0

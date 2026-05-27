@@ -15,9 +15,9 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 import numpy as np
 import pytest
 
-from sqtc.ifc_extractor import IFCExtractor
-from sqtc.phonons import PhononCalculator
-from sqtc.constants import KB, HBAR, AMU_TO_KG, R_GAS
+from sotc.ifc_extractor import IFCExtractor
+from sotc.phonons import PhononCalculator
+from sotc.constants import KB, HBAR, AMU_TO_KG, R_GAS
 
 
 def make_sc_chain_with_ifcs(n: int = 8, a: float = 3.57, k_spring: float = 0.5):

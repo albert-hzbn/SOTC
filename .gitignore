@@ -47,3 +47,24 @@ Thumbs.db
 # ── Misc ─────────────────────────────────────────────────────────────────────
 *.bak
 *.tmp
+
+# --manuscript
+manuscript/
+
+# slurm job scripts
+*.sh
+
+# examples
+examples/
+
+# qe scratch
+qe_scratch/
+
+# scripts
+scripts/
+
+# logs
+logs/
+
+# examples_old
+codes/examples_old/

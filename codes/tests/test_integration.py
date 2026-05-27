@@ -17,9 +17,9 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 import numpy as np
 import pytest
 
-from sqtc.runner import SQTCRunner
-from sqtc.mock_forces import AzizHFDPotential
-from sqtc.constants import R_GAS
+from sotc.runner import SOTCRunner
+from sotc.mock_forces import AzizHFDPotential
+from sotc.constants import R_GAS
 
 
 @pytest.fixture(scope="module")
@@ -38,7 +38,7 @@ def he_results():
         [a_he/2,   a_he/(2*np.sqrt(3)),  c_he/2],
     ])
 
-    runner = SQTCRunner(
+    runner = SOTCRunner(
         element="He",
         mass_amu=4.002602,
         prim_cell=prim_cell,

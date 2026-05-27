@@ -14,8 +14,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 import numpy as np
 import pytest
 
-from sqtc.cell_design import HNFEnumerator, DisplacementOptimizer
-from sqtc.correlators import DebyeCorrelator
+from sotc.cell_design import HNFEnumerator, DisplacementOptimizer
+from sotc.correlators import DebyeCorrelator
 
 # Simple cubic primitive cell for testing
 a = 3.5  # Å
