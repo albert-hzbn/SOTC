@@ -51,8 +51,9 @@ Thumbs.db
 # --manuscript
 manuscript/
 
-# slurm job scripts
-*.sh
+# slurm job output / error logs
+*.out.*
+*.err.*
 
 # examples
 examples/
