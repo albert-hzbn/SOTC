@@ -31,7 +31,7 @@ reproducing phonon properties to within a few percent of experiment.
 2. **Cell optimisation** — atomic displacements are optimised (gradient descent
    on a correlator mismatch cost $\mathcal{Q}$) so that one periodic cell best
    matches the target correlator hierarchy up to cutoff $r_\text{cut}$.
-3. **DFT forces** — a single DFT call (VASP **or** Quantum ESPRESSO) computes
+3. **DFT forces** — a single DFT call (Quantum ESPRESSO) computes
    forces on the displaced supercell.
 4. **IFC extraction** — interatomic force constants (IFCs) are fitted by ridge
    regression with acoustic sum rule enforcement:
@@ -43,9 +43,6 @@ reproducing phonon properties to within a few percent of experiment.
    capacity over an arbitrary temperature range is obtained by applying the
    harmonic Einstein/Debye formula to the SOTC-renormalised frequencies —
    no QHA is needed for $C_V(T)$.
-
-Full derivations are in [`Theory/`](Theory/) and in the manuscript
-(`manuscript/`).
 
 ---
 
@@ -61,7 +58,6 @@ codes/
     ifc_extractor.py       ←   Ridge-regression IFC fitting + ASR enforcement
     phonons.py             ←   Phonon dispersion, DOS, thermodynamics
     qha.py                 ←   Quasi-harmonic approximation (α, C_P, B, V(T))
-    vasp_io.py             ←   POSCAR / OUTCAR I/O (VASP backend)
     qe_io.py               ←   pw.x I/O via ASE Espresso (QE backend)
     gpaw_io.py             ←   GPAW force calculator
     mock_forces.py         ←   Analytic test forces (He, H₂) — no DFT needed
@@ -92,9 +88,8 @@ README.md                  ← this file
 | ASE | 3.22 | required for the QE force calculator |
 | pytest | 7.0 | test suite |
 | **QE `pw.x`** | 7.0 | DFT forces via Quantum ESPRESSO |
-| **VASP** | 5.4 | alternative DFT backend |
 
-VASP and QE are only needed for real calculations; the mock-force drivers work
+QE is only needed for real calculations; the mock-force drivers work
 without either.
 
 ### Step 1 — Create a virtual environment
@@ -126,8 +121,7 @@ export PYTHONPATH="$PWD/codes:$PYTHONPATH"
 pytest codes/tests/ -v
 ```
 
-All tests use built-in Lennard-Jones / Aziz mock potentials and pass without
-VASP or QE.
+All tests use built-in Lennard-Jones / Aziz mock potentials and pass without QE.
 
 ---
 
@@ -528,7 +522,7 @@ python3 codes/sotc/postprocessor.py --run-dir <dir> [options]
 |---|---|---|
 | `--run-dir PATH` | **required** | Path to the completed SOTC run directory |
 | `--structure STR` | auto (spglib) | `fcc`, `bcc`, `sc`, `hcp`, `rocksalt`, `zincblende` |
-| `--calculator STR` | auto | `vasp` or `qe` |
+| `--calculator STR` | auto | `qe` |
 | `--qe-scratch-dir PATH` | auto | Override QE scratch directory |
 | `--lattice a [c]` | auto | Lattice constant(s) in Å |
 | `--elements E1 [E2]` | auto | Element symbols per basis atom |
