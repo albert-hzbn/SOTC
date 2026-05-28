@@ -39,7 +39,10 @@ reproducing phonon properties to within a few percent of experiment.
 5. **Self-consistency** — the new phonon model updates the correlator targets;
    steps 1–4 repeat until convergence (typically 2–8 DFT calls total).
 6. **Thermodynamics** — phonon DOS → $C_V(T)$, ZPE, $S_\text{vib}(T)$,
-   $F_\text{vib}(T)$, MSD$(T)$, Debye–Waller $B(T)$.
+   $F_\text{vib}(T)$, MSD$(T)$, Debye–Waller $B(T)$.  The isochoric heat
+   capacity over an arbitrary temperature range is obtained by applying the
+   harmonic Einstein/Debye formula to the SOTC-renormalised frequencies —
+   no QHA is needed for $C_V(T)$.
 
 Full derivations are in [`Theory/`](Theory/) and in the manuscript
 (`manuscript/`).
@@ -185,14 +188,14 @@ Expected output:
 
 ```bash
 python3 codes/sotc/postprocessor.py \
-    --run-dir sotc_al_qe_run \
+    --run-dir /examples/sotc_al_qe_run \
     --structure fcc          \
     --calculator qe
 ```
 
 All parameters (lattice constant, elements, masses, $T_\text{design}$,
 $r_\text{cut}$) are **auto-detected** from `sotc_results.json` and the
-first snapshot directory. Output goes to `sotc_al_qe_run/postproc/`:
+first snapshot directory. Output goes to `/examples/sotc_al_qe_run/postproc/`:
 
 | File | Contents |
 |---|---|
@@ -571,6 +574,20 @@ override with `--symmetrize-bonds`.
 
 **Quantum correlators** — displacement targets use the exact quantum $\coth$
 formula, correctly capturing zero-point motion at all temperatures.
+
+**Temperature dependence without QHA** — once the self-consistent IFCs are
+converged at $T_\text{design}$, $C_V(T')$ across an arbitrary temperature
+range is computed by the harmonic sum
+
+$$C_V(T') = k_B N_A \frac{1}{N_q} \sum_{\mathbf{q},s}
+\left(\frac{\hbar\omega_s(\mathbf{q})}{2 k_B T'}\right)^{\!2}
+\operatorname{csch}^2\!\left(\frac{\hbar\omega_s(\mathbf{q})}{2 k_B T'}\right)$$
+
+using the thermally-renormalised SOTC frequencies $\{\omega_s\}$.  The
+anharmonic effect is already absorbed into the IFCs at $T_\text{design}$;
+no multi-volume calculation is required for isochoric ($V = \text{const}$)
+properties.  Add QHA (three-volume runs, `run_sotc_*_qha_qe.py`) only when
+thermal expansion, $C_P(T)$, or the bulk modulus $B(T)$ are needed.
 
 ---
 

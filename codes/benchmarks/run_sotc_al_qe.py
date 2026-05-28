@@ -102,11 +102,11 @@ AL_UPF = "Al.pbe-n-kjpaw_psl.1.0.0.UPF"
 #   export LD_LIBRARY_PATH=$MKLROOT/lib:$LD_LIBRARY_PATH
 #   export I_MPI_HYDRA_BOOTSTRAP=ssh   # needed outside SLURM on login node
 #
-# For a SLURM job with 32 MPI ranks:
-#   export QE_PW_CMD="mpirun -np 32 pw.x"
+# For a SLURM job with 64 MPI ranks (= physical cores on a 2×32-core node):
+#   export QE_PW_CMD="mpirun -np 64 pw.x"
 PW_CMD = os.environ.get(
     "QE_PW_CMD",
-    "mpiexec -np 1 " + os.path.expanduser("~/Softwares/qe-7.5/bin/pw.x"),
+    "mpirun -np 64 " + os.path.expanduser("~/softwares/qe-7.1/bin/pw.x"),
 )
 
 # ── QE force calculator ───────────────────────────────────────────────────────
