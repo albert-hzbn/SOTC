@@ -570,12 +570,14 @@ override with `--symmetrize-bonds`.
 formula, correctly capturing zero-point motion at all temperatures.
 
 **Temperature dependence without QHA** — once the self-consistent IFCs are
-converged at $T_\text{design}$, $C_V(T')$ across an arbitrary temperature
+converged at $T_{\text{design}}$, $C_V(T')$ across an arbitrary temperature
 range is computed by the harmonic sum
 
-$$C_V(T') = k_B N_A \frac{1}{N_q} \sum_{\mathbf{q},s}
-\left(\frac{\hbar\omega_s(\mathbf{q})}{2 k_B T'}\right)^{\!2}
-\operatorname{csch}^2\!\left(\frac{\hbar\omega_s(\mathbf{q})}{2 k_B T'}\right)$$
+$$
+C_V(T') = k_B N_A \frac{1}{N_q} \sum_{\mathbf{q},s}
+\left(\frac{\hbar\omega_s(\mathbf{q})}{2 k_B T'}\right)^{2}
+\text{csch}^2\left(\frac{\hbar\omega_s(\mathbf{q})}{2 k_B T'}\right)
+$$
 
 using the thermally-renormalised SOTC frequencies $\{\omega_s\}$.  The
 anharmonic effect is already absorbed into the IFCs at $T_\text{design}$;
@@ -655,4 +657,4 @@ The theoretical background is in [`Theory/`](Theory/):
 
 ## License
 
-Not yet licensed. Contact the author before use or redistribution.
+This project is licensed under the [MIT License](LICENSE).
