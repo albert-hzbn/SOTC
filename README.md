@@ -66,7 +66,6 @@ codes/
   tests/                   ← pytest test suite
 
 pseudopotentials/          ← Bundled SSSP efficiency + ONCV UPF files for QE
-Theory/                    ← Theoretical framework and full derivations
 manuscript/                ← Paper source (RevTeX4-2 + BibTeX)
 requirements.txt           ← Python dependencies
 README.md                  ← this file
@@ -646,12 +645,13 @@ pytest codes/tests/ -v
 
 ## Theory
 
-The theoretical background is in [`Theory/`](Theory/):
+The full theoretical derivations (correlator hierarchy, IFC ridge regression,
+variational grounding, QHA thermodynamic identities) are provided in the
+accompanying manuscript:
 
-- **`SOTC_framework.md`** — motivation, formulation, correlator hierarchy,
-  convergence analysis, benchmark results
-- **`SOTC_derivations.md`** — detailed derivations: IFC ridge regression,
-  symmetry projections, QHA, quantum thermodynamics, post-processor pipeline
+> A. Linda, *Special Optimal Thermal Cell: First-Principles Phonons and
+> Thermodynamics from Optimally Designed Minimal Supercells*, submitted to
+> Physical Review B (2026).
 
 ---
 
