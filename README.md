@@ -643,18 +643,6 @@ pytest codes/tests/ -v
 
 ---
 
-## Theory
-
-The full theoretical derivations (correlator hierarchy, IFC ridge regression,
-variational grounding, QHA thermodynamic identities) are provided in the
-accompanying manuscript:
-
-> A. Linda, *Special Optimal Thermal Cell: First-Principles Phonons and
-> Thermodynamics from Optimally Designed Minimal Supercells*, submitted to
-> Physical Review B (2026).
-
----
-
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
