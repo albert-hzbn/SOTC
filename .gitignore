@@ -48,6 +48,9 @@ Thumbs.db
 *.bak
 *.tmp
 
+# ── Theory (internal derivations, not for public repo) ───────────────────────
+Theory/
+
 # --manuscript
 manuscript/
 
@@ -73,3 +76,6 @@ codes/examples_old/
 # slurm scripts
 slurm_*.sh
 submit_*.sh
+
+# Theory
+Theory/
