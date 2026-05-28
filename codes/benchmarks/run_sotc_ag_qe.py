@@ -141,7 +141,7 @@ def main() -> None:
         if abs(T - 300.0) < 1:
             cv300 = cv
 
-    print(f"\n  T_D (spectral-moment) = {res['T_D']:.2f} K  (expt low-T: ~225 K)")
+    print(f"\n  T_D (spectral-moment) = {res['T_D_effective']:.2f} K  (expt low-T: ~225 K)")
     if cv300 is not None:
         print(f"  Cv(300 K)             = {cv300:.4f} J/(mol·K)  (expt: 25.3)")
     print(f"  ZPE                   = {res.get('ZPE_meV', float('nan')):.2f} meV/atom")

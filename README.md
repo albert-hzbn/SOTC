@@ -182,14 +182,14 @@ Expected output:
 
 ```bash
 python3 codes/sotc/postprocessor.py \
-    --run-dir /examples/sotc_al_qe_run \
+    --run-dir sotc_al_qe_run \
     --structure fcc          \
     --calculator qe
 ```
 
 All parameters (lattice constant, elements, masses, $T_\text{design}$,
 $r_\text{cut}$) are **auto-detected** from `sotc_results.json` and the
-first snapshot directory. Output goes to `/examples/sotc_al_qe_run/postproc/`:
+first snapshot directory. Output goes to `./sotc_al_qe_run/postproc/`:
 
 | File | Contents |
 |---|---|

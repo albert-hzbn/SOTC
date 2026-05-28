@@ -69,3 +69,7 @@ logs/
 
 # examples_old
 codes/examples_old/
+
+# slurm scripts
+slurm_*.sh
+submit_*.sh
