@@ -1,52 +1,16 @@
-"""
-SOTC Quasi-Harmonic Approximation (QHA) for thermal expansion.
+"""Converged quasi-harmonic thermodynamics from direct volume calculations.
 
-Obtains α(T), C_P(T), B(T) and V(T) from a **minimum** number of DFT
-calculations by combining:
+The implementation deliberately requires at least five directly calculated
+volumes.  It never extrapolates phonon free energies beyond the volume grid.
+At external pressure ``p`` the minimized potential is
 
-  1. A 3-point static EOS  (E_0 vs V, primitive cell, NSW=0 — cheap)
-  2. SOTC phonon runs at the same 3 volumes (V₋, V₀, V₊)
+    G(T, p, V) = E_static(V) + F_vib(T, V) + p V.
 
-The total DFT cost is ~3× the per-T SOTC cost plus 3 static primitive-cell
-SCF calculations, versus phonopy-QHA's ~235× cost.
+At p=0 the minimized quantity is the Helmholtz free energy.  Volumetric and
+cubic linear expansion are reported separately:
 
-Theory
-------
-At pressure P=0 the Gibbs free energy reduces to the Helmholtz free energy:
-
-    G(T, V) = E_0(V) + F_vib(T, V)
-
-    F_vib(T, V) = Σ_{q,s} k_B T ln[2 sinh(ħω_{qs}(V)/2k_B T)]
-
-At each temperature T the equilibrium volume V*(T) minimises G:
-
-    dG/dV = dE_0/dV + dF_vib/dV = 0  →  V*(T)
-
-Thermal quantities follow:
-    α(T) = (1/V*) dV*/dT
-    B(T) = -V* d²G/dV²|_{V*}
-    C_P(T) = C_V(T) + T V* α(T)² B(T)
-
-Instead of the full volume sweep, a 2-point Grüneisen shortcut is also
-provided:
-    α(T) ≈ γ_eff(T) C_V(T) / (3 B₀ V₀)
-where γ_eff is the heat-capacity-weighted average of mode Grüneisen
-parameters and B₀ is the static bulk modulus.
-
-Usage
------
-from sotc.qha import SOTCQuasiHarmonic
-
-qha = SOTCQuasiHarmonic(
-    volumes_ang3   = [V_minus, V_0, V_plus],  # Å³ per formula unit
-    static_energies_ev = [E_minus, E_0, E_plus],
-    phonon_calcs   = [calc_Vm, calc_V0, calc_Vp],  # PhononCalculator instances
-)
-results = qha.compute(T_values=np.arange(100, 1500, 50))
-# results['alpha_K']   : thermal expansion coefficient [K⁻¹]
-# results['V_ang3']    : equilibrium volume [Å³]
-# results['Cp_jmolk']  : C_P [J/(mol·K)]
-# results['B_GPa']     : bulk modulus [GPa]
+    alpha_V = (1/V) dV/dT,       alpha_L = alpha_V/3,
+    C_p-C_v = T V B_T alpha_V^2 = 9 T V B_T alpha_L^2.
 """
 
 from __future__ import annotations
@@ -54,39 +18,38 @@ from __future__ import annotations
 from typing import Dict, List, Literal, Optional
 
 import numpy as np
-from scipy.optimize import minimize_scalar
+from scipy.interpolate import CubicSpline
+from scipy.optimize import curve_fit, minimize_scalar
 
-from .constants import KB, NA, EV_TO_J
+from .constants import NA
+
+GPA_PER_EV_ANG3 = 160.21766208
+ANG3_TO_M3 = 1.0e-30
+
+
+def _birch_murnaghan_energy(V, E0, V0, B0_eva3, B0_prime):
+    """Third-order Birch--Murnaghan energy, with B0 in eV/Angstrom^3."""
+    eta = (V0 / np.asarray(V, dtype=float)) ** (2.0 / 3.0)
+    x = eta - 1.0
+    return E0 + 9.0 * V0 * B0_eva3 / 16.0 * (
+        B0_prime * x**3 + (6.0 - 4.0 * eta) * x**2
+    )
 
 
 class SOTCQuasiHarmonic:
-    """
-    Quasi-harmonic approximation using SOTC phonons at 3 volumes.
-
-    Requires 3 volumes to:
-      (a) fit a parabolic / Birch-Murnaghan EOS to E_0(V)
-      (b) interpolate F_vib(T, V) across the volume range
+    """Quasi-harmonic calculation on a direct, converged volume grid.
 
     Parameters
     ----------
-    volumes_ang3 : list of 3 floats [Å³/f.u.]
-        Primitive-cell volumes — must be sorted V₋ < V₀ < V₊.
-        Recommended step: ±1–2% of V₀.
-    static_energies_ev : list of 3 floats [eV/f.u.]
-        DFT total energies at each volume (NSW=0 SCF, primitive cell).
-    phonon_calcs : list of 3 PhononCalculator
-        One per volume, fitted SOTC IFCs at the same 3 volumes.
-    q_mesh : (3,) int, optional
-        q-mesh for F_vib integration. Default (20,20,20).
-    method : {"qha", "gruneisen", "both"}
-        Which thermal-expansion method to use in :meth:`run`:
-
-        * ``"qha"``       — full Helmholtz volume minimisation.
-          Most accurate; requires F_vib at 3 volumes.
-        * ``"gruneisen"`` — Grüneisen parameter shortcut
-          α = γ_eff C_V / (3 B₀ V₀).  No volume minimisation loop;
-          faster but slightly less accurate above 0.8 T_melt.
-        * ``"both"``      — run both and return results side-by-side.
+    volumes_ang3, static_energies_ev, phonon_calcs
+        Equal-length sequences with at least five directly calculated volumes,
+        sorted internally.  Energies and volumes are per formula unit, and each
+        phonon calculator must use the same formula-unit convention.
+    eos_model
+        ``"birch_murnaghan"`` (default) or a local ``"quadratic"`` model.
+        The latter is named honestly and is intended only for a narrow grid.
+    pressure_gpa
+        External pressure.  The pV term is included explicitly.
     """
 
     def __init__(
@@ -96,313 +59,308 @@ class SOTCQuasiHarmonic:
         phonon_calcs: list,
         q_mesh: tuple = (20, 20, 20),
         method: Literal["qha", "gruneisen", "both"] = "qha",
+        eos_model: Literal["birch_murnaghan", "quadratic"] = "birch_murnaghan",
+        pressure_gpa: float = 0.0,
     ):
-        assert len(volumes_ang3) == 3
-        assert len(static_energies_ev) == 3
-        assert len(phonon_calcs) == 3
-
-        self._V = np.asarray(volumes_ang3, dtype=float)   # Å³/f.u.
-        self._E = np.asarray(static_energies_ev, dtype=float)  # eV/f.u.
-        self._calcs = phonon_calcs
-        self._q_mesh = q_mesh
+        if not (len(volumes_ang3) == len(static_energies_ev) == len(phonon_calcs)):
+            raise ValueError("volumes, static energies, and phonon calculators must have equal length")
+        if len(volumes_ang3) < 5:
+            raise ValueError(
+                "A converged QHA workflow requires at least five direct volumes; "
+                f"received {len(volumes_ang3)}"
+            )
+        order = np.argsort(np.asarray(volumes_ang3, dtype=float))
+        self._V = np.asarray(volumes_ang3, dtype=float)[order]
+        self._E = np.asarray(static_energies_ev, dtype=float)[order]
+        self._calcs = [phonon_calcs[int(i)] for i in order]
+        if np.any(np.diff(self._V) <= 0.0):
+            raise ValueError("Volume grid must contain distinct values")
         if method not in ("qha", "gruneisen", "both"):
-            raise ValueError(f"method must be 'qha', 'gruneisen', or 'both'; got '{method}'")
+            raise ValueError(f"Unsupported method: {method}")
+        if eos_model not in ("birch_murnaghan", "quadratic"):
+            raise ValueError(f"Unsupported EOS model: {eos_model}")
+        self._q_mesh = tuple(q_mesh)
         self.method = method
+        self.eos_model = eos_model
+        self.pressure_gpa = float(pressure_gpa)
+        self._fit_static_eos()
 
-        # Fit a 2nd-order polynomial to E_0(V) as a quick EOS.
-        # For 3 points this is exact.  Parabola: E = a + b(V-V0) + c(V-V0)²
-        # Static bulk modulus B₀ = V₀ d²E/dV² = 2c × V₀
-        V0 = self._V[1]
-        self._eos_coeffs = np.polyfit(self._V - V0, self._E, 2)  # [c, b, a]
-        # B₀ in GPa:  2c [eV/Å⁶] × V₀ [Å³] × EV_TO_J / 1e-30 / 1e9
-        c = self._eos_coeffs[0]
-        ANG3_TO_M3 = 1e-30
-        self.B0_GPa = float(2.0 * c * V0 * EV_TO_J / ANG3_TO_M3 / 1e9)
-        self.V0_ang3 = float(V0)
+    def _fit_static_eos(self) -> None:
+        imin = int(np.argmin(self._E))
+        e_guess = float(self._E[imin])
+        v_guess = float(self._V[imin])
+        if self.eos_model == "birch_murnaghan":
+            span = float(self._V[-1] - self._V[0])
+            bounds = (
+                [e_guess - 10.0, self._V[0] - 0.25 * span, 1.0e-5, 0.0],
+                [e_guess + 10.0, self._V[-1] + 0.25 * span, 10.0, 12.0],
+            )
+            params, covariance = curve_fit(
+                _birch_murnaghan_energy,
+                self._V,
+                self._E,
+                p0=[e_guess, v_guess, 0.5, 4.0],
+                bounds=bounds,
+                maxfev=50000,
+            )
+            self._eos_params = np.asarray(params)
+            self._eos_covariance = np.asarray(covariance)
+            self.V0_ang3 = float(params[1])
+            self.B0_GPa = float(params[2] * GPA_PER_EV_ANG3)
+        else:
+            coeff = np.polyfit(self._V, self._E, 2)
+            if coeff[0] <= 0.0:
+                raise ValueError("Quadratic static EOS has non-positive curvature")
+            self._eos_params = coeff
+            self._eos_covariance = np.full((3, 3), np.nan)
+            self.V0_ang3 = float(-coeff[1] / (2.0 * coeff[0]))
+            self.B0_GPa = float(
+                self.V0_ang3 * 2.0 * coeff[0] * GPA_PER_EV_ANG3
+            )
+        predicted = np.asarray(self._E0(self._V))
+        residual = self._E - predicted
+        self.eos_diagnostics = {
+            "model": self.eos_model,
+            "n_volumes": int(len(self._V)),
+            "volume_min_ang3": float(self._V[0]),
+            "volume_max_ang3": float(self._V[-1]),
+            "V0_ang3": self.V0_ang3,
+            "B0_GPa": self.B0_GPa,
+            "rmse_meV_per_fu": float(np.sqrt(np.mean(residual**2)) * 1000.0),
+            "max_abs_residual_meV_per_fu": float(np.max(np.abs(residual)) * 1000.0),
+            "residuals_meV_per_fu": (residual * 1000.0).tolist(),
+        }
+        self.eos_diagnostics.update(self._leave_one_out_eos())
 
-    def _E0(self, V: float) -> float:
-        """Static DFT energy at volume V [eV/f.u.] from parabolic EOS."""
-        V0 = self._V[1]
-        c = self._eos_coeffs
-        dV = V - V0
-        return float(np.polyval(c, dV))
+    def _leave_one_out_eos(self) -> Dict:
+        v0_values = []
+        b_values = []
+        if len(self._V) <= 5 and self.eos_model == "birch_murnaghan":
+            # Four points determine BM3 exactly and do not provide a residual
+            # test; still report parameter sensitivity, but label it clearly.
+            label = "four-point BM3 parameter sensitivity"
+        else:
+            label = "leave-one-volume-out sensitivity"
+        for omit in range(len(self._V)):
+            keep = np.arange(len(self._V)) != omit
+            V, E = self._V[keep], self._E[keep]
+            try:
+                if self.eos_model == "birch_murnaghan":
+                    span = float(V[-1] - V[0])
+                    params, _ = curve_fit(
+                        _birch_murnaghan_energy,
+                        V,
+                        E,
+                        p0=[float(E.min()), float(V[np.argmin(E)]), 0.5, 4.0],
+                        bounds=(
+                            [float(E.min()) - 10.0, V[0] - 0.25 * span, 1e-5, 0.0],
+                            [float(E.min()) + 10.0, V[-1] + 0.25 * span, 10.0, 12.0],
+                        ),
+                        maxfev=50000,
+                    )
+                    v0_values.append(float(params[1]))
+                    b_values.append(float(params[2] * GPA_PER_EV_ANG3))
+                else:
+                    c = np.polyfit(V, E, 2)
+                    v0 = float(-c[1] / (2.0 * c[0]))
+                    v0_values.append(v0)
+                    b_values.append(float(v0 * 2.0 * c[0] * GPA_PER_EV_ANG3))
+            except Exception:
+                continue
+        return {
+            "sensitivity_test": label,
+            "V0_leave_one_out_std_ang3": (
+                float(np.std(v0_values, ddof=1)) if len(v0_values) > 1 else None
+            ),
+            "B0_leave_one_out_std_GPa": (
+                float(np.std(b_values, ddof=1)) if len(b_values) > 1 else None
+            ),
+        }
+
+    def _E0(self, V):
+        if self.eos_model == "birch_murnaghan":
+            return _birch_murnaghan_energy(V, *self._eos_params)
+        return np.polyval(self._eos_params, V)
+
+    def _pv_ev(self, V):
+        return self.pressure_gpa * np.asarray(V) / GPA_PER_EV_ANG3
+
+    def _fvib_values(self, T: float) -> np.ndarray:
+        return np.array([
+            calc.vibrational_free_energy(T, q_mesh=self._q_mesh)
+            for calc in self._calcs
+        ])
+
+    def _free_energy_spline(self, T: float, include_pv: bool = True) -> CubicSpline:
+        values = self._E0(self._V) + self._fvib_values(T)
+        if include_pv:
+            values = values + self._pv_ev(self._V)
+        return CubicSpline(self._V, values, bc_type="natural", extrapolate=False)
 
     def _Fvib(self, T: float, V: float) -> float:
-        """
-        F_vib(T, V) [eV/f.u.] by linear interpolation over the 3 volumes.
-
-        For ±1–2% volume steps the linear interpolation in V is accurate to
-        <0.1 meV/f.u. in F_vib, which is sufficient for α(T) calculations.
-        """
-        Fv = np.array([
-            c.vibrational_free_energy(T, q_mesh=self._q_mesh)
-            for c in self._calcs
-        ])
-        # Quadratic interpolation (exact for 3 points)
-        V0 = self._V[1]
-        coeffs = np.polyfit(self._V - V0, Fv, 2)
-        return float(np.polyval(coeffs, V - V0))
+        if not self._V[0] <= V <= self._V[-1]:
+            raise ValueError("F_vib extrapolation outside direct volume grid is forbidden")
+        return float(CubicSpline(
+            self._V, self._fvib_values(T), bc_type="natural", extrapolate=False
+        )(V))
 
     def _G(self, T: float, V: float) -> float:
-        """Helmholtz free energy G = E_0(V) + F_vib(T,V) [eV/f.u.]."""
-        return self._E0(V) + self._Fvib(T, V)
+        if not self._V[0] <= V <= self._V[-1]:
+            raise ValueError("Free-energy extrapolation outside direct volume grid is forbidden")
+        return float(self._E0(V) + self._Fvib(T, V) + self._pv_ev(V))
 
     def equilibrium_volume(self, T: float) -> float:
-        """
-        Minimise G(T,V) over V in the range [V₋, V₊] → V*(T) [Å³/f.u.].
-        """
-        Vmin, Vmax = self._V[0], self._V[2]
+        spline = self._free_energy_spline(T, include_pv=True)
         result = minimize_scalar(
-            lambda V: self._G(T, V),
-            bounds=(Vmin, Vmax),
+            lambda V: float(spline(V)),
+            bounds=(float(self._V[0]), float(self._V[-1])),
             method="bounded",
-            options={"xatol": 1e-6},
+            options={"xatol": 1.0e-8},
         )
+        if not result.success:
+            raise RuntimeError(f"Volume minimization failed at T={T}: {result.message}")
         return float(result.x)
 
     def compute(
         self,
         T_values: np.ndarray,
         q_mesh: Optional[tuple] = None,
-        dT_alpha: float = 5.0,
-        v_range_factor: float = 1.5,
+        dT_alpha: Optional[float] = None,
+        v_range_factor: float = 1.0,
     ) -> Dict[str, np.ndarray]:
-        """
-        Compute thermal expansion and related quantities at each T.
-
-        Parameters
-        ----------
-        T_values       : array of temperatures [K]
-        q_mesh         : override q-mesh for F_vib (default: self._q_mesh)
-        dT_alpha       : finite-difference step for dV/dT [K], default 5 K
-        v_range_factor : factor by which to extend the minimisation search
-            range beyond [Vm, Vp].  Default 1.5 means the search extends
-            0.5×(Vp-Vm) beyond each end, allowing V*(T) to lie outside the
-            fitting interval when thermal expansion is large.  The F_vib
-            polynomial is extrapolated in this region, which is accurate to
-            within ~0.1 meV/f.u. for volume excursions up to ~5%.
-
-        Returns
-        -------
-        dict with keys:
-            'T_K'       : temperatures [K]
-            'V_ang3'    : equilibrium volume V*(T) [Å³/f.u.]
-            'alpha_K'   : volumetric thermal expansion α(T) = (1/V)dV/dT [K⁻¹]
-            'Cv_jmolk'  : C_V per mole [J/(mol·K)]  (from SOTC phonons at V*)
-            'Cp_jmolk'  : C_P = C_V + TVα²B [J/(mol·K)]
-            'B_GPa'     : effective bulk modulus at V*(T) [GPa]
-        """
+        """Compute QHA properties without volume extrapolation."""
+        if v_range_factor != 1.0:
+            raise ValueError("QHA volume extrapolation is disabled; use v_range_factor=1")
         if q_mesh is not None:
-            self._q_mesh = q_mesh
-
+            self._q_mesh = tuple(q_mesh)
         T_arr = np.asarray(T_values, dtype=float)
-        n = len(T_arr)
+        if len(T_arr) < 4 or np.any(np.diff(T_arr) <= 0.0):
+            raise ValueError("T_values must contain at least four strictly increasing points")
 
-        V_star   = np.zeros(n)
-        alpha    = np.zeros(n)
-        Cv       = np.zeros(n)
-        Cp       = np.zeros(n)
-        B_arr    = np.zeros(n)
+        n_t = len(T_arr)
+        V_star = np.zeros(n_t)
+        B_gpa = np.zeros(n_t)
+        helmholtz = np.zeros(n_t)
+        gibbs = np.zeros(n_t)
+        boundary = np.zeros(n_t, dtype=bool)
+        cv_grid = np.zeros((len(self._V), n_t))
 
-        # Precompute F_vib arrays at each of the 3 stored volumes for all T.
-        # This avoids redundant _all_frequencies calls.
-        Fvib_3V = np.array([
-            [c.vibrational_free_energy(T, q_mesh=self._q_mesh) for T in T_arr]
-            for c in self._calcs
-        ])  # (3, n_T)
+        for iv, calc in enumerate(self._calcs):
+            cv_grid[iv] = calc.heat_capacity_scan(T_arr, q_mesh=self._q_mesh)
 
-        V0 = self._V[1]
-        Fv_coeffs = np.array([
-            np.polyfit(self._V - V0, Fvib_3V[:, it], 2)
-            for it in range(n)
-        ])  # (n_T, 3) polynomial coefficients
-
-        def _G_fast(T_idx: int, V: float) -> float:
-            dV = V - V0
-            Fvib = float(np.polyval(Fv_coeffs[T_idx], dV))
-            return self._E0(V) + Fvib
-
-        Vmin, Vmax = self._V[0], self._V[2]
-        dV_fit = Vmax - Vmin
-        Vlo = Vmin - (v_range_factor - 1.0) * dV_fit
-        Vhi = Vmax + (v_range_factor - 1.0) * dV_fit
-
+        Cv = np.zeros(n_t)
         for it, T in enumerate(T_arr):
-            # Equilibrium volume
-            res = minimize_scalar(
-                lambda V, i=it: _G_fast(i, V),
-                bounds=(Vlo, Vhi),
+            total = self._free_energy_spline(T, include_pv=True)
+            result = minimize_scalar(
+                lambda V: float(total(V)),
+                bounds=(float(self._V[0]), float(self._V[-1])),
                 method="bounded",
-                options={"xatol": 1e-6},
+                options={"xatol": 1.0e-8},
             )
-            Vs = float(res.x)
-            V_star[it] = Vs
+            V = float(result.x)
+            V_star[it] = V
+            margin = min(V - self._V[0], self._V[-1] - V)
+            boundary[it] = margin < 0.01 * (self._V[-1] - self._V[0])
+            curvature = float(total(V, 2))
+            B_gpa[it] = V * curvature * GPA_PER_EV_ANG3
+            if not np.isfinite(B_gpa[it]) or B_gpa[it] <= 0.0:
+                raise RuntimeError(
+                    f"Non-positive free-energy curvature at T={T} K: B={B_gpa[it]} GPa"
+                )
+            f_spline = self._free_energy_spline(T, include_pv=False)
+            helmholtz[it] = float(f_spline(V))
+            gibbs[it] = float(total(V))
+            Cv[it] = float(CubicSpline(
+                self._V, cv_grid[:, it], bc_type="natural", extrapolate=False
+            )(V))
 
-            # Bulk modulus from G curvature: B = V d²G/dV²
-            h = Vs * 0.001
-            d2G = (_G_fast(it, Vs + h) - 2 * _G_fast(it, Vs) + _G_fast(it, Vs - h)) / h**2
-            ANG3_TO_M3 = 1e-30
-            B_arr[it] = float(Vs * d2G * EV_TO_J / ANG3_TO_M3 / 1e9)  # GPa
+        # A single differentiable interpolant avoids inconsistent ad-hoc
+        # finite-difference steps.  Sensitivity is evaluated by the validation
+        # driver using coarser temperature grids and alternate splines.
+        volume_of_t = CubicSpline(T_arr, V_star, bc_type="natural")
+        dVdT = volume_of_t(T_arr, 1)
+        alpha_v = dVdT / V_star
+        alpha_l = alpha_v / 3.0
 
-        # Thermal expansion: central finite difference in T using V_star
-        for it in range(n):
-            T = T_arr[it]
-            V = V_star[it]
-            if T < dT_alpha:
-                alpha[it] = 0.0
-                continue
-            if it == 0:
-                alpha[it] = (V_star[1] - V_star[0]) / (T_arr[1] - T_arr[0]) / V if n > 1 else 0.0
-            elif it == n - 1:
-                alpha[it] = (V_star[-1] - V_star[-2]) / (T_arr[-1] - T_arr[-2]) / V
-            else:
-                alpha[it] = (V_star[it+1] - V_star[it-1]) / (T_arr[it+1] - T_arr[it-1]) / V
-
-        # C_V at V*(T): use the middle-volume SOTC phonon calculator as a proxy
-        # (within ±2% volume step the error in C_V is < 0.1 J/mol/K)
-        Cv = self._calcs[1].heat_capacity_scan(T_arr, q_mesh=self._q_mesh)
-
-        # C_P = C_V + T V α² B  (Nernst-Lindemann relation, standard QHA)
-        ANG3_TO_M3 = 1e-30
-        V_m3 = V_star * ANG3_TO_M3              # m³/f.u.
-        B_Pa  = B_arr * 1e9                     # Pa
-        Cp = Cv + T_arr * V_m3 * alpha**2 * B_Pa * NA  # J/(mol·K)
-
+        V_m3 = V_star * ANG3_TO_M3
+        B_pa = B_gpa * 1.0e9
+        Cp = Cv + T_arr * V_m3 * B_pa * alpha_v**2 * NA
         return {
-            "T_K":       T_arr,
-            "V_ang3":    V_star,
-            "alpha_K":   alpha,
-            "Cv_jmolk":  Cv,
-            "Cp_jmolk":  Cp,
-            "B_GPa":     B_arr,
+            "T_K": T_arr,
+            "V_ang3": V_star,
+            "alpha_V_K": alpha_v,
+            "alpha_L_K": alpha_l,
+            "alpha_K": alpha_v,  # compatibility alias, explicitly volumetric
+            "Cv_jmolk": Cv,
+            "Cp_jmolk": Cp,
+            "B_GPa": B_gpa,
+            "helmholtz_ev_fu": helmholtz,
+            "gibbs_ev_fu": gibbs,
+            "minimum_near_volume_boundary": boundary,
+            "volume_grid_ang3": self._V.copy(),
         }
-
-    # ── Grüneisen shortcut: single-temperature α from mode γ ─────────────────
 
     def alpha_gruneisen(
         self,
         T_values: np.ndarray,
         q_mesh: tuple = (20, 20, 20),
     ) -> Dict[str, np.ndarray]:
-        """
-        Fast Grüneisen estimate of α(T) using the central-volume SOTC phonons
-        and mode Grüneisen parameters from V± finite differences.
-
-        α(T) ≈ γ_eff(T) × C_V(T) / (3 × B₀ × V₀)
-
-        This requires **no** volume minimisation — just the two finite-difference
-        phonon calculators (calc_V+ and calc_V-) that were already run.
-
-        Cost: identical to running SOTC at 3 volumes (which is already done
-        for SOTCQuasiHarmonic) — no extra DFT beyond what compute() uses.
-
-        Parameters
-        ----------
-        T_values : array [K]
-        q_mesh   : q-mesh for C_V and γ_eff sums
-
-        Returns
-        -------
-        dict with keys:
-            'T_K', 'alpha_K', 'gamma_eff', 'Cv_jmolk'
-        """
+        """Independent Gruneisen estimate of volumetric and linear expansion."""
         T_arr = np.asarray(T_values, dtype=float)
-        calc0, calcp, calcm = self._calcs[1], self._calcs[2], self._calcs[0]
-
-        # dV/V between V+ and V-
-        dV_over_V = (self._V[2] - self._V[0]) / (2.0 * self._V[1])
-
-        # Mode Grüneisen parameters (n_q, n_branches)
-        gamma_qs = calc0.mode_gruneisen_parameters(calcp, calcm, dV_over_V)
-        omega0   = calc0._all_frequencies(q_mesh)   # (n_q, n_branches) rad/s
-
-        ANG3_TO_M3 = 1e-30
-        V0_m3 = self._V[1] * ANG3_TO_M3
-        B0_Pa = self.B0_GPa * 1e9
-
-        alpha   = np.zeros(len(T_arr))
-        gamma_e = np.zeros(len(T_arr))
-        Cv_arr  = calc0.heat_capacity_scan(T_arr, q_mesh=q_mesh)  # J/(mol·K)
-
+        i0 = int(np.argmin(np.abs(self._V - self.V0_ang3)))
+        if i0 == 0 or i0 == len(self._V) - 1:
+            raise ValueError("EOS equilibrium must be bracketed by phonon volumes")
+        im, ip = i0 - 1, i0 + 1
+        calc0, calcm, calcp = self._calcs[i0], self._calcs[im], self._calcs[ip]
+        dlnv_half = 0.5 * (np.log(self._V[ip]) - np.log(self._V[im]))
+        gamma_qs = calc0.mode_gruneisen_parameters(
+            calcp, calcm, dlnv_half, q_mesh=q_mesh
+        )
+        omega0 = calc0._all_frequencies(q_mesh)
+        V0_m3 = self._V[i0] * ANG3_TO_M3
+        B0_pa = self.B0_GPa * 1.0e9
+        Cv_arr = calc0.heat_capacity_scan(T_arr, q_mesh=q_mesh)
+        alpha_v = np.zeros(len(T_arr))
+        gamma_eff = np.zeros(len(T_arr))
+        from .constants import HBAR, KB
         for it, T in enumerate(T_arr):
-            if T < 1e-9:
+            if T <= 0.0:
                 continue
-            # Modal heat capacity weights (dimensionless per mode)
-            from .constants import HBAR, KB
-            pos = omega0 > calc0._imag_tol
-            om  = omega0[pos]
-            gm  = gamma_qs[pos]
-
-            x = HBAR * om / (2.0 * KB * T)
-            x_c = np.clip(x, 0, 350.0)
-            cv_mode = (x_c / np.sinh(x_c))**2   # shape function, dimensionless
-
-            # NaN entries in gm (acoustic) → exclude
-            valid = np.isfinite(gm)
-            if not np.any(valid):
+            valid = (omega0 > calc0._imag_tol) & np.isfinite(gamma_qs)
+            om = omega0[valid]
+            gm = gamma_qs[valid]
+            x = np.clip(HBAR * om / (2.0 * KB * T), 0.0, 350.0)
+            weights = (x / np.sinh(x))**2
+            if weights.size == 0 or weights.sum() <= 0.0:
                 continue
-            weights = cv_mode[valid]
-            gm_v    = gm[valid]
-            if weights.sum() < 1e-30:
-                continue
-            g_eff = float(np.dot(gm_v, weights) / weights.sum())
-            gamma_e[it] = g_eff
-
-            # Cv per f.u. in J/K (Cv_arr is per mol)
-            Cv_fu = Cv_arr[it] / NA
-            alpha[it] = g_eff * Cv_fu / (3.0 * B0_Pa * V0_m3)
-
+            gamma_eff[it] = float(np.dot(gm, weights) / weights.sum())
+            alpha_v[it] = gamma_eff[it] * (Cv_arr[it] / NA) / (B0_pa * V0_m3)
         return {
-            "T_K":       T_arr,
-            "alpha_K":   alpha,
-            "gamma_eff": gamma_e,
-            "Cv_jmolk":  Cv_arr,
+            "T_K": T_arr,
+            "alpha_V_K": alpha_v,
+            "alpha_L_K": alpha_v / 3.0,
+            "alpha_K": alpha_v,
+            "gamma_eff": gamma_eff,
+            "Cv_jmolk": Cv_arr,
         }
-
-    # ── Unified entry point ───────────────────────────────────────────────────
 
     def run(
         self,
         T_values: np.ndarray,
         q_mesh: Optional[tuple] = None,
-        v_range_factor: float = 1.5,
+        v_range_factor: float = 1.0,
     ) -> Dict[str, np.ndarray]:
-        """
-        Run the selected method(s) and return a unified results dict.
-
-        Which methods are executed is controlled by ``self.method``:
-
-        * ``"qha"``       → calls :meth:`compute`; returns keys
-          ``T_K, V_ang3, alpha_K, Cv_jmolk, Cp_jmolk, B_GPa``.
-        * ``"gruneisen"`` → calls :meth:`alpha_gruneisen`; returns keys
-          ``T_K, alpha_K, gamma_eff, Cv_jmolk``.
-        * ``"both"``      → runs both.  QHA keys are returned at top level;
-          Grüneisen keys are additionally included with prefix ``gruen_``:
-          ``gruen_alpha_K, gruen_gamma_eff``.  This lets you plot both curves
-          from a single dict.
-
-        Parameters
-        ----------
-        T_values : array-like [K]
-        q_mesh   : optional override for the q-mesh used in F_vib / C_V sums.
-
-        Returns
-        -------
-        dict
-        """
         T_arr = np.asarray(T_values, dtype=float)
-        qm = q_mesh or self._q_mesh
-
+        qm = tuple(q_mesh or self._q_mesh)
         if self.method == "qha":
             return self.compute(T_arr, q_mesh=qm, v_range_factor=v_range_factor)
-
         if self.method == "gruneisen":
             return self.alpha_gruneisen(T_arr, q_mesh=qm)
-
-        # method == "both"
-        qha_res   = self.compute(T_arr, q_mesh=qm, v_range_factor=v_range_factor)
-        gruen_res = self.alpha_gruneisen(T_arr, q_mesh=qm)
-        combined  = dict(qha_res)
-        combined["gruen_alpha_K"]   = gruen_res["alpha_K"]
-        combined["gruen_gamma_eff"] = gruen_res["gamma_eff"]
+        qha = self.compute(T_arr, q_mesh=qm, v_range_factor=v_range_factor)
+        gr = self.alpha_gruneisen(T_arr, q_mesh=qm)
+        combined = dict(qha)
+        combined["gruen_alpha_V_K"] = gr["alpha_V_K"]
+        combined["gruen_alpha_L_K"] = gr["alpha_L_K"]
+        combined["gruen_alpha_K"] = gr["alpha_V_K"]
+        combined["gruen_gamma_eff"] = gr["gamma_eff"]
         return combined

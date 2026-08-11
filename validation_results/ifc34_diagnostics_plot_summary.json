@@ -1,0 +1,17 @@
+{
+  "source": "/viper/u1/alli/calculations/sotc/validation_results/ifc34_campaign_summary.json",
+  "status": "complete",
+  "materials": [
+    "al",
+    "nacl",
+    "w"
+  ],
+  "panels": [
+    "held-out incremental model comparison",
+    "snapshot-count convergence",
+    "interaction-cutoff sensitivity",
+    "electronic-setting force sensitivity"
+  ],
+  "figure_pdf": "/viper/u1/alli/calculations/sotc/manuscript/figures/fig_ifc34_diagnostics.pdf",
+  "figure_png": "/viper/u1/alli/calculations/sotc/manuscript/figures/fig_ifc34_diagnostics.png"
+}

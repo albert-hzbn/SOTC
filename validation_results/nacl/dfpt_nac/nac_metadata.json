@@ -1,0 +1,35 @@
+{
+  "backend": "Quantum ESPRESSO pw.x + ph.x DFPT",
+  "pw_cmd": "env I_MPI_FABRICS=shm LD_LIBRARY_PATH=/mpcdf/soft/RHEL_9/packages/x86_64/intel_oneapi/2025.3/mkl/2025.3/lib: /viper/u1/alli/Softwares/qe-7.5/PW/src/pw.x",
+  "ph_cmd": "env I_MPI_FABRICS=shm LD_LIBRARY_PATH=/mpcdf/soft/RHEL_9/packages/x86_64/intel_oneapi/2025.3/mkl/2025.3/lib: /viper/u1/alli/Softwares/qe-7.5/PHonon/PH/ph.x",
+  "prefix": "nacl_nac",
+  "ecutwfc_Ry": 60.0,
+  "ecutrho_Ry": 480.0,
+  "kpts": [
+    8,
+    8,
+    8
+  ],
+  "conv_thr_Ry": 1e-10,
+  "tr2_ph": 1e-14,
+  "enforce_charge_neutrality": true,
+  "reused_existing_outputs": true,
+  "pseudopotentials": {
+    "Na": {
+      "filename": "na_pbe_v1.5.uspp.F.UPF",
+      "sha256": "f84820c4280d21603bd50ae76a08e15c26864391ea055cf50affc4aedefc8f87"
+    },
+    "Cl": {
+      "filename": "cl_pbe_v1.4.uspp.F.UPF",
+      "sha256": "5b1ebdea1e5ba743fba0100806206287e1f7f00460c7e6f19791446beaee0655"
+    }
+  },
+  "dielectric_eigenvalues": [
+    2.470969409,
+    2.470969409,
+    2.470969409
+  ],
+  "born_charge_neutrality_max_abs_raw": 0.00042999999999993044,
+  "born_charge_neutrality_max_abs_corrected": 0.0,
+  "born_convention": "rows are electric-field/polarization direction and columns are force/displacement direction; NAC uses q @ Z*"
+}

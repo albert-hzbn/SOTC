@@ -195,8 +195,10 @@ class SOTCPostProcessor:
             ``ZPE_eV``      — zero-point energy [eV/f.u.]  (scalar)
             ``TD_spectral`` — spectral-moment Debye temperature [K] (scalar)
             ``TD_caloric``  — calorimetric T_D at each T [K]
-            ``MSD_ang2``    — mean-squared displacement <u²> [Å²]
-            ``DW_B_ang2``   — Debye-Waller B = 8π²<u²>/3 [Å²]
+            ``MSD_ang2``    — basis-atom mean of total <|u|²> [Å²]
+            ``U_iso_ang2``  — basis-atom mean of <|u|²>/3 [Å²]
+            ``DW_B_ang2``   — basis-atom mean of B=8π² U_iso [Å²]
+            ``*_by_atom``   — eigenvector/species-resolved arrays
         """
         T_arr = np.asarray(T_values, dtype=float)
         n_T   = len(T_arr)
@@ -204,7 +206,9 @@ class SOTCPostProcessor:
         # ── Compute frequency mesh ONCE ───────────────────────────────────────
         # This is the dominant cost; all T-dependent quantities are derived from
         # it via broadcasting instead of calling _all_frequencies per-T.
-        all_omegas = self.calc._all_frequencies(q_mesh)   # (n_q, n_branches)
+        all_omegas, all_evecs, _ = self.calc._all_frequencies(
+            q_mesh, return_eigvecs=True
+        )
         n_q_pts    = all_omegas.shape[0]
         omegas_flat = all_omegas.ravel()                   # (n_q * n_branches,)
         valid_mask, pos_mask, omega_use = self.calc._classify_omegas(omegas_flat)
@@ -256,21 +260,32 @@ class SOTCPostProcessor:
             for cv, T in zip(Cv_arr, T_arr)
         ])
 
-        # ── Mean-squared displacement — vectorised ────────────────────────────
-        omega_safe = np.where(pos_mask, omega_use, np.inf)
-        # x for MSD uses ALL modes (omega_use, not pos_omegas)
-        x_msd   = HBAR * omega_use[None, :] / (2.0 * KB * np.where(T_col < 1e-9, 1.0, T_col))
-        x_msd_c = np.clip(x_msd, 0.0, 350.0)
-        # coth(x): safe for x≈0 (those modes are masked by pos_mask anyway)
-        x_safe_msd  = np.where(x_msd > 1e-10, x_msd_c, 1.0)
-        tanh_msd    = np.tanh(x_safe_msd)
-        coth_vals   = np.where(x_msd > 1e-10, 1.0 / tanh_msd, 1.0 / x_safe_msd)
-        contrib     = np.where(pos_mask[None, :], coth_vals / omega_safe[None, :], 0.0)
-        M_mean_SI   = float(np.mean(self.calc.masses_amu)) * AMU_TO_KG
-        msd_SI      = (HBAR / (2.0 * M_mean_SI)) * np.sum(contrib, axis=1) / n_q_pts
-        MSD_arr     = msd_SI * 1e20   # m² → Å²
-        MSD_arr     = np.where(T_arr < 1e-9, MSD_arr[0] if n_T > 0 else 0.0, MSD_arr)
-        DW_arr      = 8.0 * np.pi**2 * MSD_arr / 3.0
+        # ── Eigenvector/species-resolved displacement parameters ─────────────
+        n_modes = all_omegas.shape[1]
+        eig = all_evecs.reshape(n_q_pts, self.calc.n_b, 3, n_modes)
+        participation = np.sum(np.abs(eig) ** 2, axis=2)  # (q, atom, mode)
+        positive = all_omegas > self.calc._imag_tol
+        total_msd_by_atom = np.zeros((n_T, self.calc.n_b), dtype=float)
+        for it, T in enumerate(T_arr):
+            factor = np.zeros_like(all_omegas, dtype=float)
+            omega = all_omegas[positive]
+            if T < 1e-12:
+                thermal = np.ones_like(omega)
+            else:
+                thermal = 1.0 / np.tanh(
+                    np.clip(HBAR * omega / (2.0 * KB * T), 0.0, 350.0)
+                )
+            factor[positive] = HBAR * thermal / (2.0 * omega)
+            for ia, mass_kg in enumerate(self.calc.masses_kg):
+                total_msd_by_atom[it, ia] = (
+                    np.sum(factor * participation[:, ia, :])
+                    / (n_q_pts * mass_kg) * 1.0e20
+                )
+        u_iso_by_atom = total_msd_by_atom / 3.0
+        b_by_atom = 8.0 * np.pi**2 * u_iso_by_atom
+        MSD_arr = np.mean(total_msd_by_atom, axis=1)
+        Uiso_arr = np.mean(u_iso_by_atom, axis=1)
+        DW_arr = np.mean(b_by_atom, axis=1)
 
         self._thermal_data = {
             "T_K":         T_arr,
@@ -281,7 +296,13 @@ class SOTCPostProcessor:
             "TD_spectral": TD_spectral,
             "TD_caloric":  TD_arr,
             "MSD_ang2":    MSD_arr,
+            "U_iso_ang2":  Uiso_arr,
             "DW_B_ang2":   DW_arr,
+            "MSD_total_ang2_by_atom": total_msd_by_atom,
+            "U_iso_ang2_by_atom": u_iso_by_atom,
+            "DW_B_ang2_by_atom": b_by_atom,
+            "MSD_convention": "U_iso=<|u|^2>/3; B=8*pi^2*U_iso",
+            "MSD_stable_mode_fraction": float(np.mean(positive)),
         }
         return self._thermal_data
 
@@ -594,6 +615,8 @@ class SOTCPostProcessor:
                 "T_design_K":      self.T_design,
                 "ZPE_eV":          float(td_["ZPE_eV"]),
                 "TD_spectral_K":   float(td_["TD_spectral"]),
+                "MSD_convention":  td_["MSD_convention"],
+                "MSD_stable_mode_fraction": float(td_["MSD_stable_mode_fraction"]),
                 "temperatures":    [],
             }
             for T_c in key_Ts:
@@ -601,8 +624,14 @@ class SOTCPostProcessor:
                 if abs(T_arr[i] - T_c) > 5:
                     continue
                 row = {"T_K": float(T_arr[i])}
-                for key in ("Cv_jmolk", "Svib_jmolk", "TD_caloric", "MSD_ang2", "DW_B_ang2"):
+                for key in ("Cv_jmolk", "Svib_jmolk", "TD_caloric", "MSD_ang2", "U_iso_ang2", "DW_B_ang2"):
                     row[key] = float(td_[key][i])
+                row["MSD_total_ang2_by_atom"] = np.asarray(
+                    td_["MSD_total_ang2_by_atom"][i]
+                ).tolist()
+                row["U_iso_ang2_by_atom"] = np.asarray(
+                    td_["U_iso_ang2_by_atom"][i]
+                ).tolist()
                 row["Fvib_meV"] = float(td_["Fvib_ev"][i]) * 1000
                 summary["temperatures"].append(row)
             with open(out_dir / "thermal_summary.json", "w") as f:
@@ -1073,6 +1102,7 @@ class SOTCRunLoader:
             symmetrise=True,
             ridge_alpha=self.ridge_alpha,
             symmetrize_bonds=self.symmetrize_bonds,
+            basis_indices=np.arange(n_atoms, dtype=int) % n_b,
         )
         ifc.fit(displacements_list, forces_list)
         rep = ifc.fit_report(displacements_list, forces_list)
@@ -1228,6 +1258,7 @@ class SOTCRunLoader:
             symmetrise=True,
             ridge_alpha=self.ridge_alpha,
             symmetrize_bonds=self.symmetrize_bonds,
+            basis_indices=np.arange(n_atoms, dtype=int) % n_b,
         )
         ifc.fit(displacements_list, forces_list)
         rep = ifc.fit_report(displacements_list, forces_list)

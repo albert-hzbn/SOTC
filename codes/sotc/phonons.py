@@ -15,6 +15,7 @@ All frequencies are in rad/s internally; displayed in THz and cm⁻¹.
 from __future__ import annotations
 
 import concurrent.futures
+import os
 from typing import Dict, List, Optional, Tuple
 
 import numpy as np
@@ -63,9 +64,28 @@ class PhononCalculator:
         self.n_b = len(masses_amu)
         self._rec_lat = 2.0 * np.pi * np.linalg.inv(self.cell_prim).T  # (3,3) rad/Å
         self._imag_tol = float(imag_tolerance_thz) * THZ_TO_RAD_S
-        # LO-TO correction: (n_b, 3, 3) Born effective charges [e] and (3, 3) ε∞
-        self._born    = np.asarray(born_charges)      if born_charges      is not None else None
-        self._eps_inf = np.asarray(dielectric_tensor) if dielectric_tensor is not None else None
+        # LO-TO correction: Born effective charges [e] and electronic epsilon.
+        if (born_charges is None) != (dielectric_tensor is None):
+            raise ValueError(
+                "born_charges and dielectric_tensor must be supplied together"
+            )
+        self._born = (
+            np.asarray(born_charges, dtype=float) if born_charges is not None else None
+        )
+        self._eps_inf = (
+            np.asarray(dielectric_tensor, dtype=float)
+            if dielectric_tensor is not None else None
+        )
+        if self._born is not None:
+            if self._born.shape != (self.n_b, 3, 3):
+                raise ValueError(
+                    f"born_charges must have shape ({self.n_b}, 3, 3)"
+                )
+            if self._eps_inf.shape != (3, 3):
+                raise ValueError("dielectric_tensor must have shape (3, 3)")
+            self._eps_inf = 0.5 * (self._eps_inf + self._eps_inf.T)
+            if np.min(np.linalg.eigvalsh(self._eps_inf)) <= 0.0:
+                raise ValueError("dielectric_tensor must be positive definite")
 
     def _classify_omegas(self, omegas: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """Return (valid_mask, positive_mask, omega_for_thermo)."""
@@ -138,6 +158,112 @@ class PhononCalculator:
             }
         )
         return stats
+
+    def mean_square_displacements(
+        self,
+        T: float,
+        q_mesh: Tuple[int, int, int] = (20, 20, 20),
+    ) -> Dict[str, np.ndarray | float | str]:
+        """Return eigenvector- and species-resolved harmonic displacements.
+
+        The mass-weighted phonon eigenvectors are normalised as
+        ``sum(i, alpha) |e[i, alpha, q, s]|**2 = 1``.  For basis atom ``i``
+        the total three-dimensional mean-square displacement is
+
+        ``<|u_i|^2> = hbar/(2 Nq M_i) sum(q,s,alpha)
+        |e_i_alpha(q,s)|^2 coth(hbar*omega/2kBT) / omega``.
+
+        ``U_iso`` is one Cartesian component, ``<|u_i|^2>/3``.  The
+        crystallographic Debye--Waller parameter is ``B_i=8*pi^2*U_iso_i``.
+        Modes below ``imag_tolerance_thz`` are excluded and their fraction is
+        reported; values for an unstable spectrum must not be presented as a
+        complete harmonic MSD.
+        """
+        all_omegas, all_evecs, _ = self._all_frequencies(
+            q_mesh, return_eigvecs=True
+        )
+        n_q, n_modes = all_omegas.shape
+        positive = all_omegas > self._imag_tol
+        unstable = all_omegas < -self._imag_tol
+
+        # P[q, i, s] is the contribution of basis atom i to mode (q,s).
+        reshaped = all_evecs.reshape(n_q, self.n_b, 3, n_modes)
+        participation = np.sum(np.abs(reshaped) ** 2, axis=2)
+
+        factor = np.zeros_like(all_omegas, dtype=float)
+        omega = all_omegas[positive]
+        if T < 1e-12:
+            thermal = np.ones_like(omega)
+        else:
+            thermal = coth(HBAR * omega / (2.0 * KB * T))
+        factor[positive] = HBAR * thermal / (2.0 * omega)
+
+        total_msd_m2 = np.zeros(self.n_b, dtype=float)
+        for i in range(self.n_b):
+            total_msd_m2[i] = (
+                np.sum(factor * participation[:, i, :])
+                / (n_q * self.masses_kg[i])
+            )
+        total_msd_ang2 = total_msd_m2 * 1.0e20
+        u_iso_ang2 = total_msd_ang2 / 3.0
+        b_ang2 = 8.0 * np.pi**2 * u_iso_ang2
+        stable_fraction = float(np.mean(positive)) if positive.size else 0.0
+        unstable_fraction = float(np.mean(unstable)) if unstable.size else 0.0
+        return {
+            "convention": "U_iso=<|u|^2>/3; B=8*pi^2*U_iso",
+            "total_msd_ang2_by_atom": total_msd_ang2,
+            "u_iso_ang2_by_atom": u_iso_ang2,
+            "debye_waller_b_ang2_by_atom": b_ang2,
+            "total_msd_ang2_mean": float(np.mean(total_msd_ang2)),
+            "u_iso_ang2_mean": float(np.mean(u_iso_ang2)),
+            "debye_waller_b_ang2_mean": float(np.mean(b_ang2)),
+            "stable_mode_fraction": stable_fraction,
+            "unstable_mode_fraction": unstable_fraction,
+        }
+
+    def mean_square_displacements_from_projected_dos(
+        self,
+        T: float,
+        frequencies_thz: np.ndarray,
+        dos_partial: np.ndarray,
+    ) -> Dict[str, np.ndarray | float | str]:
+        """Integrate atom-projected DOS using the same MSD convention.
+
+        ``dos_partial[i]`` must be in states/THz/f.u. and its integral is the
+        number of modes carried by basis atom ``i`` (three for a complete,
+        stable spectrum).  This independent path is used to audit the mode-sum
+        implementation and its factor of three.
+        """
+        nu = np.asarray(frequencies_thz, dtype=float)
+        pdos = np.asarray(dos_partial, dtype=float)
+        if pdos.shape != (self.n_b, len(nu)):
+            raise ValueError(
+                f"dos_partial must have shape ({self.n_b}, {len(nu)}), "
+                f"got {pdos.shape}"
+            )
+        positive = nu > 0.0
+        omega = 2.0 * np.pi * nu[positive] * 1.0e12
+        if T < 1e-12:
+            thermal = np.ones_like(omega)
+        else:
+            thermal = coth(HBAR * omega / (2.0 * KB * T))
+        kernel = thermal / omega
+        total = np.zeros(self.n_b, dtype=float)
+        for i in range(self.n_b):
+            integral = np.trapezoid(pdos[i, positive] * kernel, nu[positive])
+            total[i] = HBAR * integral / (2.0 * self.masses_kg[i]) * 1.0e20
+        u_iso = total / 3.0
+        b_iso = 8.0 * np.pi**2 * u_iso
+        return {
+            "convention": "U_iso=<|u|^2>/3; B=8*pi^2*U_iso",
+            "total_msd_ang2_by_atom": total,
+            "u_iso_ang2_by_atom": u_iso,
+            "debye_waller_b_ang2_by_atom": b_iso,
+            "total_msd_ang2_mean": float(np.mean(total)),
+            "u_iso_ang2_mean": float(np.mean(u_iso)),
+            "debye_waller_b_ang2_mean": float(np.mean(b_iso)),
+            "pdos_mode_count_by_atom": np.trapezoid(pdos, nu, axis=1),
+        }
 
     def _spectral_moment_debye_temperature(
         self, q_mesh: Tuple[int, int, int] = (20, 20, 20)
@@ -288,13 +414,59 @@ class PhononCalculator:
         pref_conv = EV_TO_J / ((1e-10) ** 2 * AMU_TO_KG)
         D_nac = np.zeros((3 * self.n_b, 3 * self.n_b), dtype=complex)
         for i in range(self.n_b):
-            Zq_i = self._born[i] @ q_hat
+            # QE/phonopy convention: first tensor index is the electric-field
+            # (polarization) direction, so the mode-space charge is q @ Z*.
+            Zq_i = q_hat @ self._born[i]
             for j in range(self.n_b):
-                Zq_j = self._born[j] @ q_hat
+                Zq_j = q_hat @ self._born[j]
                 coeff = (C * pref_conv
                          / (eps_q * np.sqrt(self.masses_amu[i] * self.masses_amu[j])))
                 D_nac[3*i:3*i+3, 3*j:3*j+3] += coeff * np.outer(Zq_i, Zq_j)
         return D_nac
+
+    def loto_frequencies_near_gamma(
+        self,
+        direction_cartesian: np.ndarray,
+        q_magnitude_rad_per_angstrom: float = 1.0e-7,
+    ) -> Dict[str, np.ndarray | float]:
+        """Audit direction-dependent LO--TO splitting at the Gamma limit.
+
+        Both spectra use the same small nonzero wave vector. The
+        without_nac_thz result subtracts only the non-analytic term, so
+        differences are not contaminated by a different finite-q phase.
+        """
+        if self._born is None or self._eps_inf is None:
+            raise ValueError("Born charges and dielectric tensor are required")
+        direction = np.asarray(direction_cartesian, dtype=float)
+        if direction.shape != (3,) or not np.all(np.isfinite(direction)):
+            raise ValueError("direction_cartesian must be a finite length-three vector")
+        norm = float(np.linalg.norm(direction))
+        if norm == 0.0:
+            raise ValueError("direction_cartesian must be nonzero")
+        magnitude = float(q_magnitude_rad_per_angstrom)
+        if magnitude <= 0.0:
+            raise ValueError("q magnitude must be positive")
+        q_cart = magnitude * direction / norm
+        q_frac = q_cart @ np.linalg.inv(self._rec_lat)
+        full = self.dynamical_matrix(q_frac)
+        short_range = full - self._nac_term(q_cart)
+
+        def frequencies(matrix):
+            eigenvalues = eigh(
+                0.5 * (matrix + matrix.conj().T), eigvals_only=True
+            )
+            omega = np.sign(eigenvalues) * np.sqrt(np.abs(eigenvalues))
+            return omega * RAD_S_TO_THZ
+
+        without = frequencies(short_range)
+        with_nac = frequencies(full)
+        return {
+            "direction_cartesian": direction / norm,
+            "q_magnitude_rad_per_angstrom": magnitude,
+            "without_nac_thz": without,
+            "with_nac_thz": with_nac,
+            "shift_thz": with_nac - without,
+        }
 
     # ── Phonon frequencies at a single q ─────────────────────────────────────
 
@@ -355,8 +527,20 @@ class PhononCalculator:
         def _freq(q):
             return self.frequencies_at_q(q, return_eigvecs=return_eigvecs)
 
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            results = list(executor.map(_freq, q_points))
+        max_workers = max(
+            1,
+            min(len(q_points), int(os.environ.get("SOTC_MAX_WORKERS", "4"))),
+        )
+        if max_workers == 1:
+            results = [_freq(q) for q in q_points]
+        else:
+            try:
+                with concurrent.futures.ThreadPoolExecutor(
+                    max_workers=max_workers
+                ) as executor:
+                    results = list(executor.map(_freq, q_points))
+            except RuntimeError:
+                results = [_freq(q) for q in q_points]
 
         if return_eigvecs:
             all_omegas = np.array([r[0] for r in results])
@@ -834,39 +1018,83 @@ class PhononCalculator:
         self,
         calc_vp: "PhononCalculator",
         calc_vm: "PhononCalculator",
-        dV_over_V: float,
+        dlnV_half: float,
+        q_mesh: Tuple[int, int, int] = (20, 20, 20),
     ) -> np.ndarray:
+        """Mode Grüneisen parameters from a centered logarithmic derivative.
+
+        ``dlnV_half = (ln(V_plus)-ln(V_minus))/2`` and
+        ``gamma = -(ln(omega_plus)-ln(omega_minus))/(2*dlnV_half)``.
+        Only modes positive in all three calculations are retained.  Branch
+        crossings require eigenvector matching in the validation analysis and
+        are not silently resolved by this frequency-only helper.
         """
-        Mode Grüneisen parameters γ_{qs} from finite differences of phonon
-        frequencies at two volumes V+ and V- (same q-mesh as self).
-
-        γ_{qs} = -(V/ω) ∂ω/∂V ≈ -(1/2δ) [ω(V+)/ω₀ - ω(V-)/ω₀] / (δV/V)
-
-        where δV/V = dV_over_V is the fractional volume step used to generate
-        calc_vp (volume V₀(1+δ)) and calc_vm (volume V₀(1-δ)).
-
-        Parameters
-        ----------
-        calc_vp, calc_vm : PhononCalculator at V₀(1±dV_over_V)
-        dV_over_V        : fractional volume change δ (e.g. 0.02 for ±2%)
-
-        Returns
-        -------
-        gamma : (n_q, n_branches) float  — mode Grüneisen parameters
-            Positive = frequency decreases on expansion (normal behaviour).
-            q-mesh and branch ordering must match self._all_frequencies().
-        """
-        q_mesh = (20, 20, 20)
-        omega0 = self._all_frequencies(q_mesh)          # (n_q, n_branches)
+        if dlnV_half <= 0.0:
+            raise ValueError("dlnV_half must be positive")
+        omega0 = self._all_frequencies(q_mesh)
         omegap = calc_vp._all_frequencies(q_mesh)
         omegam = calc_vm._all_frequencies(q_mesh)
-
-        # Central finite difference; guard against zero frequencies
-        safe0 = np.where(omega0 > self._imag_tol, omega0, np.nan)
-        gamma = -0.5 * (omegap - omegam) / (safe0 * dV_over_V)
-        return gamma   # NaN where ω₀ ≤ imag_tol (acoustic / imaginary)
+        valid = (
+            (omega0 > self._imag_tol)
+            & (omegap > calc_vp._imag_tol)
+            & (omegam > calc_vm._imag_tol)
+        )
+        gamma = np.full_like(omega0, np.nan, dtype=float)
+        gamma[valid] = -(
+            np.log(omegap[valid]) - np.log(omegam[valid])
+        ) / (2.0 * dlnV_half)
+        return gamma
 
     # ── Updated correlators for SOTC self-consistency ─────────────────────────
+
+    def updated_correlators_by_basis(
+        self,
+        T: float,
+        R_values_ang: np.ndarray,
+        q_mesh: Tuple[int, int, int] = (20, 20, 20),
+    ) -> np.ndarray:
+        """Return scalar trace correlators resolved by ordered basis pair.
+
+        The result has shape ``(n_b, n_b, n_R)`` and uses the mass-weighted
+        eigenvectors explicitly.  ``R_values_ang`` are exact discrete shell
+        radii; the current scalar implementation averages directions within a
+        shell through ``j0(qR)``.  The basis-pair resolution prevents unlike
+        species from being pooled, while a future tensor objective may retain
+        the discarded anisotropic Cartesian components.
+        """
+        R_arr = np.asarray(R_values_ang, dtype=float)
+        all_omegas, all_evecs, q_points = self._all_frequencies(
+            q_mesh, return_eigvecs=True
+        )
+        n_q, n_modes = all_omegas.shape
+        eig = all_evecs.reshape(n_q, self.n_b, 3, n_modes)
+        result = np.zeros((self.n_b, self.n_b, len(R_arr)), dtype=float)
+        for iq, q_frac in enumerate(q_points):
+            q_cart = q_frac @ self._rec_lat
+            qR = np.linalg.norm(q_cart) * R_arr
+            j0 = np.ones_like(qR)
+            nz = np.abs(qR) > 1.0e-10
+            j0[nz] = np.sin(qR[nz]) / qR[nz]
+            for mode, omega in enumerate(all_omegas[iq]):
+                if omega <= self._imag_tol:
+                    continue
+                thermal = (
+                    1.0 if T < 1.0e-12
+                    else coth(HBAR * omega / (2.0 * KB * T))
+                )
+                for a in range(self.n_b):
+                    ea = eig[iq, a, :, mode]
+                    for b in range(self.n_b):
+                        eb = eig[iq, b, :, mode]
+                        polarisation_trace = float(np.real(np.vdot(eb, ea)))
+                        prefactor = HBAR * thermal / (
+                            6.0 * omega * np.sqrt(
+                                self.masses_kg[a] * self.masses_kg[b]
+                            )
+                        )
+                        result[a, b] += prefactor * polarisation_trace * j0
+        result /= n_q
+        return result * 1.0e20
 
     def updated_correlators(
         self,

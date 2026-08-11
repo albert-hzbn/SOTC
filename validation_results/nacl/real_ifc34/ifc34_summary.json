@@ -1,0 +1,669 @@
+{
+  "status": "complete",
+  "material": "rocksalt NaCl",
+  "temperature_k": 700.0,
+  "lattice_parameter_ang": 5.73,
+  "thermodynamic_condition": "fixed stated lattice parameter; quantum-canonical ionic ensemble",
+  "supercell_matrix": [
+    [
+      3,
+      0,
+      0
+    ],
+    [
+      0,
+      3,
+      0
+    ],
+    [
+      0,
+      0,
+      3
+    ]
+  ],
+  "n_supercell_atoms": 54,
+  "n_snapshots": 100,
+  "n_training_snapshots": 80,
+  "n_strictly_held_out_snapshots": 20,
+  "sampling": {
+    "random_seed": 314159,
+    "distribution": "phonopy quantum harmonic canonical",
+    "pairing": "50 independent draws, each paired with its exact inversion",
+    "split_rule": "complete +/- pairs; no pair crosses train/test"
+  },
+  "dft_settings": {
+    "ecutwfc_ry": 60.0,
+    "ecutrho_ry": 480.0,
+    "k_mesh_supercell": [
+      2,
+      2,
+      2
+    ],
+    "smearing": null,
+    "degauss_ry": 0.0,
+    "scf_conv_thr_ry": 1e-09
+  },
+  "ifc_fit": {
+    "backend": "symfc joint dense solver",
+    "orders": [
+      2,
+      3,
+      4
+    ],
+    "cutoffs_ang": {
+      "2": 4.3,
+      "3": 4.3,
+      "4": 4.0
+    },
+    "constraints": [
+      "space-group symmetry",
+      "index permutation symmetry",
+      "lattice translation symmetry",
+      "translational acoustic sum rules"
+    ],
+    "regularization": "none",
+    "final_all_snapshot_design": {
+      "n_parameters": 48,
+      "normalized_design_rank": 48,
+      "normalized_design_condition_number": 36.86343122232869,
+      "raw_normal_matrix_rank": 48,
+      "raw_normal_matrix_condition_number": 14624.727830861777,
+      "min_normalized_eigenvalue": 0.08335278387140284,
+      "max_normalized_eigenvalue": 3.072669615433087,
+      "basis_parameters_by_order": {
+        "2": 8,
+        "3": 36,
+        "4": 4
+      }
+    },
+    "final_constraints": {
+      "compact_fc2_max_asr_residual": 9.103828801926284e-15,
+      "compact_fc2_max_trailing_permutation_residual": 0.0,
+      "compact_fc3_max_asr_residual": 1.865174681370263e-14,
+      "compact_fc3_max_trailing_permutation_residual": 0.0,
+      "compact_fc4_max_asr_residual": 1.1226575225009583e-12,
+      "compact_fc4_max_trailing_permutation_residual": 0.0
+    }
+  },
+  "harmonic_reference": {
+    "min_mesh_frequency_thz": 0.7134661521788801,
+    "fraction_imaginary_mesh_modes": 0.0,
+    "n_displaced_states": 4,
+    "wall_seconds_sum": 493.74143522325903
+  },
+  "reference_force": {
+    "rms_component_ev_ang": 8.338670060797527e-07,
+    "max_atom_norm_ev_ang": 4.113765058057432e-06,
+    "stress_ev_ang3": [
+      [
+        0.0020070925468260014,
+        -0.0,
+        -0.0
+      ],
+      [
+        -0.0,
+        0.0020070925468260014,
+        0.0
+      ],
+      [
+        -0.0,
+        0.0,
+        0.0020070925468260014
+      ]
+    ]
+  },
+  "force_drift_projection": {
+    "method": "subtract F(0), then remove each snapshot's uniform net-force drift",
+    "rms_component_ev_ang": 9.987391648817223e-09,
+    "max_component_ev_ang": 2.8567812904887357e-08
+  },
+  "nested_held_out_order_comparison": {
+    "2": {
+      "orders": [
+        2
+      ],
+      "cutoffs_ang": {
+        "2": 4.3,
+        "3": 4.3,
+        "4": 4.0
+      },
+      "design": {
+        "n_parameters": 8,
+        "normalized_design_rank": 8,
+        "normalized_design_condition_number": 2.682742285701794,
+        "raw_normal_matrix_rank": 8,
+        "raw_normal_matrix_condition_number": 2.732723900757772,
+        "min_normalized_eigenvalue": 0.5887569004854804,
+        "max_normalized_eigenvalue": 1.5794830329311211,
+        "basis_parameters_by_order": {
+          "2": 8
+        }
+      },
+      "train": {
+        "rmse_force_component_ev_ang": 0.37436740583387973,
+        "mae_force_component_ev_ang": 0.20965924962539967,
+        "max_abs_force_component_ev_ang": 11.867258064094942,
+        "r2_force_components": 0.6198450756053535
+      },
+      "held_out_test": {
+        "rmse_force_component_ev_ang": 0.3315169220465236,
+        "mae_force_component_ev_ang": 0.19545754438361707,
+        "max_abs_force_component_ev_ang": 5.677206550300154,
+        "r2_force_components": 0.6463787057348345
+      },
+      "constraints": {
+        "compact_fc2_max_asr_residual": 1.1296519275560968e-14,
+        "compact_fc2_max_trailing_permutation_residual": 0.0
+      }
+    },
+    "23": {
+      "orders": [
+        2,
+        3
+      ],
+      "cutoffs_ang": {
+        "2": 4.3,
+        "3": 4.3,
+        "4": 4.0
+      },
+      "design": {
+        "n_parameters": 44,
+        "normalized_design_rank": 44,
+        "normalized_design_condition_number": 5.37220074619683,
+        "raw_normal_matrix_rank": 44,
+        "raw_normal_matrix_condition_number": 249.56812764263506,
+        "min_normalized_eigenvalue": 0.3499363567374737,
+        "max_normalized_eigenvalue": 1.8799283567864564,
+        "basis_parameters_by_order": {
+          "2": 8,
+          "3": 36
+        }
+      },
+      "train": {
+        "rmse_force_component_ev_ang": 0.22903999767703714,
+        "mae_force_component_ev_ang": 0.1258274938756471,
+        "max_abs_force_component_ev_ang": 9.457042435360929,
+        "r2_force_components": 0.8577057923291449
+      },
+      "held_out_test": {
+        "rmse_force_component_ev_ang": 0.18906207201285005,
+        "mae_force_component_ev_ang": 0.11661692164885883,
+        "max_abs_force_component_ev_ang": 3.7989510817202357,
+        "r2_force_components": 0.8849899393068403
+      },
+      "constraints": {
+        "compact_fc2_max_asr_residual": 1.1157741397482823e-14,
+        "compact_fc2_max_trailing_permutation_residual": 0.0,
+        "compact_fc3_max_asr_residual": 2.0861784522097082e-14,
+        "compact_fc3_max_trailing_permutation_residual": 0.0
+      }
+    },
+    "234": {
+      "orders": [
+        2,
+        3,
+        4
+      ],
+      "cutoffs_ang": {
+        "2": 4.3,
+        "3": 4.3,
+        "4": 4.0
+      },
+      "design": {
+        "n_parameters": 48,
+        "normalized_design_rank": 48,
+        "normalized_design_condition_number": 35.33038460747514,
+        "raw_normal_matrix_rank": 48,
+        "raw_normal_matrix_condition_number": 13723.195100182911,
+        "min_normalized_eigenvalue": 0.08621502194204204,
+        "max_normalized_eigenvalue": 3.0460098841542536,
+        "basis_parameters_by_order": {
+          "2": 8,
+          "3": 36,
+          "4": 4
+        }
+      },
+      "train": {
+        "rmse_force_component_ev_ang": 0.12509151449528358,
+        "mae_force_component_ev_ang": 0.06943290251495972,
+        "max_abs_force_component_ev_ang": 5.74843261918032,
+        "r2_force_components": 0.957555613388419
+      },
+      "held_out_test": {
+        "rmse_force_component_ev_ang": 0.09805142554344791,
+        "mae_force_component_ev_ang": 0.06453742695085032,
+        "max_abs_force_component_ev_ang": 1.9608013143400012,
+        "r2_force_components": 0.9690660890838402
+      },
+      "constraints": {
+        "compact_fc2_max_asr_residual": 8.798517470154366e-15,
+        "compact_fc2_max_trailing_permutation_residual": 0.0,
+        "compact_fc3_max_asr_residual": 2.1316282072803006e-14,
+        "compact_fc3_max_trailing_permutation_residual": 0.0,
+        "compact_fc4_max_asr_residual": 1.1226575225009583e-12,
+        "compact_fc4_max_trailing_permutation_residual": 0.0
+      }
+    }
+  },
+  "snapshot_count_convergence": [
+    {
+      "orders": [
+        2,
+        3,
+        4
+      ],
+      "cutoffs_ang": {
+        "2": 4.3,
+        "3": 4.3,
+        "4": 4.0
+      },
+      "design": {
+        "n_parameters": 48,
+        "normalized_design_rank": 48,
+        "normalized_design_condition_number": 46.27962505518239,
+        "raw_normal_matrix_rank": 48,
+        "raw_normal_matrix_condition_number": 19861.829921400393,
+        "min_normalized_eigenvalue": 0.0690870962357755,
+        "max_normalized_eigenvalue": 3.197324909942993,
+        "basis_parameters_by_order": {
+          "2": 8,
+          "3": 36,
+          "4": 4
+        }
+      },
+      "train": {
+        "rmse_force_component_ev_ang": 0.08904971679055323,
+        "mae_force_component_ev_ang": 0.06221906785459983,
+        "max_abs_force_component_ev_ang": 1.4692675304559026,
+        "r2_force_components": 0.9764654238080746
+      },
+      "held_out_test": {
+        "rmse_force_component_ev_ang": 0.0999799850998063,
+        "mae_force_component_ev_ang": 0.06109422597512859,
+        "max_abs_force_component_ev_ang": 2.2791730591066166,
+        "r2_force_components": 0.9678372524717286
+      },
+      "constraints": {
+        "compact_fc2_max_asr_residual": 9.756084828893563e-15,
+        "compact_fc2_max_trailing_permutation_residual": 0.0,
+        "compact_fc3_max_asr_residual": 1.774969060619469e-14,
+        "compact_fc3_max_trailing_permutation_residual": 0.0,
+        "compact_fc4_max_asr_residual": 1.0054179711005418e-12,
+        "compact_fc4_max_trailing_permutation_residual": 0.0
+      },
+      "n_training_snapshots": 20
+    },
+    {
+      "orders": [
+        2,
+        3,
+        4
+      ],
+      "cutoffs_ang": {
+        "2": 4.3,
+        "3": 4.3,
+        "4": 4.0
+      },
+      "design": {
+        "n_parameters": 48,
+        "normalized_design_rank": 48,
+        "normalized_design_condition_number": 38.62209637846857,
+        "raw_normal_matrix_rank": 48,
+        "raw_normal_matrix_condition_number": 15171.26080715636,
+        "min_normalized_eigenvalue": 0.0797741006356957,
+        "max_normalized_eigenvalue": 3.0810430032574905,
+        "basis_parameters_by_order": {
+          "2": 8,
+          "3": 36,
+          "4": 4
+        }
+      },
+      "train": {
+        "rmse_force_component_ev_ang": 0.13730536216915176,
+        "mae_force_component_ev_ang": 0.07152091908102197,
+        "max_abs_force_component_ev_ang": 5.519407574815451,
+        "r2_force_components": 0.9497735746288929
+      },
+      "held_out_test": {
+        "rmse_force_component_ev_ang": 0.09966410927606933,
+        "mae_force_component_ev_ang": 0.06671950657857359,
+        "max_abs_force_component_ev_ang": 1.8814794051865098,
+        "r2_force_components": 0.9680401607947966
+      },
+      "constraints": {
+        "compact_fc2_max_asr_residual": 8.076872504148014e-15,
+        "compact_fc2_max_trailing_permutation_residual": 0.0,
+        "compact_fc3_max_asr_residual": 2.115668751301314e-14,
+        "compact_fc3_max_trailing_permutation_residual": 0.0,
+        "compact_fc4_max_asr_residual": 1.1688428003253648e-12,
+        "compact_fc4_max_trailing_permutation_residual": 0.0
+      },
+      "n_training_snapshots": 40
+    },
+    {
+      "orders": [
+        2,
+        3,
+        4
+      ],
+      "cutoffs_ang": {
+        "2": 4.3,
+        "3": 4.3,
+        "4": 4.0
+      },
+      "design": {
+        "n_parameters": 48,
+        "normalized_design_rank": 48,
+        "normalized_design_condition_number": 37.11971244639881,
+        "raw_normal_matrix_rank": 48,
+        "raw_normal_matrix_condition_number": 14124.887128252925,
+        "min_normalized_eigenvalue": 0.08225152908176712,
+        "max_normalized_eigenvalue": 3.053153107791805,
+        "basis_parameters_by_order": {
+          "2": 8,
+          "3": 36,
+          "4": 4
+        }
+      },
+      "train": {
+        "rmse_force_component_ev_ang": 0.13246933651382461,
+        "mae_force_component_ev_ang": 0.07177145367331664,
+        "max_abs_force_component_ev_ang": 5.631127380530231,
+        "r2_force_components": 0.9541352784344386
+      },
+      "held_out_test": {
+        "rmse_force_component_ev_ang": 0.09851495100941078,
+        "mae_force_component_ev_ang": 0.06549594669837301,
+        "max_abs_force_component_ev_ang": 1.9089481467049394,
+        "r2_force_components": 0.9687729256246888
+      },
+      "constraints": {
+        "compact_fc2_max_asr_residual": 8.93729534823251e-15,
+        "compact_fc2_max_trailing_permutation_residual": 0.0,
+        "compact_fc3_max_asr_residual": 1.8186840922140846e-14,
+        "compact_fc3_max_trailing_permutation_residual": 0.0,
+        "compact_fc4_max_asr_residual": 1.1510792319313623e-12,
+        "compact_fc4_max_trailing_permutation_residual": 0.0
+      },
+      "n_training_snapshots": 60
+    },
+    {
+      "orders": [
+        2,
+        3,
+        4
+      ],
+      "cutoffs_ang": {
+        "2": 4.3,
+        "3": 4.3,
+        "4": 4.0
+      },
+      "design": {
+        "n_parameters": 48,
+        "normalized_design_rank": 48,
+        "normalized_design_condition_number": 35.33038460747514,
+        "raw_normal_matrix_rank": 48,
+        "raw_normal_matrix_condition_number": 13723.195100182911,
+        "min_normalized_eigenvalue": 0.08621502194204204,
+        "max_normalized_eigenvalue": 3.0460098841542536,
+        "basis_parameters_by_order": {
+          "2": 8,
+          "3": 36,
+          "4": 4
+        }
+      },
+      "train": {
+        "rmse_force_component_ev_ang": 0.12509151449528358,
+        "mae_force_component_ev_ang": 0.06943290251495972,
+        "max_abs_force_component_ev_ang": 5.74843261918032,
+        "r2_force_components": 0.957555613388419
+      },
+      "held_out_test": {
+        "rmse_force_component_ev_ang": 0.09805142554344791,
+        "mae_force_component_ev_ang": 0.06453742695085032,
+        "max_abs_force_component_ev_ang": 1.9608013143400012,
+        "r2_force_components": 0.9690660890838402
+      },
+      "constraints": {
+        "compact_fc2_max_asr_residual": 8.798517470154366e-15,
+        "compact_fc2_max_trailing_permutation_residual": 0.0,
+        "compact_fc3_max_asr_residual": 2.1316282072803006e-14,
+        "compact_fc3_max_trailing_permutation_residual": 0.0,
+        "compact_fc4_max_asr_residual": 1.1226575225009583e-12,
+        "compact_fc4_max_trailing_permutation_residual": 0.0
+      },
+      "n_training_snapshots": 80
+    }
+  ],
+  "cutoff_sensitivity": [
+    {
+      "orders": [
+        2,
+        3,
+        4
+      ],
+      "cutoffs_ang": {
+        "2": 3.8,
+        "3": 3.8,
+        "4": 3.5
+      },
+      "design": {
+        "n_parameters": 8,
+        "normalized_design_rank": 8,
+        "normalized_design_condition_number": 31.030331410250557,
+        "raw_normal_matrix_rank": 8,
+        "raw_normal_matrix_condition_number": 8915.90586734212,
+        "min_normalized_eigenvalue": 0.09886064485339756,
+        "max_normalized_eigenvalue": 3.0676785732320075,
+        "basis_parameters_by_order": {
+          "2": 2,
+          "3": 2,
+          "4": 4
+        }
+      },
+      "train": {
+        "rmse_force_component_ev_ang": 0.1752044445278129,
+        "mae_force_component_ev_ang": 0.12055762437758892,
+        "max_abs_force_component_ev_ang": 5.779290091513422,
+        "r2_force_components": 0.9167364739366645
+      },
+      "held_out_test": {
+        "rmse_force_component_ev_ang": 0.1517360180058758,
+        "mae_force_component_ev_ang": 0.11272966590014724,
+        "max_abs_force_component_ev_ang": 1.9319806905069807,
+        "r2_force_components": 0.9259194203806281
+      },
+      "constraints": {
+        "compact_fc2_max_asr_residual": 2.145505995088115e-14,
+        "compact_fc2_max_trailing_permutation_residual": 0.0,
+        "compact_fc3_max_asr_residual": 6.966649479522857e-15,
+        "compact_fc3_max_trailing_permutation_residual": 0.0,
+        "compact_fc4_max_asr_residual": 1.1191048088221578e-12,
+        "compact_fc4_max_trailing_permutation_residual": 0.0
+      }
+    },
+    {
+      "orders": [
+        2,
+        3,
+        4
+      ],
+      "cutoffs_ang": {
+        "2": 4.3,
+        "3": 4.3,
+        "4": 4.0
+      },
+      "design": {
+        "n_parameters": 48,
+        "normalized_design_rank": 48,
+        "normalized_design_condition_number": 35.33038460747514,
+        "raw_normal_matrix_rank": 48,
+        "raw_normal_matrix_condition_number": 13723.195100182911,
+        "min_normalized_eigenvalue": 0.08621502194204204,
+        "max_normalized_eigenvalue": 3.0460098841542536,
+        "basis_parameters_by_order": {
+          "2": 8,
+          "3": 36,
+          "4": 4
+        }
+      },
+      "train": {
+        "rmse_force_component_ev_ang": 0.12509151449528358,
+        "mae_force_component_ev_ang": 0.06943290251495972,
+        "max_abs_force_component_ev_ang": 5.74843261918032,
+        "r2_force_components": 0.957555613388419
+      },
+      "held_out_test": {
+        "rmse_force_component_ev_ang": 0.09805142554344791,
+        "mae_force_component_ev_ang": 0.06453742695085032,
+        "max_abs_force_component_ev_ang": 1.9608013143400012,
+        "r2_force_components": 0.9690660890838402
+      },
+      "constraints": {
+        "compact_fc2_max_asr_residual": 8.798517470154366e-15,
+        "compact_fc2_max_trailing_permutation_residual": 0.0,
+        "compact_fc3_max_asr_residual": 2.1316282072803006e-14,
+        "compact_fc3_max_trailing_permutation_residual": 0.0,
+        "compact_fc4_max_asr_residual": 1.1226575225009583e-12,
+        "compact_fc4_max_trailing_permutation_residual": 0.0
+      }
+    },
+    {
+      "orders": [
+        2,
+        3,
+        4
+      ],
+      "cutoffs_ang": {
+        "2": 4.8,
+        "3": 4.8,
+        "4": 4.5
+      },
+      "design": {
+        "n_parameters": 198,
+        "normalized_design_rank": 198,
+        "normalized_design_condition_number": 652.955339818895,
+        "raw_normal_matrix_rank": 198,
+        "raw_normal_matrix_condition_number": 37213.58627777957,
+        "min_normalized_eigenvalue": 0.024820974173489052,
+        "max_normalized_eigenvalue": 16.206987626086562,
+        "basis_parameters_by_order": {
+          "2": 8,
+          "3": 36,
+          "4": 154
+        }
+      },
+      "train": {
+        "rmse_force_component_ev_ang": 0.12262647912723054,
+        "mae_force_component_ev_ang": 0.06844037732154037,
+        "max_abs_force_component_ev_ang": 5.480499924651906,
+        "r2_force_components": 0.9592119372908048
+      },
+      "held_out_test": {
+        "rmse_force_component_ev_ang": 0.09874210210294737,
+        "mae_force_component_ev_ang": 0.06515885507187483,
+        "max_abs_force_component_ev_ang": 1.977339550586894,
+        "r2_force_components": 0.968628755797161
+      },
+      "constraints": {
+        "compact_fc2_max_asr_residual": 8.229528170033973e-15,
+        "compact_fc2_max_trailing_permutation_residual": 0.0,
+        "compact_fc3_max_asr_residual": 1.9421964037036332e-14,
+        "compact_fc3_max_trailing_permutation_residual": 0.0,
+        "compact_fc4_max_asr_residual": 3.465561171367426e-13,
+        "compact_fc4_max_trailing_permutation_residual": 0.0
+      }
+    }
+  ],
+  "electronic_convergence": {
+    "higher_cutoff": {
+      "settings": {
+        "ecutwfc": 75.0,
+        "ecutrho": 600.0
+      },
+      "state_indices": [
+        0,
+        80,
+        81
+      ],
+      "force_difference": {
+        "rmse_force_component_ev_ang": 0.00012333341291576798,
+        "mae_force_component_ev_ang": 0.00010037195256816706,
+        "max_abs_force_component_ev_ang": 0.0003535266846770302,
+        "r2_force_components": 0.9999999542910747
+      },
+      "energy_shift_ev_per_atom": [
+        -0.0010819447790574351,
+        -0.0010813451209051655,
+        -0.0010845097039472657
+      ]
+    },
+    "denser_kmesh": {
+      "settings": {
+        "kpts": [
+          3,
+          3,
+          3
+        ]
+      },
+      "state_indices": [
+        0,
+        80,
+        81
+      ],
+      "force_difference": {
+        "rmse_force_component_ev_ang": 1.783445110131499e-05,
+        "mae_force_component_ev_ang": 1.3234832877753777e-05,
+        "max_abs_force_component_ev_ang": 6.582024092891686e-05,
+        "r2_force_components": 0.9999999990442177
+      },
+      "energy_shift_ev_per_atom": [
+        -6.921265863908317e-06,
+        -6.936383417471208e-06,
+        -6.954020338727989e-06
+      ]
+    }
+  },
+  "force_call_accounting": {
+    "harmonic_reference_and_displacements": 5,
+    "thermal_snapshots": 100,
+    "electronic_convergence": 6,
+    "total": 111
+  },
+  "timing": {
+    "thermal_qe_wall_seconds_sum": 11222.622459830949,
+    "estimated_qe_core_hours": 416.5818273797052,
+    "workflow_elapsed_seconds": 13070.067835517926
+  },
+  "provenance": {
+    "quantum_espresso_command": "mpiexec -np 128 /viper/u1/alli/Softwares/qe-7.5/PW/src/pw.x",
+    "phonopy_version": "4.1.0",
+    "symfc_version": "1.7.2",
+    "python_version": "3.13.13",
+    "pseudopotentials": {
+      "Na": {
+        "filename": "na_pbe_v1.5.uspp.F.UPF",
+        "sha256": "f84820c4280d21603bd50ae76a08e15c26864391ea055cf50affc4aedefc8f87"
+      },
+      "Cl": {
+        "filename": "cl_pbe_v1.4.uspp.F.UPF",
+        "sha256": "5b1ebdea1e5ba743fba0100806206287e1f7f00460c7e6f19791446beaee0655"
+      }
+    }
+  },
+  "artifacts": {
+    "raw_dataset": "thermal_force_dataset.npz",
+    "harmonic_reference": "harmonic_reference.npz",
+    "compact_fc234_hdf5": "final_force_constants/fc234_compact.hdf5",
+    "phono3py_fc3": "final_force_constants/fc3.hdf5",
+    "compact_fc4_npy": "final_force_constants/fc4_compact.npy",
+    "shengbte_fc3": {
+      "path": "final_force_constants/FORCE_CONSTANTS_3RD",
+      "tensor_blocks": 348
+    },
+    "fourphonon_fc4": {
+      "path": "final_force_constants/FORCE_CONSTANTS_4TH",
+      "tensor_blocks": 86
+    }
+  }
+}

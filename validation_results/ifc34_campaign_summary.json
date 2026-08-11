@@ -1,0 +1,449 @@
+{
+  "status": "complete",
+  "protocol": {
+    "sampling": "paired quantum-canonical",
+    "train_test_split": "80/20 snapshots; inversion-pair independent",
+    "fit_backend": "symfc joint FC2/FC3/FC4 dense solver"
+  },
+  "materials": [
+    {
+      "material_key": "al",
+      "material": "fcc Al",
+      "temperature_k": 300.0,
+      "n_supercell_atoms": 27,
+      "n_snapshots": 100,
+      "n_training_snapshots": 80,
+      "n_held_out_snapshots": 20,
+      "cutoffs_ang": {
+        "2": 5.0,
+        "3": 5.0,
+        "4": 4.0
+      },
+      "basis_parameters_by_order": {
+        "2": 7,
+        "3": 69,
+        "4": 30
+      },
+      "n_parameters": 106,
+      "normalized_design_rank": 106,
+      "normalized_design_condition_number": 312.68911060501426,
+      "held_out_force_metrics": {
+        "finite_displacement_fc2": {
+          "rmse_force_component_ev_ang": 0.10294039205853346,
+          "mae_force_component_ev_ang": 0.07682869684683832,
+          "max_abs_force_component_ev_ang": 0.5108384204950194,
+          "r2_force_components": 0.9350646648016663
+        },
+        "temperature_fitted_fc2": {
+          "rmse_force_component_ev_ang": 0.0995464730324437,
+          "mae_force_component_ev_ang": 0.0757070858515688,
+          "max_abs_force_component_ev_ang": 0.5149513216168455,
+          "r2_force_components": 0.9392758833836451
+        },
+        "temperature_fitted_fc2_fc3": {
+          "rmse_force_component_ev_ang": 0.027205541131721616,
+          "mae_force_component_ev_ang": 0.019111926383297104,
+          "max_abs_force_component_ev_ang": 0.1692131565128227,
+          "r2_force_components": 0.9954645102677214
+        },
+        "temperature_fitted_fc2_fc3_fc4": {
+          "rmse_force_component_ev_ang": 0.006507839798675904,
+          "mae_force_component_ev_ang": 0.004464823872688812,
+          "max_abs_force_component_ev_ang": 0.044606631401756136,
+          "r2_force_components": 0.9997404726347204
+        }
+      },
+      "finite_displacement_contraction_rmse_ev_ang": 5.6751013728877206e-05,
+      "held_out_rmse_force_component_ev_ang": {
+        "finite_displacement_fc2": 0.10294039205853346,
+        "fc2": 0.0995464730324437,
+        "fc2_fc3": 0.027205541131721616,
+        "fc2_fc3_fc4": 0.006507839798675904
+      },
+      "held_out_r2_fc2_fc3_fc4": 0.9997404726347204,
+      "thermal_fc2_vs_finite_displacement_rmse_reduction_percent": 3.2969750340176778,
+      "fc3_rmse_reduction_percent": 72.67051227133389,
+      "fc4_incremental_rmse_reduction_percent": 76.07899152909046,
+      "overall_rmse_reduction_percent": 93.4625109253696,
+      "overall_vs_finite_displacement_rmse_reduction_percent": 93.6780503080118,
+      "snapshot_count_convergence": {
+        "20": 0.006637588086501786,
+        "40": 0.0065647343187636,
+        "60": 0.006567386157094061,
+        "80": 0.006507839798675904
+      },
+      "cutoff_sensitivity": [
+        {
+          "cutoffs_ang": {
+            "2": 4.5,
+            "3": 4.5,
+            "4": 3.5
+          },
+          "held_out_rmse_force_component_ev_ang": 0.031025225298868555
+        },
+        {
+          "cutoffs_ang": {
+            "2": 5.0,
+            "3": 5.0,
+            "4": 4.0
+          },
+          "held_out_rmse_force_component_ev_ang": 0.006507839798675904
+        },
+        {
+          "cutoffs_ang": {
+            "2": 5.5,
+            "3": 5.5,
+            "4": 4.5
+          },
+          "held_out_rmse_force_component_ev_ang": 0.006412744826952189
+        }
+      ],
+      "electronic_convergence_force_rmse_ev_ang": {
+        "higher_cutoff": 6.583800042188495e-05,
+        "denser_kmesh": 0.021604673713372147
+      },
+      "max_compact_asr_residual": 1.089545120791513e-13,
+      "displacement_rms_ang": 0.08816142815439235,
+      "force_rms_ev_ang": 0.39542429856201455,
+      "max_inversion_pair_error_ang": 0.0,
+      "hdf5_tensor_shapes": {
+        "fc2": [
+          1,
+          27,
+          3,
+          3
+        ],
+        "fc3": [
+          1,
+          27,
+          27,
+          3,
+          3,
+          3
+        ],
+        "fc4": [
+          1,
+          27,
+          27,
+          27,
+          3,
+          3,
+          3,
+          3
+        ]
+      },
+      "artifact_presence": {
+        "fc2_compact.npy": true,
+        "fc3_compact.npy": true,
+        "fc4_compact.npy": true,
+        "fc234_compact.hdf5": true,
+        "fc3.hdf5": true,
+        "FORCE_CONSTANTS_3RD": true,
+        "FORCE_CONSTANTS_4TH": true
+      },
+      "checks": {
+        "summary_complete": true,
+        "all_final_artifacts_present": true,
+        "finite_dataset": true,
+        "finite_final_tensors": true,
+        "exact_inversion_pairing": true,
+        "finite_displacement_contraction_rmse_below_1e-3": true,
+        "full_normalized_design_rank": true,
+        "acoustic_sum_rule_residual_below_1e-10": true
+      }
+    },
+    {
+      "material_key": "nacl",
+      "material": "rocksalt NaCl",
+      "temperature_k": 700.0,
+      "n_supercell_atoms": 54,
+      "n_snapshots": 100,
+      "n_training_snapshots": 80,
+      "n_held_out_snapshots": 20,
+      "cutoffs_ang": {
+        "2": 4.3,
+        "3": 4.3,
+        "4": 4.0
+      },
+      "basis_parameters_by_order": {
+        "2": 8,
+        "3": 36,
+        "4": 4
+      },
+      "n_parameters": 48,
+      "normalized_design_rank": 48,
+      "normalized_design_condition_number": 36.86343122232869,
+      "held_out_force_metrics": {
+        "finite_displacement_fc2": {
+          "rmse_force_component_ev_ang": 0.35431634794976624,
+          "mae_force_component_ev_ang": 0.17210053984967863,
+          "max_abs_force_component_ev_ang": 6.057592423661892,
+          "r2_force_components": 0.5960669507486617
+        },
+        "temperature_fitted_fc2": {
+          "rmse_force_component_ev_ang": 0.3315169220465236,
+          "mae_force_component_ev_ang": 0.19545754438361707,
+          "max_abs_force_component_ev_ang": 5.677206550300154,
+          "r2_force_components": 0.6463787057348345
+        },
+        "temperature_fitted_fc2_fc3": {
+          "rmse_force_component_ev_ang": 0.18906207201285005,
+          "mae_force_component_ev_ang": 0.11661692164885883,
+          "max_abs_force_component_ev_ang": 3.7989510817202357,
+          "r2_force_components": 0.8849899393068403
+        },
+        "temperature_fitted_fc2_fc3_fc4": {
+          "rmse_force_component_ev_ang": 0.09805142554344791,
+          "mae_force_component_ev_ang": 0.06453742695085032,
+          "max_abs_force_component_ev_ang": 1.9608013143400012,
+          "r2_force_components": 0.9690660890838402
+        }
+      },
+      "finite_displacement_contraction_rmse_ev_ang": 1.4511165139076513e-05,
+      "held_out_rmse_force_component_ev_ang": {
+        "finite_displacement_fc2": 0.35431634794976624,
+        "fc2": 0.3315169220465236,
+        "fc2_fc3": 0.18906207201285005,
+        "fc2_fc3_fc4": 0.09805142554344791
+      },
+      "held_out_r2_fc2_fc3_fc4": 0.9690660890838402,
+      "thermal_fc2_vs_finite_displacement_rmse_reduction_percent": 6.434765439181784,
+      "fc3_rmse_reduction_percent": 42.970611923599506,
+      "fc4_incremental_rmse_reduction_percent": 48.137971566934056,
+      "overall_rmse_reduction_percent": 70.42340254061365,
+      "overall_vs_finite_displacement_rmse_reduction_percent": 72.32658721201616,
+      "snapshot_count_convergence": {
+        "20": 0.0999799850998063,
+        "40": 0.09966410927606933,
+        "60": 0.09851495100941078,
+        "80": 0.09805142554344791
+      },
+      "cutoff_sensitivity": [
+        {
+          "cutoffs_ang": {
+            "2": 3.8,
+            "3": 3.8,
+            "4": 3.5
+          },
+          "held_out_rmse_force_component_ev_ang": 0.1517360180058758
+        },
+        {
+          "cutoffs_ang": {
+            "2": 4.3,
+            "3": 4.3,
+            "4": 4.0
+          },
+          "held_out_rmse_force_component_ev_ang": 0.09805142554344791
+        },
+        {
+          "cutoffs_ang": {
+            "2": 4.8,
+            "3": 4.8,
+            "4": 4.5
+          },
+          "held_out_rmse_force_component_ev_ang": 0.09874210210294737
+        }
+      ],
+      "electronic_convergence_force_rmse_ev_ang": {
+        "higher_cutoff": 0.00012333341291576798,
+        "denser_kmesh": 1.783445110131499e-05
+      },
+      "max_compact_asr_residual": 1.1226575225009583e-12,
+      "displacement_rms_ang": 0.20193475075516495,
+      "force_rms_ev_ang": 0.5975727991565095,
+      "max_inversion_pair_error_ang": 0.0,
+      "hdf5_tensor_shapes": {
+        "fc2": [
+          2,
+          54,
+          3,
+          3
+        ],
+        "fc3": [
+          2,
+          54,
+          54,
+          3,
+          3,
+          3
+        ],
+        "fc4": [
+          2,
+          54,
+          54,
+          54,
+          3,
+          3,
+          3,
+          3
+        ]
+      },
+      "artifact_presence": {
+        "fc2_compact.npy": true,
+        "fc3_compact.npy": true,
+        "fc4_compact.npy": true,
+        "fc234_compact.hdf5": true,
+        "fc3.hdf5": true,
+        "FORCE_CONSTANTS_3RD": true,
+        "FORCE_CONSTANTS_4TH": true
+      },
+      "checks": {
+        "summary_complete": true,
+        "all_final_artifacts_present": true,
+        "finite_dataset": true,
+        "finite_final_tensors": true,
+        "exact_inversion_pairing": true,
+        "finite_displacement_contraction_rmse_below_1e-3": true,
+        "full_normalized_design_rank": true,
+        "acoustic_sum_rule_residual_below_1e-10": true
+      }
+    },
+    {
+      "material_key": "w",
+      "material": "bcc W",
+      "temperature_k": 1500.0,
+      "n_supercell_atoms": 27,
+      "n_snapshots": 100,
+      "n_training_snapshots": 80,
+      "n_held_out_snapshots": 20,
+      "cutoffs_ang": {
+        "2": 5.0,
+        "3": 4.5,
+        "4": 3.5
+      },
+      "basis_parameters_by_order": {
+        "2": 7,
+        "3": 69,
+        "4": 50
+      },
+      "n_parameters": 126,
+      "normalized_design_rank": 126,
+      "normalized_design_condition_number": 269.40921997836415,
+      "held_out_force_metrics": {
+        "finite_displacement_fc2": {
+          "rmse_force_component_ev_ang": 0.2981569191798526,
+          "mae_force_component_ev_ang": 0.22258842797549885,
+          "max_abs_force_component_ev_ang": 1.293990606921854,
+          "r2_force_components": 0.963266524744215
+        },
+        "temperature_fitted_fc2": {
+          "rmse_force_component_ev_ang": 0.27565752213213895,
+          "mae_force_component_ev_ang": 0.20688942897861293,
+          "max_abs_force_component_ev_ang": 1.1061936294105352,
+          "r2_force_components": 0.968601281069619
+        },
+        "temperature_fitted_fc2_fc3": {
+          "rmse_force_component_ev_ang": 0.08634234911353995,
+          "mae_force_component_ev_ang": 0.06344083267240781,
+          "max_abs_force_component_ev_ang": 0.4748756000172364,
+          "r2_force_components": 0.9969195089321927
+        },
+        "temperature_fitted_fc2_fc3_fc4": {
+          "rmse_force_component_ev_ang": 0.03729580264861378,
+          "mae_force_component_ev_ang": 0.028514532552324983,
+          "max_abs_force_component_ev_ang": 0.20916606567258356,
+          "r2_force_components": 0.9994252325710947
+        }
+      },
+      "finite_displacement_contraction_rmse_ev_ang": 0.00014390067521964352,
+      "held_out_rmse_force_component_ev_ang": {
+        "finite_displacement_fc2": 0.2981569191798526,
+        "fc2": 0.27565752213213895,
+        "fc2_fc3": 0.08634234911353995,
+        "fc2_fc3_fc4": 0.03729580264861378
+      },
+      "held_out_r2_fc2_fc3_fc4": 0.9994252325710947,
+      "thermal_fc2_vs_finite_displacement_rmse_reduction_percent": 7.5461596227930166,
+      "fc3_rmse_reduction_percent": 68.67767349655311,
+      "fc4_incremental_rmse_reduction_percent": 56.80473946849662,
+      "overall_rmse_reduction_percent": 86.47023946230799,
+      "overall_vs_finite_displacement_rmse_reduction_percent": 87.49121678906388,
+      "snapshot_count_convergence": {
+        "20": 0.03975416276460909,
+        "40": 0.037990357178461574,
+        "60": 0.03771454590455146,
+        "80": 0.03729580264861378
+      },
+      "cutoff_sensitivity": [
+        {
+          "cutoffs_ang": {
+            "2": 4.5,
+            "3": 4.0,
+            "4": 3.0
+          },
+          "held_out_rmse_force_component_ev_ang": 0.07473384003282711
+        },
+        {
+          "cutoffs_ang": {
+            "2": 5.0,
+            "3": 4.5,
+            "4": 3.5
+          },
+          "held_out_rmse_force_component_ev_ang": 0.03729580264861378
+        },
+        {
+          "cutoffs_ang": {
+            "2": 5.5,
+            "3": 5.0,
+            "4": 4.0
+          },
+          "held_out_rmse_force_component_ev_ang": 0.03729580264861378
+        }
+      ],
+      "electronic_convergence_force_rmse_ev_ang": {
+        "higher_cutoff": 0.005955712220568401,
+        "denser_kmesh": 0.02370674479383249
+      },
+      "max_compact_asr_residual": 2.063904602778166e-13,
+      "displacement_rms_ang": 0.08778748837583357,
+      "force_rms_ev_ang": 1.523068728736224,
+      "max_inversion_pair_error_ang": 0.0,
+      "hdf5_tensor_shapes": {
+        "fc2": [
+          1,
+          27,
+          3,
+          3
+        ],
+        "fc3": [
+          1,
+          27,
+          27,
+          3,
+          3,
+          3
+        ],
+        "fc4": [
+          1,
+          27,
+          27,
+          27,
+          3,
+          3,
+          3,
+          3
+        ]
+      },
+      "artifact_presence": {
+        "fc2_compact.npy": true,
+        "fc3_compact.npy": true,
+        "fc4_compact.npy": true,
+        "fc234_compact.hdf5": true,
+        "fc3.hdf5": true,
+        "FORCE_CONSTANTS_3RD": true,
+        "FORCE_CONSTANTS_4TH": true
+      },
+      "checks": {
+        "summary_complete": true,
+        "all_final_artifacts_present": true,
+        "finite_dataset": true,
+        "finite_final_tensors": true,
+        "exact_inversion_pairing": true,
+        "finite_displacement_contraction_rmse_below_1e-3": true,
+        "full_normalized_design_rank": true,
+        "acoustic_sum_rule_residual_below_1e-10": true
+      }
+    }
+  ],
+  "failed_checks": []
+}

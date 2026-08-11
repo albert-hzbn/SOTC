@@ -1,0 +1,79 @@
+{
+  "backend": "QE pw.x + ph.x DFPT tensors applied with phonopy NAC",
+  "phonopy_yaml": "/viper/u1/alli/calculations/sotc/validation_results/nacl/real_ifc34/phonopy_harmonic.yaml",
+  "dfpt_summary": "/viper/u1/alli/calculations/sotc/validation_results/nacl/dfpt_nac/dfpt_summary.json",
+  "path": [
+    "Gamma",
+    "X",
+    "W",
+    "K",
+    "Gamma",
+    "L"
+  ],
+  "gamma_to_without_nac_thz": 4.3693534642715015,
+  "gamma_lo_with_nac_thz": 7.263980952424557,
+  "gamma_lo_to_split_thz": 2.8946274881530556,
+  "literature_reference": "NBS Special Publication 301 (1969)",
+  "literature_gamma_to_cm1": 164.0,
+  "literature_gamma_lo_cm1": 268.0,
+  "literature_gamma_to_thz": 4.916596311199999,
+  "literature_gamma_lo_thz": 8.0344378744,
+  "literature_gamma_split_thz": 3.1178415632000007,
+  "gamma_to_error_percent": -11.13052226154666,
+  "gamma_lo_error_percent": -9.58943156969746,
+  "gamma_split_error_percent": -7.1592500940890975,
+  "lo_to_ratio_error_percent": 1.7341057144328875,
+  "born_effective_charges": [
+    [
+      [
+        1.1109149999999999,
+        -0.0,
+        -0.0
+      ],
+      [
+        -0.0,
+        1.1109149999999999,
+        0.0
+      ],
+      [
+        -0.0,
+        0.0,
+        1.1109149999999999
+      ]
+    ],
+    [
+      [
+        -1.1109149999999999,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        -1.1109149999999999,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        -1.1109149999999999
+      ]
+    ]
+  ],
+  "dielectric_tensor": [
+    [
+      2.470969409,
+      -0.0,
+      0.0
+    ],
+    [
+      -0.0,
+      2.470969409,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      2.470969409
+    ]
+  ]
+}

@@ -56,20 +56,32 @@ codes/
     cell_design.py         ←   Correlator-optimised cell construction (HNF)
     correlators.py         ←   Quantum coth correlator targets
     ifc_extractor.py       ←   Ridge-regression IFC fitting + ASR enforcement
+    anharmonic_ifc.py      ←   Mode-space and reference finite-difference fc3/fc4
+    anharmonic_io.py       ←   phono3py, ShengBTE, and FourPhonon IFC exporters
+    symfc_fit.py           ←   Symmetry/sum-rule constrained compact fc2/fc3/fc4
     phonons.py             ←   Phonon dispersion, DOS, thermodynamics
     qha.py                 ←   Quasi-harmonic approximation (α, C_P, B, V(T))
     qe_io.py               ←   pw.x I/O via ASE Espresso (QE backend)
+    qe_dfpt.py             ←   ph.x Born charges, dielectric tensor, LO–TO NAC
     gpaw_io.py             ←   GPAW force calculator
     mock_forces.py         ←   Analytic test forces (He, H₂) — no DFT needed
     constants.py           ←   Physical constants
   benchmarks/              ← Ready-to-run driver scripts for all systems
   tests/                   ← pytest test suite
+  validation/              ← Independent FC3/FC4 and real QE DFPT campaigns
+
+validation_results/        ← Compact QE/IFC validation outputs and summaries
 
 pseudopotentials/          ← Bundled SSSP efficiency + ONCV UPF files for QE
 manuscript/                ← Paper source (RevTeX4-2 + BibTeX)
 requirements.txt           ← Python dependencies
 README.md                  ← this file
 ```
+
+The manuscript sources are kept separate: `manuscript.tex` is the original,
+`manuscript_updated.tex` highlights added text in blue, and
+`manuscript_clean.tex` is the uncolored submission copy. Each updated source
+has a matching PDF.
 
 ---
 
@@ -121,6 +133,45 @@ pytest codes/tests/ -v
 ```
 
 All tests use built-in Lennard-Jones / Aziz mock potentials and pass without QE.
+
+### Production real-material FC3/FC4 validation
+
+The optional validation environment adds phonopy, phono3py, symfc, and HDF5:
+
+```bash
+pip install -r requirements-validation.txt
+```
+
+The production driver computes 3×3×3-supercell FC3 and FC4 tensors for fcc Al
+at 300 K, bcc W at 1500 K, or rocksalt NaCl at 700 K:
+
+```bash
+export QE_PW_CMD="mpiexec -np 128 /path/to/pw.x"
+export SSSP_DIR="$PWD/pseudopotentials"
+python3 codes/validation/run_real_anharmonic_ifcs.py al
+```
+
+Each campaign uses 100 paired quantum-canonical snapshots, an 80/20
+pair-independent train/test split, joint symmetry- and acoustic-sum-rule
+constrained fits, and explicit snapshot-count, cutoff, plane-wave-cutoff, and
+k-mesh controls. Every QE state is checkpointed. Outputs include raw
+displacements/forces/stresses, rank and condition diagnostics, compact HDF5/NPY
+tensors, phono3py `fc3.hdf5`, ShengBTE `FORCE_CONSTANTS_3RD`, and
+FourPhonon `FORCE_CONSTANTS_4TH`.
+
+After all three campaigns finish, regenerate the cross-material acceptance
+report directly from their machine-readable archives:
+
+```bash
+python3 codes/validation/summarize_real_anharmonic_ifcs.py
+```
+
+Regenerate the manuscript validation plots from the same archives:
+
+```bash
+python3 codes/validation/plot_ifc34_diagnostics.py
+python3 codes/validation/plot_nacl_loto.py
+```
 
 ---
 

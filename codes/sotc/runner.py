@@ -161,28 +161,90 @@ class SOTCRunner:
                 f"got {len(self.elements_per_atom)} and {len(self.masses_per_atom)}."
             )
 
+        # Regression/design classes are crystallographic site orbits, not raw
+        # primitive-basis labels.  Using the latter over-parameterises crystals
+        # such as hcp (two symmetry-equivalent sites in the primitive cell),
+        # while species-aware symmetry still keeps genuinely distinct compound
+        # sites separate.  Raw basis labels remain available for phonons and
+        # interchange formats.
+        self.basis_class_indices = self._infer_basis_class_indices()
+
         # Initial Debye correlator (seed for iteration 0).
         # Use mean atomic mass for the Debye seed (appropriate for compounds).
         V_prim_ang3 = abs(float(np.linalg.det(np.array(prim_cell, dtype=float)))) / self.n_b
         M_eff_amu = float(np.mean(self.masses_per_atom))
         self.debye_corr = DebyeCorrelator(T_D=T_D, M_amu=M_eff_amu, V_per_atom_ang3=V_prim_ang3)
 
-        # Thermal coherence length
-        if xi_T is not None:
-            self.xi_T = xi_T
-        else:
-            xi_est = self.debye_corr.coherence_length(T, gruneisen=2.0)
-            # ξ_T = ℏv_D/(γk_BT) gives the phonon thermal de Broglie length, which
-            # for most metals at 300K is <1 Å — too small to usefully weight the
-            # displacement quality functional beyond the on-site term.  Clamp to at
-            # least 2 Å (≈ nearest-neighbor distance) so the optimizer penalises
-            # mismatch at all shells within r_cutoff.
-            self.xi_T = max(xi_est, 2.0)
-            if verbosity >= 1:
-                print(f"  ξ_T = {self.xi_T:.1f} Å  (Debye estimate at T={T} K, floor 2 Å)")
+        # Numerical distance-weighting length.  This is not a phonon lifetime,
+        # mean free path, or proven correlation length; it must be included in
+        # cutoff/sensitivity tests.  ``xi_T`` is retained as a compatibility
+        # keyword but interpreted only as xi_w.
+        self.xi_w = float(xi_T) if xi_T is not None else max(r_cutoff / 2.0, 1.0)
+        self.xi_T = self.xi_w  # compatibility alias for older scripts
+        if verbosity >= 1:
+            print(f"  xi_w = {self.xi_w:.2f} Å  (numerical shell weight)")
 
         self._results: Dict = {}
         self._iteration_log: List[Dict] = []
+        self._equilibrium_cache: Dict[bytes, np.ndarray] = {}
+        self._reference_state: Dict = {}
+
+    def _infer_basis_class_indices(self) -> np.ndarray:
+        """Return contiguous crystallographic-orbit labels for basis atoms."""
+        try:
+            import spglib
+
+            fractional = self.prim_pos @ np.linalg.inv(self.prim_cell)
+            species_keys = [
+                (str(element), round(float(mass), 8))
+                for element, mass in zip(
+                    self.elements_per_atom, self.masses_per_atom
+                )
+            ]
+            key_to_number = {
+                key: number + 1
+                for number, key in enumerate(dict.fromkeys(species_keys))
+            }
+            numbers = [key_to_number[key] for key in species_keys]
+            dataset = spglib.get_symmetry_dataset(
+                (self.prim_cell, fractional, numbers), symprec=1.0e-5
+            )
+            if dataset is None:
+                raise ValueError("spglib did not identify the primitive cell")
+            equivalent = np.asarray(dataset.equivalent_atoms, dtype=int)
+            representatives = {
+                representative: label
+                for label, representative in enumerate(
+                    dict.fromkeys(map(int, equivalent))
+                )
+            }
+            return np.array(
+                [representatives[int(index)] for index in equivalent],
+                dtype=int,
+            )
+        except (ImportError, AttributeError, TypeError, ValueError, np.linalg.LinAlgError):
+            # Conservative fallback: never pool sites whose equivalence could
+            # not be established.
+            return np.arange(self.n_b, dtype=int)
+
+    def _supercell_basis_classes(self, n_atoms: int) -> np.ndarray:
+        if n_atoms % self.n_b:
+            raise ValueError("Supercell atom count is not divisible by n_b")
+        return np.tile(self.basis_class_indices, n_atoms // self.n_b)
+
+    def _correlators_by_basis_class(self, values: np.ndarray) -> np.ndarray:
+        """Average a basis-pair correlator tensor over symmetry-equivalent sites."""
+        values = np.asarray(values, dtype=float)
+        n_classes = int(np.max(self.basis_class_indices)) + 1
+        grouped = np.empty((n_classes, n_classes, values.shape[-1]))
+        for class_a in range(n_classes):
+            mask_a = self.basis_class_indices == class_a
+            for class_b in range(n_classes):
+                mask_b = self.basis_class_indices == class_b
+                grouped[class_a, class_b] = np.mean(
+                    values[np.ix_(mask_a, mask_b)], axis=(0, 1)
+                )
+        return grouped
 
     # ── Step 1: target correlators ────────────────────────────────────────────
 
@@ -350,8 +412,10 @@ class SOTCRunner:
         optimizer = DisplacementOptimizer(
             target_correlator=target_corr or self.debye_corr,
             T=self.T,
-            xi_T=self.xi_T,
+            xi_T=self.xi_w,
             r_max=self.r_max_corr,
+            basis_indices=self._supercell_basis_classes(len(sc_pos)),
+            masses_amu=masses,
         )
 
         if self.verbosity >= 1:
@@ -365,6 +429,7 @@ class SOTCRunner:
             seed=42 + iteration * 100,
             verbose=(self.verbosity >= 2),
         )
+        self._last_objective_values = list(optimizer.last_objective_values)
         return ensemble
 
     # ── Step 4: force evaluation ──────────────────────────────────────────────
@@ -383,17 +448,40 @@ class SOTCRunner:
         when using an external pressure or a slightly mis-matched lattice
         constant).
         """
+        key = sc_cell.tobytes() + sc_pos.tobytes()
+        if key in self._equilibrium_cache:
+            return self._equilibrium_cache[key].copy()
+
         if self.force_calc is not None:
             res0 = mock_vasp_results(sc_pos, sc_cell, self.force_calc)
-            F0 = res0["forces_ev_ang"]
+            F0 = np.asarray(res0["forces_ev_ang"], dtype=float)
+            stress_kbar = np.asarray(res0.get("stress_kbar", np.zeros((3, 3))))
+            energy_ev = float(res0.get("energy_ev", np.nan))
+            stress_sign = res0.get("stress_sign_convention", "not reported")
         else:
-            # For real VASP, callers should supply the relaxed structure;
-            # returning zero here is the safe fallback.
-            F0 = np.zeros((len(sc_pos), 3))
+            # The legacy VASP path has no reference-force implementation yet;
+            # fail explicitly rather than silently pretending F(0)=0.
+            raise RuntimeError(
+                "Residual-force subtraction requires a force_calculator with "
+                "force/stress support; the legacy vasp_cmd path is unsupported."
+            )
+        max_force = float(np.max(np.linalg.norm(F0, axis=1)))
+        rms_force = float(np.sqrt(np.mean(F0**2)))
+        self._reference_state = {
+            "energy_ev": energy_ev,
+            "max_force_ev_ang": max_force,
+            "rms_force_component_ev_ang": rms_force,
+            "stress_kbar": stress_kbar.tolist(),
+            "hydrostatic_pressure_kbar": float(-np.trace(stress_kbar) / 3.0),
+            "stress_sign_convention": stress_sign,
+            "forces_subtracted": True,
+        }
+        self._equilibrium_cache[key] = F0.copy()
         if self.verbosity >= 1:
             print(
-                f"  Equilibrium forces: |F0|_max = {np.abs(F0).max():.4f} eV/Å  "
-                f"  |F0|_rms = {np.sqrt(np.mean(F0**2)):.4f} eV/Å"
+                f"  Reference state: |F0|_max = {max_force:.4f} eV/Å  "
+                f"component RMS = {rms_force:.4f} eV/Å  "
+                f"P = {self._reference_state['hydrostatic_pressure_kbar']:.2f} kbar"
             )
         return F0
 
@@ -485,6 +573,7 @@ class SOTCRunner:
             symmetrise=True,
             ridge_alpha=self.ridge_alpha,
             symmetrize_bonds=self.symmetrize_bonds,
+            basis_indices=self._supercell_basis_classes(len(sc_pos)),
         )
         extractor.fit(displacements_list, forces_list)
 
@@ -583,6 +672,7 @@ class SOTCRunner:
 
         current_corr = None     # None → use Debye seed in first iteration
         prev_C2 = None
+        prev_C2_basis = None
         converged = False
         phonon_calc = None
         extractor = None
@@ -597,7 +687,10 @@ class SOTCRunner:
         divergence_detected = False
 
         # Shell distances for convergence check
-        R_shells = np.linspace(np.linalg.norm(self.prim_cell[0]) * 0.5, self.r_max_corr, 20)
+        R_shells = np.concatenate([
+            [0.0],
+            np.linspace(np.linalg.norm(self.prim_cell[0]) * 0.5, self.r_max_corr, 20),
+        ])
 
         for it in range(n_sc_iterations):
             t_iter = time.time()
@@ -612,6 +705,19 @@ class SOTCRunner:
 
             # Step 5: IFC extraction
             extractor = self._extract_ifcs(sc_cell, sc_pos, masses, disps, forces)
+            iter_archive = self.work_dir / "iterations" / f"iter_{it + 1:02d}"
+            iter_archive.mkdir(parents=True, exist_ok=True)
+            np.savez_compressed(
+                iter_archive / "force_displacement_data.npz",
+                equilibrium_positions=sc_pos,
+                supercell=sc_cell,
+                displacements=np.asarray(disps),
+                delta_forces=np.asarray(forces),
+                basis_indices=np.arange(len(sc_pos), dtype=int) % self.n_b,
+                basis_class_indices=self._supercell_basis_classes(len(sc_pos)),
+            )
+            extractor.save_diagnostics(str(iter_archive))
+            extractor.save(str(iter_archive / "ifc_extractor.npz"))
 
             # Step 6: phonon reconstruction
             phonon_calc = self._compute_phonons(extractor, sc_pos)
@@ -624,49 +730,23 @@ class SOTCRunner:
             ZPE = thermo["zpe_ev"]
             unstable_fraction = thermo["unstable_fraction"]
 
-            # Updated correlators from DFT IFCs
-            C2_new = phonon_calc.updated_correlators(self.T, R_shells, q_mesh=q_mesh_cv)
-
-            # ── Correlator stabilisation ──────────────────────────────────────
-            # updated_correlators skips imaginary modes, so C2_new represents
-            # only the (1 - unstable_fraction) stable fraction of the spectral
-            # weight.  Compensate by rescaling:
-            #
-            #   C2_total ≈ C2_new / (1 - f)
-            #
-            # This preserves the *shape* of the correlator (including its
-            # oscillations at longer R), unlike the previous additive Debye
-            # blending which distorted the profile and overcorrected T_D.
-            # Cap the scale at 2.0 to avoid over-amplification when f > 0.5.
-            if unstable_fraction > 0.05:
-                scale = min(1.0 / max(1.0 - unstable_fraction, 0.15), 2.0)
-                C2_new = C2_new * scale
-                if self.verbosity >= 1:
-                    print(
-                        f"  Correlator rescaled \u00d7{scale:.3f} "
-                        f"({unstable_fraction*100:.1f}% imaginary modes compensated)."
-                    )
-
-            # Guard against NaN/Inf from a catastrophic IFC fit (e.g. all modes imaginary).
-            if not np.all(np.isfinite(C2_new)):
-                if self.verbosity >= 1:
-                    print("  WARNING: non-finite correlators; falling back to Debye reference.")
-                C2_new = self.debye_corr.correlator_table(R_shells, self.T)
-
-            # Physical lower bound: never let C2 collapse below 20% of the Debye
-            # reference.  If the IFC fit fails (e.g. R² << 0), the phonon modes
-            # are unphysically stiff (large ω), producing near-zero correlators.
-            # This guard prevents the optimizer from generating vanishingly small
-            # displacements in the next iteration, which would destroy force SNR.
-            C2_debye_ref = self.debye_corr.correlator_table(R_shells, self.T)
-            C2_floor = 0.20 * C2_debye_ref
-            if np.any(C2_new < C2_floor):
-                if self.verbosity >= 1:
-                    print(
-                        f"  Correlator floor applied: C2[0]={C2_new[0]:.4f} -> "
-                        f">= {C2_floor[0]:.4f} Å² (Debye 20% floor)."
-                    )
-                C2_new = np.maximum(C2_new, C2_floor)
+            # Basis-pair-resolved correlators from DFT IFCs.  An unstable
+            # spectrum has no well-defined harmonic covariance, so it is
+            # rejected rather than rescaled or floored with an ad-hoc Debye
+            # contribution.
+            C2_basis_new = phonon_calc.updated_correlators_by_basis(
+                self.T, R_shells, q_mesh=q_mesh_cv
+            )
+            C2_new = np.mean(C2_basis_new, axis=(0, 1))
+            correlator_update_accepted = (
+                np.all(np.isfinite(C2_basis_new))
+                and unstable_fraction <= 0.01
+            )
+            if not correlator_update_accepted and self.verbosity >= 1:
+                print(
+                    "  Correlator update rejected: harmonic covariance is "
+                    f"undefined for unstable_fraction={unstable_fraction:.4f}."
+                )
 
             iter_dict = {
                 "iteration": it + 1,
@@ -674,23 +754,37 @@ class SOTCRunner:
                 "T_D_eff_K": T_D_eff,
                 "ZPE_eV": ZPE,
                 "unstable_fraction": unstable_fraction,
+                "correlator_update_accepted": correlator_update_accepted,
+                "ifc_fit": extractor.fit_report(disps, forces),
+                "objective_values_ang4": self._last_objective_values,
+                "objective_mean_ang4": float(np.mean(self._last_objective_values)),
                 "C2_shells": C2_new.tolist(),
+                "C2_by_basis": C2_basis_new.tolist(),
                 "wall_time_s": time.time() - t_iter,
             }
 
             # Convergence check
             delta_C2 = None
-            if prev_C2 is not None:
-                delta_C2 = np.linalg.norm(C2_new - prev_C2)
+            delta_C2_relative = None
+            if correlator_update_accepted and prev_C2_basis is not None:
+                difference = C2_basis_new - prev_C2_basis
+                delta_C2 = float(np.sqrt(np.mean(difference**2)))
+                scale_C2 = float(np.sqrt(np.mean(prev_C2_basis**2)))
+                delta_C2_relative = delta_C2 / max(scale_C2, 1.0e-15)
                 iter_dict["delta_C2"] = delta_C2
+                iter_dict["delta_C2_relative"] = delta_C2_relative
                 if self.verbosity >= 1:
-                    print(f"  ‖ΔC̄₂‖₂ = {delta_C2:.4e} Å²  (threshold: {epsilon_conv:.4e})")
+                    print(
+                        f"  RMS ΔC2 = {delta_C2:.4e} Å² "
+                        f"(relative {delta_C2_relative:.3e}; threshold {epsilon_conv:.4e})"
+                    )
                 if delta_C2 < epsilon_conv and it + 1 >= min_iterations:
                     converged = True
                     if self.verbosity >= 1:
                         print(f"  ✓ Converged after {it+1} iterations!")
             else:
                 iter_dict["delta_C2"] = None
+                iter_dict["delta_C2_relative"] = None
 
             # Save the best iteration for robust final reporting.
             score = (
@@ -713,7 +807,7 @@ class SOTCRunner:
                 and np.isfinite(ZPE)
                 and (T_D_eff > 1.0)
                 and (ZPE > 1e-4)
-                and (unstable_fraction <= 0.15)
+                and (unstable_fraction <= 0.01)
             )
             if is_physical:
                 if best_physical_state is None or score < best_physical_score:
@@ -744,20 +838,25 @@ class SOTCRunner:
             if delta_C2 is not None:
                 prev_delta = delta_C2
 
-            # Linear mixing to damp oscillations:
-            # C̄₂^{n+1} = mixing * C̄₂^{new} + (1−mixing) * C̄₂^{prev}
-            if prev_C2 is not None and mixing < 1.0:
-                C2_mixed = mixing * C2_new + (1.0 - mixing) * prev_C2
-            else:
-                C2_mixed = C2_new.copy()
-
-            prev_C2 = C2_mixed.copy()
-
-            # Build updated correlator object for next iteration
-            # (use a simple wrapper that returns C2_mixed for each R)
-            current_corr = _InterpolatedCorrelator(
-                R_shells, C2_mixed, self.debye_corr, self.T
-            )
+            # Linear mixing is applied only to accepted, basis-resolved
+            # covariances.  Rejected unstable iterations do not alter the
+            # target and cannot trigger false convergence.
+            if correlator_update_accepted:
+                if prev_C2_basis is not None and mixing < 1.0:
+                    C2_basis_mixed = (
+                        mixing * C2_basis_new
+                        + (1.0 - mixing) * prev_C2_basis
+                    )
+                else:
+                    C2_basis_mixed = C2_basis_new.copy()
+                prev_C2_basis = C2_basis_mixed.copy()
+                prev_C2 = np.mean(C2_basis_mixed, axis=(0, 1))
+                current_corr = _InterpolatedCorrelator(
+                    R_shells,
+                    self._correlators_by_basis_class(C2_basis_mixed),
+                    self.debye_corr,
+                    self.T,
+                )
 
             if converged or divergence_detected:
                 break
@@ -794,28 +893,44 @@ class SOTCRunner:
 
         cv_final = selected_thermo["cv_jmolk"]
         cv_scan  = phonon_calc.heat_capacity_scan(T_values, q_mesh=(6, 6, 6))
-        T_D_eff      = selected_thermo["t_debye_k"]           # spectral-moment
-        T_D_caloric  = selected_thermo["t_debye_caloric_k"]   # calorimetric
+        T_D_positive_mode_moment = selected_thermo["t_debye_k"]
+        T_D_positive_mode_caloric = selected_thermo["t_debye_caloric_k"]
         ZPE      = selected_thermo["zpe_ev"]
         unstable_fraction_selected = selected_thermo["unstable_fraction"]
+        T_D_defined = unstable_fraction_selected <= 0.01
+        # A positive-mode moment of an unstable spectrum is useful as a
+        # diagnostic, but it is not a thermodynamic Debye temperature.  Keep
+        # that raw moment under an explicit name and use the historical 0.0
+        # sentinel for the public estimates when the harmonic state is invalid.
+        T_D_eff = T_D_positive_mode_moment if T_D_defined else 0.0
+        T_D_caloric = T_D_positive_mode_caloric if T_D_defined else 0.0
 
-        # MSD from Debye model with effective T_D
-        debye_eff = DebyeCorrelator(
-            T_D=T_D_eff if T_D_eff > 0.1 else self.T_D,
-            M_amu=self.mass_amu,
+        # Eigenvector- and species-resolved displacement parameters from the
+        # selected IFC model.  Do not reconstruct MSD from an effective Debye
+        # temperature: that loses eigenvector and mass information.
+        msd_info = phonon_calc.mean_square_displacements(
+            self.T, q_mesh=q_mesh_cv
         )
-        msd = debye_eff.msd_ang2(self.T)
+        msd = float(msd_info["total_msd_ang2_mean"])
+        u_iso = float(msd_info["u_iso_ang2_mean"])
 
         if self.verbosity >= 1:
             print(f"  C_V({self.T} K) = {cv_final:.4f} J/(mol·K)")
-            print(f"  T_D (spectral-moment)  = {T_D_eff:.2f} K")
-            if abs(self.T / max(T_D_eff, 1.0)) < 3.0:
+            if T_D_defined:
+                print(f"  T_D (spectral-moment)  = {T_D_eff:.2f} K")
+            else:
+                print(
+                    "  T_D                     = undefined for unstable spectrum "
+                    f"(positive-mode moment {T_D_positive_mode_moment:.2f} K)"
+                )
+            if T_D_defined and abs(self.T / max(T_D_eff, 1.0)) < 3.0:
                 # Calorimetric T_D is reliable when T < 3×T_D
                 print(f"  T_D (calorimetric)     = {T_D_caloric:.2f} K")
-            else:
+            elif T_D_defined:
                 print(f"  T_D (calorimetric)     = {T_D_caloric:.2f} K  [ill-cond. T≫T_D]")
             print(f"  ZPE             = {ZPE*1000:.2f} meV/atom")
-            print(f"  MSD (Debye)     = {msd:.4f} Å²")
+            print(f"  <|u|²> (mode sum) = {msd:.4f} Å²")
+            print(f"  U_iso=<|u|²>/3    = {u_iso:.4f} Å²")
             print(f"  Total wall time = {time.time()-t_start:.1f} s")
 
         self._results = {
@@ -823,17 +938,34 @@ class SOTCRunner:
             "T_D_input": self.T_D,
             "T_D_effective": T_D_eff,
             "T_D_caloric": T_D_caloric,
+            "T_D_defined": T_D_defined,
+            "T_D_undefined_reason": (
+                None if T_D_defined else "selected harmonic spectrum is unstable"
+            ),
+            "T_D_positive_mode_moment": T_D_positive_mode_moment,
+            "T_D_positive_mode_caloric": T_D_positive_mode_caloric,
             "C_V_jmolk": cv_final,
             "C_V_scan": cv_scan,
             "T_values": T_values,
             "ZPE_eV": ZPE,
             "MSD_ang2": msd,
+            "U_iso_ang2": u_iso,
+            "MSD_total_ang2_by_atom": msd_info["total_msd_ang2_by_atom"],
+            "U_iso_ang2_by_atom": msd_info["u_iso_ang2_by_atom"],
+            "DW_B_ang2_by_atom": msd_info["debye_waller_b_ang2_by_atom"],
+            "MSD_convention": msd_info["convention"],
+            "MSD_stable_mode_fraction": msd_info["stable_mode_fraction"],
             "unstable_fraction": unstable_fraction_selected,
             "converged": converged,
             "n_iterations": len(self._iteration_log),
             "selected_iteration": selected_iteration,
             "selected_state_physical": selected_state_physical,
             "iteration_log": self._iteration_log,
+            "supercell_matrix": H,
+            "supercell_cell_ang": sc_cell,
+            "equilibrium_positions_ang": sc_pos,
+            "basis_indices": np.arange(len(sc_pos), dtype=int) % self.n_b,
+            "basis_class_indices": self._supercell_basis_classes(len(sc_pos)),
             "phonon_calculator": phonon_calc,
             "ifc_extractor": extractor,
         }
@@ -885,6 +1017,16 @@ class SOTCRunner:
         summary["ridge_alpha"] = self.ridge_alpha
         summary["symmetrize_bonds"] = self.symmetrize_bonds
         summary["n_ensemble"] = self.n_ensemble
+        summary["weighting_length_ang"] = self.xi_w
+        summary["weighting_length_interpretation"] = "numerical exponential shell weight"
+        summary["reference_state"] = self._reference_state
+        if self.force_calc is not None and hasattr(self.force_calc, "provenance"):
+            summary["dft_provenance"] = self.force_calc.provenance()
+        summary["force_call_accounting"] = {
+            "reference_calls": 1,
+            "displaced_calls": len(self._iteration_log) * self.n_ensemble,
+            "total_calls": 1 + len(self._iteration_log) * self.n_ensemble,
+        }
 
         def _json_default(obj):
             if isinstance(obj, np.ndarray):
@@ -893,9 +1035,11 @@ class SOTCRunner:
                 return obj.item()
             raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
 
-        (self.work_dir / "sotc_results.json").write_text(
-            json.dumps(summary, indent=2, default=_json_default)
-        )
+        summary_json = json.dumps(summary, indent=2, default=_json_default)
+        (self.work_dir / "sotc_results.json").write_text(summary_json)
+        # Historical releases and third-party scripts used the old SQTC name.
+        # Keep a byte-identical compatibility copy while SOTC is canonical.
+        (self.work_dir / "sqtc_results.json").write_text(summary_json)
 
         return self._results
 
@@ -908,27 +1052,32 @@ class _InterpolatedCorrelator:
     drop-in for DebyeCorrelator in subsequent SOTC iterations.
     """
 
-    def __init__(self, R_shells, C2_shells, fallback_corr, T):
-        self._R = R_shells
-        self._C2 = C2_shells
+    def __init__(self, R_shells, C2_by_basis, fallback_corr, T):
+        self._R = np.asarray(R_shells, dtype=float)
+        self._C2_by_basis = np.asarray(C2_by_basis, dtype=float)
+        self._C2 = np.mean(self._C2_by_basis, axis=(0, 1))
         self._fallback = fallback_corr
         self._T = T
 
-    def pair_correlator_ang2(self, R_ang: float, T: float) -> float:
+    def _interp(self, values, R_ang):
         if R_ang <= self._R[0]:
-            return float(self._C2[0])
+            return float(values[0])
         if R_ang >= self._R[-1]:
-            return float(self._C2[-1])
-        return float(np.interp(R_ang, self._R, self._C2))
+            return float(values[-1])
+        return float(np.interp(R_ang, self._R, values))
+
+    def pair_correlator_ang2(self, R_ang: float, T: float) -> float:
+        return self._interp(self._C2, R_ang)
+
+    def pair_correlator_by_basis_ang2(self, a, b, R_ang, T):
+        return self._interp(self._C2_by_basis[int(a), int(b)], R_ang)
 
     def msd_ang2(self, T: float) -> float:
-        return self._fallback.msd_ang2(T)
+        diagonal_u_iso = np.diagonal(self._C2_by_basis[:, :, 0])
+        return float(3.0 * np.mean(diagonal_u_iso))
 
     def correlator_table(self, R_values, T):
         return np.array([self.pair_correlator_ang2(R, T) for R in R_values])
-
-    def coherence_length(self, T, gruneisen=2.0):
-        return self._fallback.coherence_length(T, gruneisen)
 
     @property
     def _M(self):

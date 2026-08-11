@@ -30,12 +30,21 @@ from .correlators import DebyeCorrelator, PhononCorrelator
 from .cell_design import HNFEnumerator, DisplacementOptimizer
 from .qha import SOTCQuasiHarmonic
 from .ifc_extractor import IFCExtractor
+from .anharmonic_ifc import (
+    FiniteDifferenceAnharmonicIFC,
+    ModeSpaceAnharmonicIFC,
+)
 from .phonons import PhononCalculator
 from .vasp_io import VASPWriter, VASPReader
 from .mock_forces import LennardJonesForces
 from .postprocessor import SOTCPostProcessor, SOTCRunLoader
 from .gpaw_io import GPAWForceCalculator
 from .qe_io import QEForceCalculator
+from .qe_dfpt import (
+    DFPTNACResult,
+    QEDFPTNAC,
+    parse_ph_gamma_frequencies,
+)
 
 __version__ = "0.1.0"
 __all__ = [
@@ -45,6 +54,8 @@ __all__ = [
     "HNFEnumerator",
     "DisplacementOptimizer",
     "IFCExtractor",
+    "ModeSpaceAnharmonicIFC",
+    "FiniteDifferenceAnharmonicIFC",
     "PhononCalculator",
     "VASPWriter",
     "VASPReader",
@@ -53,4 +64,7 @@ __all__ = [
     "SOTCRunLoader",
     "GPAWForceCalculator",
     "QEForceCalculator",
+    "QEDFPTNAC",
+    "DFPTNACResult",
+    "parse_ph_gamma_frequencies",
 ]

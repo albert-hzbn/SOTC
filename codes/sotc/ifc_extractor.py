@@ -78,15 +78,34 @@ class IFCExtractor:
         symmetrise: bool = True,
         ridge_alpha: float = 0.0,
         symmetrize_bonds: bool = False,
+        basis_indices: Optional[np.ndarray] = None,
     ):
         self.pos = np.asarray(supercell_positions, dtype=float)   # (N, 3)
         self.cell = np.asarray(supercell_cell, dtype=float)       # (3, 3)
         self.masses = np.asarray(masses_amu, dtype=float)         # (N,)
+        self.N = len(self.pos)
+        if basis_indices is None:
+            # Backward-compatible monatomic default.  Compound callers must
+            # provide the primitive-basis index for every supercell atom.
+            self.basis_indices = np.zeros(self.N, dtype=int)
+        else:
+            self.basis_indices = np.asarray(basis_indices, dtype=int)
+            if self.basis_indices.shape != (self.N,):
+                raise ValueError(
+                    f"basis_indices must have shape ({self.N},), got "
+                    f"{self.basis_indices.shape}"
+                )
         self.r_cutoff = r_cutoff
         self.symmetrise = symmetrise
         self.symmetrize_bonds = symmetrize_bonds
         self.ridge_alpha = ridge_alpha
-        self.N = len(self.pos)
+        self._rank_tolerance = None
+        self._rank = 0
+        self._solver_rank = 0
+        self._singular_values = np.array([], dtype=float)
+        self._solver_singular_values = np.array([], dtype=float)
+        self._A_data: Optional[np.ndarray] = None
+        self._b_data: Optional[np.ndarray] = None
 
         # Precompute neighbour list
         self._pairs, self._pair_vecs = self._build_pair_list()
@@ -147,28 +166,35 @@ class IFCExtractor:
         # (cls=k, sign=+1).
         tol = 1e-3   # Å — numerical tolerance for vector equality
         unique_vecs: List[np.ndarray] = []
+        unique_basis_pairs: List[Tuple[int, int]] = []
         pair_to_class: Dict[Tuple[int, int], Tuple[int, int]] = {}
 
         for (i, j) in pairs:
             R = pair_vecs[(i, j)]
+            basis_pair = (int(self.basis_indices[i]), int(self.basis_indices[j]))
             cls = -1
             sign = 0
-            for k, R_k in enumerate(unique_vecs):
-                if np.linalg.norm(R - R_k) < tol:
+            for k, (R_k, pair_k) in enumerate(
+                zip(unique_vecs, unique_basis_pairs)
+            ):
+                if basis_pair == pair_k and np.linalg.norm(R - R_k) < tol:
                     cls = k
                     sign = +1
                     break
-                if np.linalg.norm(R + R_k) < tol:
+                inverse_pair = (pair_k[1], pair_k[0])
+                if basis_pair == inverse_pair and np.linalg.norm(R + R_k) < tol:
                     cls = k
                     sign = -1
                     break
             if cls == -1:
                 cls = len(unique_vecs)
                 unique_vecs.append(R.copy())
+                unique_basis_pairs.append(basis_pair)
                 sign = +1
             pair_to_class[(i, j)] = (cls, sign)
 
         self._unique_vecs = unique_vecs      # K unique R vectors (canonical +R)
+        self._unique_basis_pairs = unique_basis_pairs
         self._pair_to_class = pair_to_class  # (i,j) → (class index, ±1 sign)
         return pairs, pair_vecs
 
@@ -244,37 +270,58 @@ class IFCExtractor:
         Phi : dict (i,j) -> (3,3) ndarray [eV/Å²]
             Second-order IFCs for all pairs within r_cutoff.
         """
+        if len(displacements_list) != len(forces_list):
+            raise ValueError("displacements_list and forces_list must have equal length")
         n_snap = len(displacements_list)
+        if n_snap == 0:
+            raise ValueError("At least one force-displacement snapshot is required")
         n_obs = n_snap * 3 * self.N
         K = len(self._unique_vecs)          # number of unique displacement classes
         n_ifc = K * 9
 
-        A_full = np.zeros((n_obs, n_ifc))
-        b_full = np.zeros(n_obs)
+        A_data = np.zeros((n_obs, n_ifc))
+        b_data = np.zeros(n_obs)
 
         for m, (u, F) in enumerate(zip(displacements_list, forces_list)):
+            u = np.asarray(u, dtype=float)
+            F = np.asarray(F, dtype=float)
+            if u.shape != (self.N, 3) or F.shape != (self.N, 3):
+                raise ValueError(
+                    f"Snapshot {m} must have displacement and force shape "
+                    f"({self.N}, 3); got {u.shape} and {F.shape}"
+                )
             row_start = m * 3 * self.N
             row_end   = row_start + 3 * self.N
-            A_full[row_start:row_end, :] = self._build_design_matrix(u)
-            b_full[row_start:row_end]    = F.ravel()
+            A_data[row_start:row_end, :] = self._build_design_matrix(u)
+            b_data[row_start:row_end]    = F.ravel()
 
-        # Tikhonov (ridge) regularisation: augment [A; √α I] x = [b; 0]
-        # With translational symmetry the system is typically well-overdetermined
-        # (n_obs >> n_ifc), so ridge_alpha mainly guards against numerical
-        # ill-conditioning of nearly-degenerate shell distances.
+        # Rank and singular values belong to the physical data matrix A, not
+        # the ridge-augmented solver matrix.  Ridge stabilises a solution but
+        # cannot create data identifiability.
+        data_sv = linalg.svdvals(A_data) if n_ifc else np.array([], dtype=float)
+        scale = float(data_sv[0]) if data_sv.size else 0.0
+        rank_tol = float(rcond * scale)
+        data_rank = int(np.sum(data_sv > rank_tol)) if data_sv.size else 0
+        self._A_data = A_data.copy()
+        self._b_data = b_data.copy()
+        self._rank_tolerance = rank_tol
+        self._rank = data_rank
+        self._singular_values = data_sv
+
+        # Tikhonov solve [A; sqrt(alpha) I] x = [b; 0].
         alpha = self.ridge_alpha
+        A_solve = A_data
+        b_solve = b_data
         if alpha > 0.0:
             sqrt_alpha = np.sqrt(alpha)
-            A_full = np.vstack([A_full, sqrt_alpha * np.eye(n_ifc)])
-            b_full = np.concatenate([b_full, np.zeros(n_ifc)])
+            A_solve = np.vstack([A_data, sqrt_alpha * np.eye(n_ifc)])
+            b_solve = np.concatenate([b_data, np.zeros(n_ifc)])
 
-        # Least-squares solve: A·x = b  → x = IFC elements
-        x, residuals, rank, sv = linalg.lstsq(
-            A_full, b_full, cond=rcond, overwrite_a=False, overwrite_b=False
+        x, _residuals, solver_rank, solver_sv = linalg.lstsq(
+            A_solve, b_solve, cond=rcond, overwrite_a=False, overwrite_b=False
         )
-
-        self._rank = rank
-        self._singular_values = sv
+        self._solver_rank = int(solver_rank)
+        self._solver_singular_values = np.asarray(solver_sv, dtype=float)
 
         # Unpack solution: one 3×3 tensor per unique class, then expand to
         # per-pair IFC dict using the sign to apply or invert transposition.
@@ -362,7 +409,10 @@ class IFCExtractor:
             b = float((np.trace(Phi_k) - a) / 2.0)              # transverse avg
             alpha_k[k] = a
             beta_k[k]  = b
-            shell_key = round(np.linalg.norm(R_k), 3)
+            shell_key = (
+                self._unique_basis_pairs[k],
+                round(np.linalg.norm(R_k), 3),
+            )
             shell_classes[shell_key].append(k)
 
         # --- Step 3: average within each shell ---
@@ -498,12 +548,123 @@ class IFCExtractor:
         ss_res = np.sum(res ** 2)
         r2 = 1.0 - ss_res / (ss_tot + 1e-30)
 
-        return {
+        report = {
             "rmse_ev_ang": rmse,
             "max_error_ev_ang": max_err,
             "r2": r2,
-            "rank": self._rank,
         }
+        report.update(self.diagnostics())
+        return report
+
+    def diagnostics(self) -> Dict:
+        """Return reproducible identifiability diagnostics for the data fit."""
+        n_params = len(self._unique_vecs) * 9
+        n_obs = int(self._A_data.shape[0]) if self._A_data is not None else 0
+        if self.symmetrize_bonds:
+            shell_keys = {
+                (self._unique_basis_pairs[k], round(float(np.linalg.norm(R)), 3))
+                for k, R in enumerate(self._unique_vecs)
+            }
+            projected_params = 2 * len(shell_keys)
+        else:
+            projected_params = n_params
+        nonzero = self._singular_values[
+            self._singular_values > (self._rank_tolerance or 0.0)
+        ]
+        cond_nonzero = (
+            float(nonzero[0] / nonzero[-1]) if nonzero.size else None
+        )
+        cond_full = cond_nonzero if self._rank == n_params else None
+        return {
+            "n_snapshots": int(n_obs // (3 * self.N)) if self.N else 0,
+            "n_force_observations": n_obs,
+            "raw_parameter_count": int(n_params),
+            "projected_parameter_count": int(projected_params),
+            "data_rank": int(self._rank),
+            "rank": int(self._rank),  # compatibility: always the data rank
+            "rank_deficiency": int(max(n_params - self._rank, 0)),
+            "rank_tolerance": (
+                float(self._rank_tolerance)
+                if self._rank_tolerance is not None else None
+            ),
+            "condition_number": cond_full,
+            "condition_number_nonzero_subspace": cond_nonzero,
+            "ridge_alpha": float(self.ridge_alpha),
+            "ridge_solver_rank": int(self._solver_rank),
+            "symmetrize_bonds": bool(self.symmetrize_bonds),
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": False,
+        }
+
+    def save_diagnostics(self, directory: str) -> None:
+        """Archive A, b, SVD, and a machine-readable rank report."""
+        import json
+        from pathlib import Path
+
+        if self._A_data is None or self._b_data is None:
+            raise RuntimeError("Call fit() before save_diagnostics().")
+        out = Path(directory)
+        out.mkdir(parents=True, exist_ok=True)
+        np.savez_compressed(
+            out / "design_matrix.npz",
+            A=self._A_data,
+            b=self._b_data,
+            singular_values=self._singular_values,
+            rank_tolerance=np.array([self._rank_tolerance], dtype=float),
+        )
+        (out / "fit_diagnostics.json").write_text(
+            json.dumps(self.diagnostics(), indent=2, allow_nan=False)
+        )
+
+    def save(self, path: str) -> None:
+        """Save fitted IFCs and construction metadata without pickle."""
+        if not self._Phi:
+            raise RuntimeError("Call fit() before save().")
+        pairs = np.array(list(self._Phi.keys()), dtype=int)
+        tensors = np.array([self._Phi[tuple(pair)] for pair in pairs], dtype=float)
+        np.savez_compressed(
+            path,
+            positions=self.pos,
+            cell=self.cell,
+            masses=self.masses,
+            basis_indices=self.basis_indices,
+            r_cutoff=np.array([self.r_cutoff]),
+            symmetrise=np.array([int(self.symmetrise)]),
+            ridge_alpha=np.array([self.ridge_alpha]),
+            symmetrize_bonds=np.array([int(self.symmetrize_bonds)]),
+            phi_pairs=pairs,
+            phi_tensors=tensors,
+            data_rank=np.array([self._rank]),
+            solver_rank=np.array([self._solver_rank]),
+            rank_tolerance=np.array([
+                self._rank_tolerance if self._rank_tolerance is not None else 0.0
+            ]),
+            singular_values=self._singular_values,
+        )
+
+    @classmethod
+    def load(cls, path: str) -> "IFCExtractor":
+        """Load an IFC archive written by :meth:`save`."""
+        with np.load(path, allow_pickle=False) as data:
+            obj = cls(
+                supercell_positions=data["positions"],
+                supercell_cell=data["cell"],
+                masses_amu=data["masses"],
+                r_cutoff=float(data["r_cutoff"][0]),
+                symmetrise=bool(data["symmetrise"][0]),
+                ridge_alpha=float(data["ridge_alpha"][0]),
+                symmetrize_bonds=bool(data["symmetrize_bonds"][0]),
+                basis_indices=data["basis_indices"],
+            )
+            obj._Phi = {
+                tuple(map(int, pair)): tensor.copy()
+                for pair, tensor in zip(data["phi_pairs"], data["phi_tensors"])
+            }
+            obj._rank = int(data["data_rank"][0])
+            obj._solver_rank = int(data["solver_rank"][0])
+            obj._rank_tolerance = float(data["rank_tolerance"][0])
+            obj._singular_values = data["singular_values"].copy()
+        return obj
 
     def predict_forces(self, displacements: np.ndarray) -> np.ndarray:
         """

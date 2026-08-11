@@ -1,0 +1,31 @@
+{
+  "material": "al",
+  "n_supercell_atoms": 27,
+  "supercell_matrix": [
+    [
+      3,
+      0,
+      0
+    ],
+    [
+      0,
+      3,
+      0
+    ],
+    [
+      0,
+      0,
+      3
+    ]
+  ],
+  "cutoffs_ang": {
+    "2": 5.0,
+    "3": 5.0,
+    "4": 4.0
+  },
+  "estimated_basis_parameters_by_order": {
+    "2": 3,
+    "3": 71,
+    "4": 49
+  }
+}

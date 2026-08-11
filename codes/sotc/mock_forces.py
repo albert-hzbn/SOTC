@@ -400,9 +400,19 @@ def mock_vasp_results(
     """
     forces = force_calculator.compute(positions, cell)
     energy = force_calculator.energy(positions, cell)
+    if hasattr(force_calculator, "stress"):
+        stress_ev_ang3 = np.asarray(
+            force_calculator.stress(positions, cell), dtype=float
+        )
+    else:
+        stress_ev_ang3 = np.zeros((3, 3))
+    # 1 eV/Å³ = 160.21766208 GPa = 1602.1766208 kbar.
+    stress_kbar = stress_ev_ang3 * 1602.1766208
     return {
         "energy_ev": energy,
         "forces_ev_ang": forces,
-        "stress_kbar": np.zeros((3, 3)),
+        "stress_ev_ang3": stress_ev_ang3,
+        "stress_kbar": stress_kbar,
+        "stress_sign_convention": "ASE: positive=tension",
         "converged": True,
     }

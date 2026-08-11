@@ -1,0 +1,23 @@
+{
+  "test": "analytic polynomial forces -> phono3py finite differences",
+  "python": "3.13.13",
+  "numpy": "2.5.2",
+  "phonopy": "4.1.0",
+  "phono3py": "4.1.0",
+  "n_displaced_supercells": 156,
+  "displacement_distance_ang": 0.01,
+  "is_symmetry": false,
+  "fc2_units": "eV/angstrom^2",
+  "fc3_units": "eV/angstrom^3",
+  "fc2": {
+    "rmse": 1.910932971315535e-15,
+    "max_abs": 4.385380947269368e-15,
+    "reference_max_abs": 0.4009657126267236
+  },
+  "fc3": {
+    "rmse": 4.3330776999287705e-14,
+    "max_abs": 2.3792079417717105e-13,
+    "reference_max_abs": 1.8372064395277832
+  },
+  "passed": true
+}

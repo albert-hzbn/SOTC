@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import concurrent.futures
 import itertools
+import os
 from typing import List, Optional, Tuple
 
 import numpy as np
@@ -175,7 +176,7 @@ class HNFEnumerator:
 class DisplacementOptimizer:
     """
     Optimise atomic displacement field {u_i} in an SOTC candidate cell to
-    minimise the quality functional Q[C̄₂^SOTC − C̄₂^target].
+    minimise the objective function Q[C̄₂^SOTC − C̄₂^target].
 
     The optimisation is over displacement amplitudes A_{qs} (one scalar per
     phonon mode), with the displacement of atom i given by:
@@ -194,7 +195,8 @@ class DisplacementOptimizer:
     T : float
         Temperature [K].
     xi_T : float
-        Thermal coherence length [Å].  Controls the distance weighting.
+        Numerical exponential weighting length [Å].  This is a tunable design
+        parameter, not a phonon lifetime or mean free path.
     r_max : float
         Maximum pair-shell distance to include in Q [Å].
     lambda_2 : float
@@ -208,14 +210,23 @@ class DisplacementOptimizer:
         xi_T: float = 20.0,
         r_max: float = 10.0,
         lambda_2: float = 1.0,
+        basis_indices: Optional[np.ndarray] = None,
+        masses_amu: Optional[np.ndarray] = None,
     ):
         self.corr = target_correlator
         self.T = T
         self.xi_T = xi_T
         self.r_max = r_max
         self.lambda_2 = lambda_2
+        self.basis_indices = (
+            None if basis_indices is None
+            else np.asarray(basis_indices, dtype=int)
+        )
+        self.masses_amu = (
+            None if masses_amu is None else np.asarray(masses_amu, dtype=float)
+        )
 
-    # ── Quality functional ────────────────────────────────────────────────────
+    # ── Objective function ────────────────────────────────────────────────────
 
     def quality(
         self,
@@ -271,39 +282,73 @@ class DisplacementOptimizer:
         target_C2 : (n_shells,) [Å²]
         """
         n = len(positions)
-        # lattice images: ±1 along each axis
+        basis = (
+            self.basis_indices
+            if self.basis_indices is not None
+            else np.zeros(n, dtype=int)
+        )
+        if basis.shape != (n,):
+            raise ValueError(f"basis_indices must have shape ({n},)")
+        masses = (
+            self.masses_amu
+            if self.masses_amu is not None
+            else np.ones(n, dtype=float)
+        )
+        # Exact discrete shells are binned only within ``tol`` and kept
+        # separate for every ordered primitive-basis pair.
         images = list(itertools.product([-1, 0, 1], repeat=3))
-        distances: dict[float, List[Tuple[int, int]]] = {}
-
+        distances = {}
         for i in range(n):
             for j in range(n):
                 for img in images:
                     if i == j and img == (0, 0, 0):
-                        continue  # skip self at origin
+                        continue
                     R_vec = positions[j] - positions[i] + np.array(img) @ cell
-                    dist = np.linalg.norm(R_vec)
+                    dist = float(np.linalg.norm(R_vec))
                     if dist < 1e-3 or dist > self.r_max:
                         continue
-                    # Round to tolerance
-                    key = round(dist / tol) * tol
-                    if key not in distances:
-                        distances[key] = []
-                    distances[key].append((i, j))
+                    distance_bin = round(dist / tol) * tol
+                    key = (int(basis[i]), int(basis[j]), distance_bin)
+                    distances.setdefault(key, []).append((i, j))
 
-        sorted_keys = sorted(distances.keys())
-        shells = [(k, distances[k]) for k in sorted_keys]
+        sorted_keys = sorted(distances, key=lambda key: (key[2], key[0], key[1]))
+        shells = [(key[2], distances[key]) for key in sorted_keys]
 
-        # Compute target C̄₂ for each shell
+        def target_for(a, b, R):
+            if hasattr(self.corr, "pair_correlator_by_basis_ang2"):
+                return self.corr.pair_correlator_by_basis_ang2(a, b, R, self.T)
+            scalar = self.corr.pair_correlator_ang2(R, self.T)
+            # Debye initialization has one reference mass.  Scale the
+            # covariance for a basis pair as 1/sqrt(M_a M_b).
+            ref_mass_kg = getattr(self.corr, "_M", None)
+            if ref_mass_kg is None:
+                return scalar
+            ref_mass_amu = ref_mass_kg / AMU_TO_KG
+            ma = float(np.mean(masses[basis == a]))
+            mb = float(np.mean(masses[basis == b]))
+            return scalar * ref_mass_amu / np.sqrt(ma * mb)
+
         target_C2 = np.array([
-            self.corr.pair_correlator_ang2(R, self.T)
-            for R, _ in shells
+            target_for(key[0], key[1], key[2]) for key in sorted_keys
         ])
 
-        # Also add R=0 (on-site, gives MSD/3)
-        msd3 = self.corr.msd_ang2(self.T) / 3.0
-        shells.insert(0, (0.0, [(i, i) for i in range(n)]))
-        target_C2 = np.concatenate([[msd3], target_C2])
-
+        # Add a distinct on-site target for each basis/species.
+        onsite_shells = []
+        onsite_targets = []
+        for a in sorted(set(map(int, basis))):
+            pairs = [(i, i) for i in range(n) if basis[i] == a]
+            onsite_shells.append((0.0, pairs))
+            if hasattr(self.corr, "pair_correlator_by_basis_ang2"):
+                target = self.corr.pair_correlator_by_basis_ang2(a, a, 0.0, self.T)
+            else:
+                target = self.corr.msd_ang2(self.T) / 3.0
+                ref_mass_kg = getattr(self.corr, "_M", None)
+                if ref_mass_kg is not None:
+                    ref_mass_amu = ref_mass_kg / AMU_TO_KG
+                    target *= ref_mass_amu / float(np.mean(masses[basis == a]))
+            onsite_targets.append(target)
+        shells = onsite_shells + shells
+        target_C2 = np.concatenate([np.asarray(onsite_targets), target_C2])
         return shells, target_C2
 
     # ── Debye displacement basis ──────────────────────────────────────────────
@@ -525,11 +570,28 @@ class DisplacementOptimizer:
             (self, positions, cell, masses_amu, seed + m, verbose)
             for m in range(n_members)
         ]
-        # CPU-bound SA optimisation: use ProcessPoolExecutor for true parallelism
-        with concurrent.futures.ProcessPoolExecutor() as executor:
-            results = list(executor.map(_run_optimise_member, args_list))
+        # Bound process creation explicitly.  The previous unbounded executor
+        # attempted to start one worker per visible cluster CPU, which can
+        # exceed login-node and Slurm task limits and made even unit tests fail.
+        max_workers = max(
+            1,
+            min(n_members, int(os.environ.get("SOTC_MAX_WORKERS", "4"))),
+        )
+        if max_workers == 1:
+            results = [_run_optimise_member(args) for args in args_list]
+        else:
+            try:
+                with concurrent.futures.ProcessPoolExecutor(
+                    max_workers=max_workers
+                ) as executor:
+                    results = list(executor.map(_run_optimise_member, args_list))
+            except (BlockingIOError, OSError, RuntimeError):
+                # Resource-constrained CI/login nodes remain usable.  The
+                # serial path is deterministic because each member has a seed.
+                results = [_run_optimise_member(args) for args in args_list]
 
         ensemble = [u for u, Q in results]
+        self.last_objective_values = [float(Q) for _, Q in results]
         if verbose:
             for m, (u, Q) in enumerate(results):
                 print(f"  Member {m+1}/{n_members}: Q_final = {Q:.3e}")

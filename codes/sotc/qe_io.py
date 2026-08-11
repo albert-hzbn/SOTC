@@ -173,6 +173,7 @@ class QEForceCalculator:
         self._cache_key: Optional[bytes] = None
         self._cache_forces: Optional[np.ndarray] = None
         self._cache_energy: Optional[float] = None
+        self._cache_stress_ev_ang3: Optional[np.ndarray] = None
 
         # Validate pseudo_dir and pseudopotentials at construction time.
         self._validate_pseudos()
@@ -227,7 +228,7 @@ class QEForceCalculator:
         data: Dict = {
             "control": {
                 "calculation": "scf",
-                "tstress": False,
+                "tstress": True,   # retain reference stress for validation
                 "tprnfor": True,   # forces are required
                 "disk_io": "none", # avoid writing large restart files
             },
@@ -297,7 +298,7 @@ class QEForceCalculator:
 
     def _run_dft(
         self, positions: np.ndarray, cell: np.ndarray
-    ) -> Tuple[np.ndarray, float]:
+    ) -> Tuple[np.ndarray, float, np.ndarray]:
         """
         Run a single pw.x SCF calculation.
 
@@ -305,6 +306,7 @@ class QEForceCalculator:
         -------
         forces : (N, 3) ndarray [eV/Å]
         energy : float [eV]
+        stress : (3, 3) ndarray [eV/Å³], ASE sign convention
         """
         with self._counter_lock:
             snap_n = self._n_calls
@@ -317,27 +319,34 @@ class QEForceCalculator:
         with self._sem:
             energy = float(atoms.get_potential_energy())
             forces = np.array(atoms.get_forces(), dtype=float)
+            stress = np.array(atoms.get_stress(voigt=False), dtype=float)
 
-        return forces, energy
+        return forces, energy, stress
 
     def _run_cached(
         self, positions: np.ndarray, cell: np.ndarray
-    ) -> Tuple[np.ndarray, float]:
+    ) -> Tuple[np.ndarray, float, np.ndarray]:
         """Return cached result or run a new DFT calculation."""
         key = positions.tobytes() + cell.tobytes()
         with self._cache_lock:
             if key == self._cache_key:
                 assert self._cache_forces is not None
-                return self._cache_forces, self._cache_energy  # type: ignore[return-value]
+                assert self._cache_stress_ev_ang3 is not None
+                return (
+                    self._cache_forces,
+                    self._cache_energy,
+                    self._cache_stress_ev_ang3,
+                )  # type: ignore[return-value]
 
-        forces, energy = self._run_dft(positions, cell)
+        forces, energy, stress = self._run_dft(positions, cell)
 
         with self._cache_lock:
             self._cache_key = key
             self._cache_forces = forces
             self._cache_energy = energy
+            self._cache_stress_ev_ang3 = stress
 
-        return forces, energy
+        return forces, energy, stress
 
     # ── Public interface (matches mock_forces contract) ───────────────────────
 
@@ -354,7 +363,7 @@ class QEForceCalculator:
         -------
         forces : (N, 3) ndarray [eV/Å]
         """
-        forces, _ = self._run_cached(positions, cell)
+        forces, _, _ = self._run_cached(positions, cell)
         return forces
 
     def energy(self, positions: np.ndarray, cell: np.ndarray) -> float:
@@ -370,8 +379,36 @@ class QEForceCalculator:
         -------
         energy : float [eV]
         """
-        _, energy = self._run_cached(positions, cell)
+        _, energy, _ = self._run_cached(positions, cell)
         return energy
+
+    def stress(self, positions: np.ndarray, cell: np.ndarray) -> np.ndarray:
+        """Return the symmetric stress tensor [eV/Å³], ASE sign convention."""
+        _, _, stress = self._run_cached(positions, cell)
+        return stress.copy()
+
+    def provenance(self) -> Dict:
+        """Return calculation settings and pseudopotential checksums."""
+        import hashlib
+        pseudo_hashes = {}
+        for element, filename in self.pseudopotentials.items():
+            path = self.pseudo_dir / filename
+            pseudo_hashes[element] = {
+                "filename": filename,
+                "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            }
+        return {
+            "backend": "Quantum ESPRESSO via ASE Espresso",
+            "pw_cmd": self.pw_cmd,
+            "ecutwfc_Ry": self.ecutwfc,
+            "ecutrho_Ry": self.ecutrho,
+            "kpts": list(self.kpts),
+            "smearing": self.smearing,
+            "degauss_Ry": self.degauss,
+            "conv_thr_Ry": self.conv_thr,
+            "pseudopotentials": pseudo_hashes,
+            "force_calls": self._n_calls,
+        }
 
     def __repr__(self) -> str:
         return (

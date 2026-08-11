@@ -1,0 +1,10 @@
+&inputph
+  tr2_ph = 1e-14
+  prefix = 'nacl_nac'
+  outdir = '/viper/u1/alli/calculations/sotc/validation_results/nacl/dfpt_nac/scratch'
+  fildyn = '/viper/u1/alli/calculations/sotc/validation_results/nacl/dfpt_nac/nacl_nac.dynG'
+  epsil = .true.
+  trans = .true.
+  ldisp = .false.
+/
+0.0 0.0 0.0

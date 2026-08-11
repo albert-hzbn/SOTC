@@ -1,0 +1,31 @@
+{
+  "material": "nacl",
+  "n_supercell_atoms": 54,
+  "supercell_matrix": [
+    [
+      3,
+      0,
+      0
+    ],
+    [
+      0,
+      3,
+      0
+    ],
+    [
+      0,
+      0,
+      3
+    ]
+  ],
+  "cutoffs_ang": {
+    "2": 4.3,
+    "3": 4.3,
+    "4": 4.0
+  },
+  "estimated_basis_parameters_by_order": {
+    "2": 4,
+    "3": 39,
+    "4": 13
+  }
+}

@@ -1,0 +1,7 @@
+# Optional reviewer-validation environment (Python >= 3.11 recommended).
+-r requirements.txt
+phonopy>=4.1
+phono3py>=4.1
+symfc>=1.7
+h5py>=3.14
+PyYAML>=6.0

@@ -79,3 +79,29 @@ submit_*.sh
 
 # Theory
 Theory/
+
+# Reviews
+reviews/
+
+# Public manuscript source and generated submission figures
+!manuscript/
+manuscript/*
+!manuscript/manuscript.tex
+!manuscript/manuscript_clean.tex
+!manuscript/manuscript_clean.pdf
+!manuscript/manuscript_updated.tex
+!manuscript/manuscript_updated.pdf
+!manuscript/refs.bib
+!manuscript/figures/
+manuscript/figures/*
+!manuscript/figures/fig2_phonons_all.pdf
+!manuscript/figures/fig_nacl_loto.pdf
+!manuscript/figures/fig_ifc34_diagnostics.pdf
+
+# Compact validation results are public; transient QE/HPC artifacts stay local
+validation_results/**/*.out
+validation_results/**/*.err
+validation_results/**/scratch/
+validation_results/**/thermal_qe/
+validation_results/**/fc4_compact.npy
+core.*
