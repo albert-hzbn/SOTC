@@ -87,16 +87,27 @@ reviews/
 !manuscript/
 manuscript/*
 !manuscript/manuscript.tex
+!manuscript/manuscript_original.tex
+!manuscript/manuscript_original.pdf
+!manuscript/refs_original.bib
 !manuscript/manuscript_clean.tex
 !manuscript/manuscript_clean.pdf
 !manuscript/manuscript_updated.tex
 !manuscript/manuscript_updated.pdf
+!manuscript/FILE_MAP.md
 !manuscript/refs.bib
 !manuscript/figures/
 manuscript/figures/*
 !manuscript/figures/fig2_phonons_all.pdf
 !manuscript/figures/fig_nacl_loto.pdf
 !manuscript/figures/fig_ifc34_diagnostics.pdf
+!manuscript/figures/fig_dispersion_controls.pdf
+
+# Point-by-point response included in the submission package
+!reviews/
+reviews/*
+!reviews/response_to_reviewers.tex
+!reviews/response_to_reviewers.pdf
 
 # Compact validation results are public; transient QE/HPC artifacts stay local
 validation_results/**/*.out
