@@ -43,7 +43,7 @@ temperatures and within 7\% for all nine materials at 300\,K. At the design
 temperatures of the metals, the harmonic heat capacity cannot reproduce
 electronic and explicit anharmonic contributions above the Dulong--Petit
 limit. The primary SOTC benchmarks assess second-order
-effective-harmonic and quasi-harmonic observables; they do not establish
+effective-harmonic observables; they do not establish
 equivalence to methods that sample explicit anharmonic free-energy surfaces.
 In a separate 100-snapshot canonical validation for Al, NaCl, and W,
 symmetry-constrained FC2+FC3+FC4 models reduce held-out force RMSE by
@@ -109,15 +109,13 @@ optimization of prescribed spatial correlator moments before the force
 calculation, rather than a general replacement for ensemble or trajectory
 methods.
 
-This paper is organized as follows. Section II presents the theoretical
-framework: thermal displacement correlators, the SOTC objective
-function, IFC extraction by ridge regression, the self-consistency loop,
-and the quasi-harmonic extension for continuous thermodynamic
-properties. Section III describes computational details. Section IV
-reports benchmarks for all nine materials, including thermal expansion
-for aluminum (Sec. IV.F). Section V discusses the method's range of
-validity, limitations, computational cost, and comparison with the
-phonopy quasi-harmonic approximation (QHA). Section VI concludes.
+This paper is organized as follows. Section II presents the thermal-displacement
+correlators, SOTC objective, IFC extraction, phonon reconstruction, and
+self-consistency loop. Section III describes the QE computational settings.
+Section IV reports the effective-FC2 benchmarks, the NaCl non-analytic control,
+and the independent FC2/FC3/FC4 validation. Section V discusses the validated
+scope, limitations, computational cost, and related anharmonic methods.
+Section VI concludes.
 
 \section{Theory}\label{theory}
 
@@ -372,82 +370,6 @@ reach their stopping criterion in 2--5 iterations with
 \(N_{\rm ens}=1\)--8, as detailed in Table~I. Iteration count is therefore not
 used as a proxy for DFT cost.
 
-\subsection{Quasi-Harmonic Approximation and Continuous High-Temperature
-Properties}\label{quasi-harmonic-approximation-and-continuous-high-temperature-properties}
-
-The self-consistent SOTC loop delivers converged IFCs
-\(\Phi_{ij}^{*\alpha\beta}(T)\) at a single design temperature \(T\). To
-obtain continuous thermodynamic properties, specifically the thermal
-expansion coefficient \(\alpha(T)\), isobaric heat capacity \(C_P(T)\),
-and bulk modulus \(B(T)\), across a temperature range without repeating
-the SOTC loop at each \(T\), we couple SOTC phonons to the QHA.
-
-\textbf{SOTC-QHA setup.} A converged QHA calculation requires a set of
-\(N_V\) volumes spanning the thermally sampled range. Static reference-lattice
-energies \(E_0(V)\) and phonons are computed directly at every volume; energies
-of thermally displaced configurations are not substituted for \(E_0\), and
-IFCs at an uncalculated volume are not inferred by linear extrapolation. At
-least five volumes are used for a third-order Birch--Murnaghan fit, with
-convergence checked against the number and range of volumes. The zero-pressure
-Helmholtz free energy is
-\begin{equation}
-F(T,V)=E_0(V)+F_{\rm vib}(T,V),
-\end{equation}
-where the harmonic vibrational contribution is
-\begin{equation}
-F_{\rm vib}(T,V)=k_BT\sum_{\mathbf q,s}
-\ln\!\left[2\sinh\!\left(\frac{\hbar\omega_{\mathbf q s}(V)}
-{2k_BT}\right)\right].
-\end{equation}
-At external pressure \(p\), the equilibrium volume minimizes
-\(F(T,V)+pV\):
-\begin{equation}
-\left.\frac{\partial [F(T,V)+pV]}{\partial V}\right|_{V^*(T,p)}=0 .
-\end{equation}
-Thus \(F\), rather than \(G\), is minimized at \(p=0\). Equations
-(13)--(15) are the standard quasi-harmonic construction \cite{ref44,ref45};
-they do not imply an anharmonic variational upper bound.
-
-For a cubic crystal, define the volumetric and linear expansion coefficients
-separately. The thermodynamic identities are
-\begin{equation}
-\alpha_V=\frac{1}{V^*}\frac{dV^*}{dT},\qquad
-\alpha_L=\frac{\alpha_V}{3},\qquad
-B_T=V^*\left.\frac{\partial^2F}{\partial V^2}\right|_{V^*}.
-\end{equation}
-The corresponding heat-capacity relation is
-\begin{equation}
-C_P-C_V=TV^*B_T\alpha_V^2
-       =9TV^*B_T\alpha_L^2 .
-\end{equation}
-The positive curvature sign, the distinction between \(\alpha_V\) and
-\(\alpha_L\), and the factor of nine in the linear-coefficient form are
-essential. All numerical QHA results must be regenerated with these conventions
-and with a converged volume grid before an accuracy or cost comparison is made.
-
-\textbf{Grüneisen shortcut.} When volume-changing DFT runs are not
-desired, a faster estimate uses the mode Grüneisen parameters:
-
-\begin{equation}
-\gamma_{\mathbf{q}s} = -\frac{V}{\omega_{\mathbf{q}s}}\frac{\partial\omega_{\mathbf{q}s}}{\partial V}\bigg|_{V_0} \approx -\frac{V_0}{\omega_{\mathbf{q}s}}\frac{\omega_{\mathbf{q}s}(V_+)-\omega_{\mathbf{q}s}(V_-)}{V_+-V_-}
-\end{equation}
-
-The heat-capacity-weighted average
-\(\gamma_\text{eff}(T) = \sum_{\mathbf{q}s}c_{\mathbf{q}s}(T)\gamma_{\mathbf{q}s}/\sum_{\mathbf{q}s}c_{\mathbf{q}s}(T)\)
-gives:
-
-\begin{equation}
-\alpha_L(T) \approx
-\frac{\gamma_\text{eff}(T)\,C_V(T)}{3B_0V_0},\qquad
-\alpha_V(T)=3\alpha_L(T).
-\end{equation}
-
-Here \(B_0=V_0(\partial^2E_0/\partial V^2)_{V_0}\) is the positive static
-bulk modulus. Equation~(19) is the standard cubic Grüneisen relation
-\cite{ref44}; it requires volume derivatives of the phonons and is a diagnostic
-approximation, not an independent validation of QHA. Software-specific class
-names and keyword choices are moved to the reproducibility material.
-
 \section{Computational Details}\label{computational-details}
 
 \subsection{DFT Calculations}\label{dft-calculations}
@@ -533,18 +455,6 @@ NaCl \cite{ref28}, MgO \cite{ref29,ref30}, PbTe \cite{ref31,ref32}. For
 comparison of phonon dispersions, we use neutron scattering data from:
 Cu (Ref. \cite{ref33}), Al (Ref. \cite{ref34}), NaCl (Ref.
 \cite{ref35}).
-
-\subsection{SOTC-QHA Setup for
-Aluminum}\label{sotc-qha-setup-for-aluminum}
-
-The available Al dataset contains only \(V_0\) and \(V_-\), an
-extrapolated expanded-volume IFC matrix, and energies from displaced cells. It
-is insufficient for a converged equation of state. A quantitative QHA study
-requires direct static reference-lattice energies and direct FC2 phonon
-calculations at at least five volumes, followed by volume-grid, EOS, and
-temperature-derivative convergence tests as specified in Sec.~II.F. No
-numerical Al expansion coefficient or QHA cost/accuracy comparison is therefore
-reported.
 
 \section{Results}\label{results}
 
@@ -790,21 +700,6 @@ mode-sum and DOS tests followed by regeneration of the complete effective-FC2
 workflow with the corrected displacement normalization. Consequently, the
 present benchmarks do not validate Debye--Waller factors.
 
-\subsection{Thermal Expansion and Isobaric Heat Capacity
-(QHA)}\label{thermal-expansion-and-isobaric-heat-capacity-qha}
-
-No Al QHA curve or table is reported because the available two-volume FC2
-dataset uses an extrapolated expanded-volume force-constant matrix and produces
-a nonmonotonic 300\,K linear expansion coefficient. It also mixes linear and
-volumetric expansion conventions and an inconsistent curvature sign, so it
-cannot support an accuracy or DFT-cost comparison.
-
-A quantitative QHA benchmark requires direct FC2 phonon calculations on a
-converged volume grid, static reference-lattice energies, the identities in
-Eqs.~(13)--(17), and convergence with respect to EOS choice, volume range,
-temperature grid, and numerical differentiation. Full-QHA and Gr\"uneisen
-results should then be tabulated from the same regenerated dataset.
-
 \subsection{Independent Higher-Order IFC
 Validation}\label{independent-higher-order-ifc-validation}
 
@@ -954,8 +849,8 @@ another method.
 A defensible efficiency comparison must use the same material, cell and
 k-point convergence, exchange-correlation approximation, physical observable,
 and quantitative accuracy threshold. It must also count reference forces,
-discarded/restarted calculations, QHA volumes, and DFPT non-analytic
-corrections. No external-method dataset satisfying all of these conditions is
+discarded/restarted calculations and DFPT non-analytic corrections. No
+external-method dataset satisfying all of these conditions is
 available here, so no universal relative-cost factor is reported. Wall-time and
 core-hour comparisons require matched, reproducible calculations.
 
@@ -996,55 +891,61 @@ spectra with the established methods above. The special displacement method
 \subsection{Limitations and Planned
 Extensions}\label{limitations-and-planned-extensions}
 
-\textbf{LO-TO splitting.} Polar insulators (NaCl, MgO, PbTe) require a
-non-analytic correction to the dynamical matrix \cite{ref39}:
+\textbf{Sampling and identifiability.} The scalar stopping metric tests selected
+shell-averaged displacement correlators; it does not test every tensor component
+or guarantee convergence of the full phonon dispersion. With 1--8 displaced
+configurations per iteration and ridge regularization, convergence of this
+metric is not proof of unique FC2 recovery. The present evidence is therefore
+restricted to the reported cells, temperatures, cutoffs, and electronic
+settings. A general sampling-efficiency claim requires matched QE comparisons
+against random or canonical-Gaussian displacement designs at the same force-call
+budget and on held-out forces and branch-resolved phonons.
+
+\textbf{Long-range electrostatics.} Polar insulators require a non-analytic
+correction to the dynamical matrix \cite{ref39}:
 
 \begin{equation*}
-D_{ij}^{\alpha\beta,\text{NAC}}(\hat{\mathbf{q}}) = \frac{4\pi e^2}{\Omega_0} \frac{(\sum_\gamma Z_i^{*\alpha\gamma}\hat{q}_\gamma)(\sum_\delta Z_j^{*\beta\delta}\hat{q}_\delta)}{\sum_{\gamma\delta}\hat{q}_\gamma\varepsilon_\infty^{\gamma\delta}\hat{q}_\delta}
+D_{ij}^{\alpha\beta,\text{NAC}}(\hat{\mathbf{q}}) = \frac{4\pi e^2}{\Omega_0} \frac{(\sum_\gamma Z_i^{*\alpha\gamma}\hat{q}_\gamma)(\sum_\delta Z_j^{*\beta\delta}\hat{q}_\delta)}{\sum_{\gamma\delta}\hat{q}_\gamma\varepsilon_\infty^{\gamma\delta}\hat{q}_\delta}.
 \end{equation*}
 
 Here \(\Omega_0\), \(Z^*\), and \(\varepsilon_\infty\) are the primitive-cell
-volume, Born effective-charge tensor, and clamped-ion dielectric tensor,
-respectively.  Figure~\ref{fig:nacl-loto} now applies real QE DFPT tensors to
-the matched NaCl finite-displacement phonons and resolves the missing
-longitudinal branch.  The archived nine-panel SOTC figure itself is retained
-without NAC for provenance rather than silently replaced.  MgO and PbTe still
-lack corresponding DFPT tensors and regenerated dispersions, so the
-quantitative polar-material accuracy claim remains restricted to the explicit
-NaCl LO--TO test.
+volume, Born effective-charge tensor, and clamped-ion dielectric tensor.
+Figure~\ref{fig:nacl-loto} applies QE DFPT tensors in a matched NaCl control,
+whereas the production SOTC dispersions in Fig.~\ref{fig:2} omit this correction.
+Long-wavelength polar-branch validation is consequently limited to the NaCl
+control. Equivalent DFPT calculations and regenerated dispersions remain
+necessary for MgO and PbTe.
 
-\textbf{Higher-order scope.} The canonical-ensemble extension in
-Sec.~\ref{independent-higher-order-ifc-validation} validates constrained FC3
-and FC4 fitting and common transport-code file conventions. Phonon lifetimes
-and lattice thermal conductivity additionally require converged reciprocal-
-space integration, scattering phase space, isotope/boundary choices, and
-transport calculations \cite{ref40}; none is reported here. No universal
-5--10-configuration estimate is made: the demonstrated fits use 100 snapshots,
-and the required number depends on parameter count, symmetry, cutoff, matrix
-rank, force noise, and target accuracy.
+\textbf{Higher-order and transport scope.} The independent canonical campaign
+in Sec.~\ref{independent-higher-order-ifc-validation} validates constrained FC3
+and FC4 fitting and export using 100 snapshots. It does not show that the
+few-configuration SOTC design identifies FC3 or FC4, and it does not report
+phonon linewidths, lifetimes, or lattice thermal conductivity. A transport
+extension requires convergence of reciprocal-space integration, scattering
+phase space, isotope and boundary models, higher-order cutoffs, and training-set
+size \cite{ref40}.
 
-\textbf{Dynamically unstable systems.} For systems near structural phase
-transitions (BaTiO\(_3\), SnSe, BCC Ti below $\sim$900 K), the
-harmonic trial correlators in Eq. (1) cannot describe the anharmonic
-double-well landscape. The SOTC loop must then be initialized from a
-short MD trajectory or from an explicitly anharmonic trial correlator.
+\textbf{Structural-instability scope.} The current harmonic trial correlator
+requires a stable reference spectrum and cannot represent a non-Gaussian or
+double-well displacement distribution. Systems near displacive phase
+transitions are therefore outside the demonstrated scope. Extending the method
+to this regime would require an explicitly anharmonic reference distribution
+and validation of both free energies and renormalized spectra against
+established ensemble methods.
 
-\textbf{Quasi-harmonic and magnetic limitations.} QHA neglects explicit
-temperature-dependent phonon--phonon terms at fixed volume and requires a
-converged volume dependence of both static energy and phonons. The available Al dataset does not demonstrate that these errors or the interpolation error are
-minor. Strongly anharmonic, dynamically unstable, or high-temperature systems
-require validation beyond QHA. Magnetic materials additionally require a
-treatment of spin--lattice coupling not included here \cite{ref41}.
+\textbf{Thermodynamic and magnetic scope.} The reported thermodynamic quantities
+are fixed-volume effective-FC2 values of \(C_V\), ZPE, \(F_{\rm vib}\), and
+\(S_{\rm vib}\). Thermal expansion and isobaric heat capacity are not evaluated;
+they require direct static energies and phonons over a converged volume grid.
+Magnetic materials also require spin--lattice coupling, which is absent from the
+present implementation \cite{ref41}.
 
-\subsection{SOTC-QHA vs.~Phonopy-QHA}\label{sotc-qha-vs.-phonopy-qha}
-
-Phonopy is an open-source lattice-dynamics package that can organize
-finite-displacement FC2 phonon and QHA workflows \cite{ref45}. A controlled
-comparison requires documented displacement settings and cannot combine an
-assumed displacement count with an unvalidated \(N^{3/2}\) cost model or an
-underconverged SOTC-QHA dataset. Both workflows must report the code version,
-functional, pseudopotentials, cell, k/q meshes, displacement count, volume
-grid, convergence targets, wall time, and core-hours.
+\textbf{Planned validation.} The immediate priorities are matched sampling
+controls, resolution of the Au instability, DFPT non-analytic corrections for
+MgO and PbTe, and regeneration of the MSD benchmark with one verified
+normalization. Claims concerning strongly anharmonic phases or transport will
+be considered only after those calculations establish the accuracy and cost
+of the effective-FC2 workflow.
 
 \section{Conclusions}\label{conclusions}
 
@@ -1070,17 +971,17 @@ The primary SOTC evidence concerns effective-FC2 DOS-derived observables; it
 does not establish branch-resolved dispersion convergence, universal
 representability, or superiority over matched random/Gaussian configurations.
 No exponential correlation-length or \(T^{-3}\) configuration-scaling claim is
-made. Quantitative Al QHA and Debye--Waller results require corrected definitions
-and converged recalculation. Real QE DFPT tensors resolve the NaCl LO--TO
+made. No quantitative Al thermal-expansion or Debye--Waller result is claimed;
+both require dedicated, converged recalculation. Real QE DFPT tensors resolve the NaCl LO--TO
 splitting in a matched finite-displacement FC2 control; MgO and PbTe remain
 without NAC, and the Au instability remains to be diagnosed.
 
 The next validation steps are therefore concrete: report the complete
 parameter/rank/SVD diagnostics, compare against matched random and converged
 finite-displacement controls, overlay neutron data, resolve the Au instability,
-complete DFPT/NAC dispersions for MgO and PbTe, rerun the MSD calculation with
-a single convention, and recompute QHA on a converged volume grid. Only those
-matched tests can establish the accuracy/cost domain in which optimized
+complete DFPT/NAC dispersions for MgO and PbTe, and rerun the MSD calculation
+with a single convention. Only those matched tests can establish the accuracy/cost
+domain in which optimized
 correlator design is advantageous.
 
 \begin{acknowledgments}
@@ -1529,53 +1430,6 @@ variational free energy or supply missing cubic and quartic force constants.
 Higher-order free energies, linewidths, lifetimes, and thermal conductivity are
 outside the validated scope of this manuscript.
 
-\section{Quasi-Harmonic Thermodynamic Identities and
-Convergence Requirements}
-\label{appendix-j-quasi-harmonic-approximation-thermodynamic-identities-eos-fitting-and-interpolation-accuracy}
-
-Let \(F(T,V)=E_0(V)+F_{\rm vib}(T,V)\) be the Helmholtz free energy. At
-external pressure \(p\), the equilibrium volume minimizes the Gibbs free
-energy \(F+pV\). At a stable minimum,
-\[
-B_T=-V\left(\frac{\partial p}{\partial V}\right)_T
-   =V\left(\frac{\partial^2F}{\partial V^2}\right)_T>0 .
-\]
-The volumetric expansion coefficient is
-\(\alpha_V=V^{-1}(\partial V/\partial T)_p\); for a cubic solid the
-linear coefficient is \(\alpha_L=\alpha_V/3\). Standard Maxwell relations
-then give \cite{ref44}
-\[
-C_P-C_V=TVB_T\alpha_V^2=9TVB_T\alpha_L^2 .
-\]
-These definitions correct the sign and factor-of-three/factor-of-nine
-ambiguities between common conventions.
-
-For mode Gr\"uneisen parameters
-\[
-\gamma_{\mathbf q s}=-\frac{\partial\ln\omega_{\mathbf q s}}
-{\partial\ln V},\qquad
-\gamma_{\rm eff}(T)=
-\frac{\sum_{\mathbf q s}c_{\mathbf q s}(T)\gamma_{\mathbf q s}}
-{\sum_{\mathbf q s}c_{\mathbf q s}(T)},
-\]
-the cubic quasi-harmonic relation is
-\[
-\alpha_V=\frac{\gamma_{\rm eff}C_V}{B_TV},\qquad
-\alpha_L=\frac{\gamma_{\rm eff}C_V}{3B_TV},
-\]
-with \(C_V\) and \(V\) expressed for the same amount of material.
-
-No interpolation-error bound follows solely from a representative
-Gr\"uneisen parameter and a 2\% volume step. A third-order Birch--Murnaghan
-EOS requires enough independent static-energy points to determine and test its
-parameters; a two-volume IFC extrapolation cannot validate the phonon
-curvature. A converged protocol uses direct static energies and
-direct phonons at at least five volumes, tests alternative volume ranges and
-EOS forms, and reports leave-one-out residuals and propagated uncertainty in
-\(V(T)\), \(\alpha(T)\), \(B_T(T)\), and \(C_P(T)\). No sub-percent
-quadratic-interpolation or IFC-extrapolation error is claimed without those
-tests.
-
 \section{Implementation and Reproducibility Details}\label{appendix-k-reproducibility}
 
 The exact SSSP filenames used by the archived QE calculations were
@@ -1592,9 +1446,7 @@ The exact SSSP filenames used by the archived QE calculations were
 \texttt{W\_pbe\_v1.2.uspp.F}. In QE input, the metallic smearing width was
 set with \texttt{degauss=0.02}~Ry. In the Python interface, the archived
 central-force projection corresponds to
-\texttt{symmetrize\_bonds=True}. The archived QHA class/keyword invocation is
-not evidence of thermodynamic convergence and is not used in the
-analysis.
+\texttt{symmetrize\_bonds=True}.
 
 The machine-readable result files are JSON and NPZ rather than uniformly
 plain text. A reproducibility archive should identify a single tagged commit
