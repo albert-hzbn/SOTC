@@ -24,36 +24,23 @@
 
 \begin{abstract}
 
-We introduce the Special Optimal Thermal Cell (SOTC), a deterministic
-displacement-design strategy for extracting effective second-order interatomic
-force constants (IFCs) from small periodic supercells. Inspired by the
-Special Quasirandom Structure construction, SOTC chooses collective atomic
-displacements by minimizing the mismatch between selected shell-averaged
-displacement correlators of the cell and those of a harmonic trial model. A
-self-consistent cycle updates the trial phonons from density-functional-theory
-(DFT) forces and ridge-regression IFC fits. For the nine systems studied here
-(FCC Al, Ag, Au, and Cu; BCC Mo and W; and rocksalt NaCl, MgO, and PbTe), the
-reported self-consistency criterion is reached in 2--5 iterations. The
-archived calculations use 1--8 displaced configurations per iteration and an
-undisplaced reference, corresponding to 4--36 force evaluations rather than
-one force evaluation per iteration.
-The resulting effective-harmonic phonons give constant-volume heat capacities
-within approximately 5\% of experiment for the ionic compounds at their design
-temperatures and within 7\% for all nine materials at 300\,K. At the design
-temperatures of the metals, the harmonic heat capacity cannot reproduce
-electronic and explicit anharmonic contributions above the Dulong--Petit
-limit. The primary SOTC benchmarks assess second-order
-effective-harmonic observables; they do not establish
-equivalence to methods that sample explicit anharmonic free-energy surfaces.
-In a separate 100-snapshot canonical validation for Al, NaCl, and W,
-symmetry-constrained FC2+FC3+FC4 models reduce held-out force RMSE by
-72--94\% relative to matched central finite-displacement phonopy FC2
-baselines. This validates the higher-order fitting and export implementation,
-not a few-configuration SOTC sampling advantage.  For NaCl, QE DFPT Born
-charges and the electronic dielectric tensor produce a 2.895\,THz LO--TO
-splitting when applied to the matched finite-displacement phonons.
-The implementation is available as an open-source Python package interfaced
-to Quantum ESPRESSO.
+We present the Special Optimal Thermal Cell (SOTC), a deterministic strategy
+for selecting collective displacements in small periodic supercells by matching
+shell-averaged correlators of a harmonic trial model. Density-functional-theory
+forces from the selected structures are used to fit symmetry-constrained
+effective second-order force constants (FC2) and update the trial phonons. For
+nine metals and rocksalt compounds, the scalar self-consistency criterion is
+reached in 2--5 iterations using 4--36 force calculations, including reference
+structures. The resulting fixed-volume FC2 heat capacities differ from
+experiment by at most 7\% at 300\,K and by approximately 5\% for the ionic
+compounds at their design temperatures; the high-temperature metal results
+also expose the electronic and explicit anharmonic contributions missing from
+a harmonic model. In a separate 100-snapshot canonical test for Al, NaCl, and
+W, FC2+FC3+FC4 fits reduce held-out force RMSE by 72--94\% relative to matched
+finite-displacement FC2 baselines. This verifies higher-order fitting, not a
+few-configuration SOTC sampling advantage. For NaCl, a matched non-analytic
+control gives a 2.895\,THz LO--TO splitting. The demonstrated scope comprises deterministic effective-FC2 design and
+independently tested higher-order IFC regression.
 
 \end{abstract}
 
@@ -109,6 +96,16 @@ optimization of prescribed spatial correlator moments before the force
 calculation, rather than a general replacement for ensemble or trajectory
 methods.
 
+The most direct applications are reproducible effective-FC2 construction for
+dynamically stable, nonmagnetic crystals and fixed-volume phonon-DOS
+thermodynamics, including \(C_V\), ZPE, \(F_{\rm vib}\), and
+\(S_{\rm vib}\). The deterministic FC2 model can also serve as a harmonic
+reference for a larger finite-temperature workflow. When a sufficiently large
+ensemble of forces is available, the independently tested constrained
+regression route can be used to extract FC3 and FC4. The demonstrated application domain does not
+include strongly non-Gaussian phases, anharmonic free energies, phonon
+lifetimes, or thermal conductivity.
+
 This paper is organized as follows. Section II presents the thermal-displacement
 correlators, SOTC objective, IFC extraction, phonon reconstruction, and
 self-consistency loop. Section III describes the QE computational settings.
@@ -151,7 +148,7 @@ smoothly interpolating between the zero-point limit (\(T\to 0\):
 (\(k_BT\gg\hbar\omega\): \(\coth\to 2k_BT/\hbar\omega\)).
 
 To reduce the tensor correlator to the scalar target used in the present
-implementation, let \(\mathcal S_R^{ab}\) denote the set of lattice vectors
+work, let \(\mathcal S_R^{ab}\) denote the set of lattice vectors
 belonging to the crystallographic shell of radius \(R\) for basis pair
 \((a,b)\), with multiplicity \(N_R^{ab}\). The shell and Cartesian trace
 average is defined by
@@ -363,7 +360,7 @@ safeguards can retain initialization dependence. Validation requires comparison 
 models rather than assuming a unique fixed point.
 
 Each iteration evaluates \(N_{\rm ens}\) displaced configurations and an
-undisplaced reference configuration. In the current implementation the
+undisplaced reference configuration. In the archived workflow the
 reference is recomputed once per iteration; hence the force-call count is
 \(N_{\rm iter}(N_{\rm ens}+1)\), not \(N_{\rm iter}\). The archived benchmarks
 reach their stopping criterion in 2--5 iterations with
@@ -384,17 +381,16 @@ wave-function cutoff for ONCV and eight times it for PAW/ultrasoft
 potentials. FCC and BCC supercells used a Gamma-centered
 \(2\times2\times2\) k mesh; rocksalt supercells used Gamma only. Metals used
 Marzari--Vanderbilt cold smearing \cite{ref18} of 0.02\,Ry, while the
-insulators used fixed occupations. Literal pseudopotential filenames, QE
-keywords, and software class/flag names are collected in Appendix~K rather
-than the theory section.
+insulators used fixed occupations. Software and file-level provenance is given in
+Appendix~\ref{appendix-k-reproducibility}.
 
 Experimental lattice constants and ideal high-symmetry fractional coordinates
 were used for the archived benchmarks. An undisplaced single-point calculation
 at the same cell defines the reference force and stress. IFC fits use
 \(\Delta\mathbf F=\mathbf F(\mathbf u)-\mathbf F(\mathbf0)\), as in Eq.~(6),
-rather than assuming \(\mathbf F(\mathbf0)=0\). The calculation archive should report
-maximum/RMS reference forces, induced-force scales, residual stresses, and
-comparisons with representative PBE-relaxed cells.
+rather than assuming \(\mathbf F(\mathbf0)=0\). The primary archive does not report maximum/RMS reference forces and residual
+stresses uniformly for all nine systems, so sensitivity to residual forces and
+the use of experimental rather than PBE-relaxed cells is not fully quantified.
 
 \subsection{SOTC Supercell Setup}\label{sotc-supercell-setup}
 
@@ -414,19 +410,20 @@ used a 64-atom supercell (2 atoms/cell \(\times\) 32 conventional cells)
 and rocksalt compounds (NaCl, MgO, PbTe) used a \(2\times2\times2\)
 conventional-cell supercell (8 atoms/cell \(\times\) 8 = 64 atoms).
 
-The experimental lattice parameters are provided in the archived inputs; Table~I
-now reports force-call accounting. The IFC cutoffs are listed in Table~I, and
-the ridge parameter was \(10^{-3}\) in the code's reported units. A
-central-force bond projection was enabled for all archived benchmarks. Because
-this is a strong physical prior rather than a software detail, sensitivity tests should compare it with the less constrained tensor fit.
+The experimental lattice parameters are provided in the archived inputs.
+Table~I reports the IFC cutoffs and force-call accounting. The ridge
+coefficient was \(10^{-3}\) in the reported convention, and a central-force
+bond projection was applied to all primary benchmarks. Because sensitivity to
+that physical prior is not quantified, the reported FC2 results are conditional
+on the constrained fit.
 
-The archived benchmark workflow used one SOTC displacement configuration per
-self-consistency iteration (\(N_{\rm ens}=1\)). This fact does not guarantee
-full IFC coverage. For every benchmark, the data release should report
-the dimensions and numerical rank of the symmetry-reduced design matrix, its
-singular-value threshold and condition number, and the independent parameter
-count. The ensemble mode (\(N_{\rm ens}>1\)) provides additional force rows
-when an overdetermined fit is required.
+The archived runs used material-specific ensembles of
+\(N_{\rm ens}=1\)--8 configurations per iteration, as listed in Table~I.
+These force rows do not by themselves establish full IFC coverage. Complete
+symmetry-reduced matrix dimensions, numerical ranks, singular-value thresholds,
+and condition numbers are unavailable for every primary benchmark. Scalar
+self-consistency and FC2 identifiability are therefore treated as separate
+diagnostics.
 
 \subsection{Phonon Post-Processing}\label{phonon-post-processing}
 
@@ -461,17 +458,15 @@ Cu (Ref. \cite{ref33}), Al (Ref. \cite{ref34}), NaCl (Ref.
 \subsection{Self-Consistency
 Convergence}\label{self-consistency-convergence}
 
-A multi-method Debye-temperature comparison is not shown because the available
-external-method series lack calculation-level provenance and matched settings.
-The SOTC FC2 and experimental values remain tabulated, but no external-method
-accuracy claim is based on those unmatched data.
+The Debye-temperature comparison contains the SOTC FC2 and experimental values.
+Available external-method series lack calculation-level provenance and matched
+settings and are therefore outside this comparison.
 
 The archived runs stop after 2--5 self-consistency iterations under the
 material-specific minimum-iteration rule and the correlator threshold stated in
-Sec.~II.E. This is convergence of the chosen scalar stopping metric, not a
-demonstration that the full phonon dispersion is converged. Direct
-configuration-count and dispersion-error convergence against a matched
-reference is required for that stronger claim.
+Sec.~II.E. This quantity measures convergence of the selected scalar metric;
+full-dispersion convergence is a separate, unmeasured diagnostic in the primary
+archive.
 
 \begin{table*}[htbp]
 
@@ -480,8 +475,8 @@ reference is required for that stronger claim.
 \(N_{\rm ens}\) the displaced configurations evaluated per iteration,
 \(N_{\rm disp}=N_{\rm iter}N_{\rm ens}\), and
 \(N_{\rm force}=N_{\rm iter}(N_{\rm ens}+1)\) includes the undisplaced
-reference recomputed by the current runner. These counts do not establish IFC
-or dispersion convergence.}
+reference recomputed by the archived workflow. The counts quantify workflow
+cost independently of IFC or dispersion convergence.}
 \begin{ruledtabular}
 \begin{tabular}{lrrrrrrrr}
 Material & \(T_{\rm des}\) (K) & \(N_{\rm atoms}\) & \(r_{\rm cut}\) (Å) &
@@ -517,8 +512,9 @@ DOS}\label{phonon-dispersions-and-dos}
 Figure~2 displays the SOTC effective-FC2 dispersions and DOS. The curves expose
 branch topology and instabilities but do not include explicit FC3 or FC4
 self-energies. They are presented descriptively because the cited neutron data
-and a matched converged DFT reference are not overlaid; no branch-resolved
-accuracy or superiority claim is inferred.
+and a matched converged DFT reference are not overlaid. The figure therefore
+provides descriptive branch topology rather than branch-resolved error
+statistics.
 
 \begin{figure*}[htbp]
 \centering
@@ -532,7 +528,7 @@ accuracy or superiority claim is inferred.
 \(30\times30\times30\) q mesh and 0.1\,THz broadening. Experimental
 neutron points are not overlaid in this archived figure. The three polar
 materials omit the non-analytic LO--TO correction, and the Au panel contains
-an instability; these omissions preclude a quantitative accuracy claim.}
+an instability; the panels are consequently interpreted qualitatively.}
 \label{fig:2}
 \end{figure*}
 
@@ -543,10 +539,9 @@ both available at 300\,K, whereas the Cu and NaCl comparisons involve unmatched
 temperatures. A quantitative comparison requires digitized points on identical
 paths and temperatures, followed by frequency MAE/RMSE, maximum branch error,
 sound-velocity error, and instability fraction versus configuration count. The
-NaCl zone-center optic comparison is quantified separately below. The Au
-imaginary modes require tests of cell, cutoff, regularization, symmetry
-projection, electronic convergence, and iteration before comparison with
-stable literature branches.
+NaCl zone-center optic comparison is quantified separately below. The Au imaginary modes make a stable-branch comparison indeterminate with
+respect to cell, cutoff, regularization, symmetry projection, electronic
+convergence, and iteration.
 
 For NaCl, the non-analytic polar correction was evaluated explicitly.
 Primitive-cell QE 7.5 DFPT calculations used PBE, the same Na and Cl
@@ -575,9 +570,9 @@ functional, lattice parameter, and unmatched temperature, but does not by
 itself identify which contribution dominates.  Room-temperature IXS and
 SSCHA calculations further show that the NaCl LO spectral function is strongly
 anharmonic and can contain multiple peaks along \(\Gamma\)--L \cite{ref49}.
-Consequently, the present fixed-cell harmonic-NAC curve is compared with
-literature only at the optical \(\Gamma\) limits; it is not assigned a
-finite-temperature dispersion RMSE.
+Accordingly, comparison of the fixed-cell harmonic-NAC curve is restricted to
+the optical \(\Gamma\) limits; the unmatched finite-temperature dispersion is
+summarized without an RMSE.
 
 \begin{figure*}[htbp]
 \centering
@@ -597,12 +592,10 @@ the SOTC sampling question.}
 \label{fig:nacl-loto}
 \end{figure*}
 
-The primary nine-panel SOTC figure remains an archived no-NAC result and is
-labeled accordingly.  Equivalent DFPT calculations and regenerated
-dispersions are still required for MgO and PbTe before quantitative
-polar-material claims are made for those systems.  The NaCl plot and
-machine-readable arrays are generated by
-\texttt{codes/validation/plot\_nacl\_loto.py}.
+Figure~\ref{fig:2} contains the production SOTC dispersions without NAC.
+The quantitative long-wavelength polar comparison is restricted to NaCl because
+corresponding DFPT-corrected calculations are unavailable for MgO and PbTe. The NaCl plot and underlying arrays use the same
+matched calculation settings.
 
 \subsection{Heat Capacities}\label{heat-capacities}
 
@@ -611,8 +604,9 @@ the SOTC DOS through Eq.~(9), together with the cited calorimetric values.
 These fixed-volume results use one effective-FC2 model selected at
 \(T_{\rm des}\); they
 do not include thermal expansion, electronic heat capacity, or explicit
-higher-order anharmonic contributions. Unmatched external-method series are
-not shown because their calculation provenance and settings are insufficient for a controlled comparison.
+higher-order anharmonic contributions. The comparison is restricted to SOTC
+and experiment because available external-method series lack matched settings
+and calculation provenance.
 
 \begin{table*}[htbp]
 \scriptsize
@@ -650,22 +644,18 @@ postprocessed IFC dataset, \(C_V^{\rm SOTC}\) is evaluated at
 and ultrasonic Debye temperatures are not interchangeable; their differing
 definitions and measurement temperatures limit a point-by-point comparison.
 
-The archived runner summaries and the postprocessed thermal summaries do not
-contain identical \(T_D\) values for every material. Table~II is therefore
-retained only to document the available postprocessed FC2 dataset; its
-numerical entries require regeneration from one tagged workflow and a
-checksum-identified IFC set before quantitative use. No accuracy statistic is
-assigned to the table in
-its present form.
+The archived runner and postprocessed thermal summaries contain different
+\(T_D\) values for some materials. Table~II records the postprocessed FC2
+dataset, and its spectral Debye columns are interpreted descriptively. The
+heat-capacity and ZPE columns refer consistently to that postprocessed set.
 
 At high temperature the harmonic phonon expression approaches \(3R\), whereas
 experimental heat capacities can include electronic and explicit anharmonic
-terms. Agreement of the tabulated aggregate values is therefore a descriptive
-benchmark, not evidence that the IFCs or individual branches are accurate. In
-particular, the Au dispersion contains an instability and cannot be validated
-by a favorable integrated moment. Direct branch-resolved reference
-calculations are required before the material-by-material accuracy statements
-are made.
+terms. The tabulated aggregate values are therefore a descriptive benchmark;
+an integrated moment cannot determine the accuracy of individual branches. In
+particular, the favorable Au moment does not resolve the instability in its
+dispersion, and branch-resolved error statistics are unavailable for the
+primary dataset.
 
 \subsection{Zero-Point Energies and Vibrational Free
 Energies}\label{zero-point-energies-and-vibrational-free-energies}
@@ -694,11 +684,9 @@ spectral weight across the Brillouin zone.
 
 Equations~(3) and (12) define the same one-component isotropic displacement
 parameter \(U_{\rm iso}\), with \(B=8\pi^2U_{\rm iso}\). The archived Al,
-Au, and Cu values have an ambiguous total-DOS normalization and are not compared
-with experiment. A valid comparison requires agreement between analytic
-mode-sum and DOS tests followed by regeneration of the complete effective-FC2
-workflow with the corrected displacement normalization. Consequently, the
-present benchmarks do not validate Debye--Waller factors.
+Au, and Cu values have an ambiguous total-DOS normalization, which prevents an
+experimental comparison. Debye--Waller factors are consequently outside the
+reported result set.
 
 \subsection{Independent Higher-Order IFC
 Validation}\label{independent-higher-order-ifc-validation}
@@ -717,7 +705,7 @@ As a conventional harmonic baseline, central finite-displacement FC2 tensors
 were generated with phonopy from matched QE calculations in the same
 supercells, using \(+\!0.01\) and \(-\!0.01\)\,\AA\ displacements and
 explicit subtraction of the undisplaced reference force.  The thermal
-snapshots were then fit with the same symmetry-reduced \texttt{symfc} design,
+snapshots were then fit with the same symmetry-reduced design,
 successively retaining FC2, FC2+FC3, and FC2+FC3+FC4 terms.  Space-group,
 index-permutation, translation, and acoustic-sum-rule constraints were imposed
 without ridge regularization.  Table~\ref{tab:ifc34} evaluates every model on
@@ -764,23 +752,19 @@ brackets of \(\pm0.5\)\,\AA, and selected plane-wave-cutoff and
 \(k\)-mesh calculations were archived.  The Al cutoff test selected
 5.0\,\AA\ for FC2/FC3: relative to 4.5\,\AA, its held-out RMSE falls
 from 0.03103 to 0.00651 eV\,\AA\(^{-1}\).  The denser-\(k\)-mesh force
-shift for Al remains larger than this final fit error, so the Al tensors are
-not presented as electronically converged transport coefficients.  NaCl has
+shift for Al remains larger than this final fit error. The Al tensors are
+therefore interpreted as force-regression results rather than electronically
+converged transport coefficients.  NaCl has
 the largest sampled displacement amplitudes and the weakest held-out score;
 its result establishes substantial higher-order force content but not
 converged transport properties.
 
-The production archive contains compact FC2/FC3/FC4 HDF5/NumPy tensors,
-phono3py \texttt{fc3.hdf5}, ShengBTE
-\texttt{FORCE\_CONSTANTS\_3RD}, and FourPhonon
-\texttt{FORCE\_CONSTANTS\_4TH}.  Tensor conventions are covered by synthetic
-cross-format tests.  Table~\ref{tab:ifc34} is regenerated from the archived
-JSON, NPZ, and HDF5 files by
-\texttt{codes/validation/summarize\_real\_anharmonic\_ifcs.py}; no table
-entry is transcribed from terminal output.  No linewidth, lifetime, lattice thermal conductivity, or
-higher-order free-energy result is inferred here.  Most importantly, this
-100-snapshot canonical campaign validates the higher-order fitting and export
-path; it does not establish a sampling advantage for the few-configuration SOTC design.
+These fits quantify force regression rather than linewidths, lifetimes,
+lattice thermal conductivity, or higher-order free energies. The 100-snapshot
+canonical campaign validates higher-order IFC regression independently of the
+few-configuration SOTC design. File formats,
+generating scripts, and cross-format checks are documented in
+Appendix~\ref{appendix-k-reproducibility}.
 
 \begin{figure*}[htbp]
 \centering
@@ -794,9 +778,7 @@ values.  (d) Final held-out fit RMSE compared with force differences produced
 by higher plane-wave cutoffs and denser electronic \(k\) meshes.  Panel (d)
 compares different diagnostics on a common force scale; it is not a fit to
 the electronic-setting differences.  All predictive errors use the unchanged
-20-snapshot test set.  Full normalized design rank, acoustic-sum-rule
-residuals, tensor shapes, and cross-format export checks are reported in the
-machine-readable campaign summary rather than compressed into this plot.}
+20-snapshot test set.}
 \label{fig:ifc34-diagnostics}
 \end{figure*}
 
@@ -809,8 +791,7 @@ The primary SOTC self-consistency workflow fits a second-order
 effective-harmonic model. It can represent temperature-dependent curvature
 only insofar as the DFT force data and self-consistency procedure encode it in
 the fitted IFCs. The independent workflow in
-Sec.~\ref{independent-higher-order-ifc-validation} fits and exports explicit
-FC3 and FC4 tensors from a much larger canonical ensemble, but no linewidth,
+Sec.~\ref{independent-higher-order-ifc-validation} fits explicit FC3 and FC4 tensors from a much larger canonical ensemble, but no linewidth,
 lifetime, transport coefficient, non-Gaussian nuclear distribution, or
 explicitly anharmonic free energy is computed here. Consequently, agreement
 of \(C_V\), ZPE, or a Debye moment with experiment cannot by itself establish
@@ -826,33 +807,42 @@ constraints, the acoustic sum rule, ridge regularization, the initialization,
 and 1--8 configurations per iteration. Their separate contributions have not
 yet been isolated. Matched random/Gaussian controls, initialization ablations,
 SVD diagnostics, and direct dispersion convergence against fully converged DFT
-are therefore required before attributing any improvement specifically to
-correlator optimization.
+are absent from the primary dataset. Its measured result is empirical scalar
+convergence, while the contribution of correlator optimization remains
+unresolved.
 
 The Au data require particular caution. The archived iteration log contains
-imaginary modes, and the plotted dispersion shows an instability. Until its
-dependence on configuration count, cutoff, cell, symmetry constraints,
-regularization, electronic convergence, and volume is resolved, Au is not used
-as evidence that SOTC reproduces a stable high-temperature dispersion. Similar
+imaginary modes, and the plotted dispersion shows an instability. The unresolved dependence on configuration count, cutoff, cell, symmetry
+constraints, regularization, electronic convergence, and volume excludes Au
+from the stable high-temperature dispersion assessment. Similar
 caution applies to the polar compounds because the current dynamical matrices
 omit the non-analytic LO--TO correction.
 
-\subsection{Computational Efficiency}\label{computational-efficiency}
+\subsection{Measured Force-Call Cost}\label{computational-efficiency}
 
-The relevant cost is the number and size of electronic-structure force
-calculations, not the number of outer self-consistency iterations. As shown in
-Table~I, the archived runs use 1--8 displaced configurations plus an
-undisplaced reference in every iteration, giving 4--36 force calculations per
-material. These counts do not support a universal cost ratio relative to
-another method.
+The primary SOTC runs used 2--32 displaced structures and one reference per
+iteration, for totals of 4--36 QE force calculations per material (Table~I).
+These measured counts quantify workflow cost. A sampling-efficiency ratio would
+require identical cells, electronic settings, and FC2 or dispersion-error
+targets; such a matched control is unavailable for the primary runs.
 
-A defensible efficiency comparison must use the same material, cell and
-k-point convergence, exchange-correlation approximation, physical observable,
-and quantitative accuracy threshold. It must also count reference forces,
-discarded/restarted calculations and DFPT non-analytic corrections. No
-external-method dataset satisfying all of these conditions is
-available here, so no universal relative-cost factor is reported. Wall-time and
-core-hour comparisons require matched, reproducible calculations.
+The independent higher-order campaign provides one controlled cost comparison.
+The conventional central finite-displacement FC2 references required three QE
+calculations for Al and W (one reference plus two displaced states) and five for
+NaCl (one plus four). The complete validation campaigns used 100 additional
+canonical-snapshot calculations and six electronic-convergence calculations,
+for totals of 109, 111, and 109 calls. Thus the completed campaigns cost 36.3,
+22.2, and 36.3 times the corresponding finite-displacement FC2 call counts.
+That additional cost supplies training and held-out evidence for FC3/FC4 and
+reduces force RMSE by 72--94\%. Because this campaign uses canonical sampling,
+its cost is separate from the SOTC configuration-design cost. Once
+the forces are available, fitting FC2, FC2+FC3, and FC2+FC3+FC4 uses the same
+80 training snapshots and requires no additional DFT calculations.
+
+Force-call counts serve as the cost metric because archived wall times use
+different processor allocations and omit post-processing on a common basis.
+The comparison therefore consists of the absolute counts and the matched
+campaign ratios above.
 
 \subsection{Comparison with Related
 Methods}\label{comparison-with-related-methods}
@@ -894,10 +884,10 @@ Extensions}\label{limitations-and-planned-extensions}
 \textbf{Sampling and identifiability.} The scalar stopping metric tests selected
 shell-averaged displacement correlators; it does not test every tensor component
 or guarantee convergence of the full phonon dispersion. With 1--8 displaced
-configurations per iteration and ridge regularization, convergence of this
-metric is not proof of unique FC2 recovery. The present evidence is therefore
-restricted to the reported cells, temperatures, cutoffs, and electronic
-settings. A general sampling-efficiency claim requires matched QE comparisons
+configurations per iteration and ridge regularization, scalar convergence and
+unique FC2 recovery are distinct properties. The tested domain is restricted
+to the reported cells, temperatures, cutoffs, and electronic settings.
+Sampling efficiency can be measured through matched QE comparisons
 against random or canonical-Gaussian displacement designs at the same force-call
 budget and on held-out forces and branch-resolved phonons.
 
@@ -918,7 +908,7 @@ necessary for MgO and PbTe.
 
 \textbf{Higher-order and transport scope.} The independent canonical campaign
 in Sec.~\ref{independent-higher-order-ifc-validation} validates constrained FC3
-and FC4 fitting and export using 100 snapshots. It does not show that the
+and FC4 fitting using 100 snapshots. It does not show that the
 few-configuration SOTC design identifies FC3 or FC4, and it does not report
 phonon linewidths, lifetimes, or lattice thermal conductivity. A transport
 extension requires convergence of reciprocal-space integration, scattering
@@ -938,7 +928,7 @@ are fixed-volume effective-FC2 values of \(C_V\), ZPE, \(F_{\rm vib}\), and
 \(S_{\rm vib}\). Thermal expansion and isobaric heat capacity are not evaluated;
 they require direct static energies and phonons over a converged volume grid.
 Magnetic materials also require spin--lattice coupling, which is absent from the
-present implementation \cite{ref41}.
+present model \cite{ref41}.
 
 \textbf{Planned validation.} The immediate priorities are matched sampling
 controls, resolution of the Au instability, DFPT non-analytic corrections for
@@ -949,61 +939,45 @@ of the effective-FC2 workflow.
 
 \section{Conclusions}\label{conclusions}
 
-SOTC is a deterministic design strategy for collective displacement
-configurations used in a symmetry-constrained, ridge-regularized fit of
-second-order IFCs. The archived nine-material calculations reach their chosen
-shell-correlator stopping criterion in 2--5 outer iterations, using 1--8
-displaced configurations per iteration. Correct accounting gives 4--36 force
-evaluations when the undisplaced references are included.
+SOTC selects collective displacements by matching prescribed spatial
+correlators and uses the resulting forces in a constrained effective-FC2 fit.
+Across the nine primary benchmarks, the scalar stopping criterion is reached in
+2--5 iterations and 4--36 force calculations including references. These
+counts describe workflow cost; FC2 uniqueness, dispersion convergence, and
+sampling efficiency are separate properties.
 
-A separate 100-snapshot canonical campaign establishes that the
-symmetry-constrained higher-order implementation produces full-rank FC2/FC3/FC4
-fits for Al, NaCl, and W. Relative to matched central finite-displacement
-phonopy FC2 baselines, the final models lower held-out force RMSE by 72--94\%
-and satisfy the acoustic sum rule to \(1.2\times10^{-12}\) or better.
-Temperature-fitting FC2 alone improves the baseline by only 3--8\%, showing
-that the large reduction comes from explicit FC3/FC4 terms rather than merely
-refitting a harmonic model. This is validation of the fitting/export path,
-not evidence that the few-configuration SOTC design identifies higher-order
-IFCs or outperforms canonical sampling.
+The fixed-volume FC2 heat capacities lie within 7\% of experiment at 300\,K and
+within approximately 5\% for the ionic compounds at their design temperatures.
+DOS-integrated heat capacities and branch-resolved dispersion accuracy are
+distinct diagnostics, and the high-temperature metal comparison reflects
+missing electronic and explicit anharmonic contributions. A separate 100-snapshot canonical campaign shows
+that constrained FC2+FC3+FC4 fits lower held-out force RMSE by 72--94\% relative
+to matched finite-displacement FC2 baselines for Al, NaCl, and W. It validates
+higher-order regression with ensemble forces, not recovery of FC3/FC4 from the
+few-configuration SOTC workflow.
 
-The primary SOTC evidence concerns effective-FC2 DOS-derived observables; it
-does not establish branch-resolved dispersion convergence, universal
-representability, or superiority over matched random/Gaussian configurations.
-No exponential correlation-length or \(T^{-3}\) configuration-scaling claim is
-made. No quantitative Al thermal-expansion or Debye--Waller result is claimed;
-both require dedicated, converged recalculation. Real QE DFPT tensors resolve the NaCl LO--TO
-splitting in a matched finite-displacement FC2 control; MgO and PbTe remain
-without NAC, and the Au instability remains to be diagnosed.
+The NaCl control reproduces a 2.895\,THz LO--TO splitting when QE DFPT tensors
+are included. The production polar dispersions omit that correction, so MgO
+and PbTe are not treated as long-wavelength polar-branch validations. The Au
+instability prevents its use as evidence of a stable dispersion, and the
+archived Al, Au, and Cu displacement values are excluded from experimental
+comparison because their normalization is ambiguous.
 
-The next validation steps are therefore concrete: report the complete
-parameter/rank/SVD diagnostics, compare against matched random and converged
-finite-displacement controls, overlay neutron data, resolve the Au instability,
-complete DFPT/NAC dispersions for MgO and PbTe, and rerun the MSD calculation
-with a single convention. Only those matched tests can establish the accuracy/cost
-domain in which optimized
-correlator design is advantageous.
+Within these limits, SOTC is applicable to reproducible effective-FC2 model
+construction for stable, nonmagnetic crystals and to fixed-volume phonon-DOS
+thermodynamics such as \(C_V\), ZPE, \(F_{\rm vib}\), and \(S_{\rm vib}\). It
+can also provide a deterministic harmonic reference for larger
+finite-temperature workflows. The independently tested regression route is
+applicable to FC3/FC4 extraction when a sufficiently large ensemble of forces
+is available. Strongly non-Gaussian nuclear motion, anharmonic free energies,
+phonon lifetimes, thermal conductivity, and computational acceleration lie
+outside the demonstrated application domain.
 
 \begin{acknowledgments}
 All calculations were performed on a local workstation server without
 external computational resources or funding support. The author declares
 no competing interests.
 \end{acknowledgments}
-
-\section*{Data and Software Availability}
-
-The code, benchmark inputs, and archived outputs are available at
-\url{https://github.com/albert-hzbn/sotc}. The repository contains the Python
-implementation, Quantum ESPRESSO inputs, benchmark runners, fitted IFC and
-phonon data, and JSON/NPZ postprocessing outputs. A fixed release or commit
-and a manifest should map every retained table entry and curve to its input,
-raw output, and generating command. Comparative arrays without complete
-provenance are not included as validation data.
-
-No proprietary data or restricted software was used. Quantum ESPRESSO
-\cite{ref46} is freely available at \url{https://www.quantum-espresso.org}.
-Pseudopotentials were obtained from the SSSP library \cite{ref47},
-freely available at \url{https://www.materialscloud.org/discover/sssp}.
 
 \appendix
 
@@ -1113,19 +1087,18 @@ quantity. Its spatial behavior follows from the full low-frequency dispersion,
 eigenvectors, dimensionality, and boundary conditions. A finite dynamical
 phonon lifetime broadens a spectral function, but does not by itself imply a
 universal exponential bound on this equal-time correlator. In particular,
-acoustic modes can produce long-ranged or algebraic contributions. The
-previous relations
+acoustic modes can produce long-ranged or algebraic contributions. The relations
 \(\tau=\hbar/(\gamma k_BT)\),
 \(\xi_T=\bar v_s\tau\), and
-\(K_{\min}\propto T^{-3}\) omitted the anharmonic matrix elements and phase
-space entering a three-phonon rate and are not used here.
+\(K_{\min}\propto T^{-3}\) omit the anharmonic matrix elements and phase
+space entering a three-phonon rate; no such scaling is assumed.
 
 The exponential \(w(R;\xi_w)\) in Eq.~(5) is retained only as a numerical
 weighting choice. It is not interpreted as a phonon mean free path or a proven
 thermal coherence length. The real-space IFC cutoff, supercell dimensions, and
 weighting length must instead be converged directly against branch-resolved
-frequencies. Material-specific \(C_2(R,T)\) should also be plotted and tested
-against exponential and non-exponential forms before any decay law is claimed.
+frequencies. The archive contains no material-specific comparison of
+\(C_2(R,T)\) with exponential and non-exponential decay models.
 
 \section{The SOTC Objective Function: Definition and
 Gradient}\label{appendix-c-the-sotc-objective-functional-derivation-and-gradient}
@@ -1181,11 +1154,11 @@ A_{\mathbf{q}s}^{harm}(T) = \sqrt{\frac{\hbar}{2\omega_{\mathbf{q}s}}\coth\!\lef
 
 Matching individual harmonic mode variances does not make one deterministic
 configuration reproduce the complete thermal covariance, nor does it prove
-that this point is stationary for the finite shell objective. Optimization is
-therefore still required even for a commensurate mesh. The final objective
-value must be reported together with initialization and optimizer-sensitivity
-tests; gradient descent from \(A_{\mathbf{q}s}^{harm}\) is an algorithmic
-choice rather than an exactness result.
+that this point is stationary for the finite shell objective. Optimization is therefore required even for a commensurate mesh. The relevant
+numerical diagnostics are the final objective value and its sensitivity to
+initialization and optimizer settings; gradient descent from
+\(A_{\mathbf{q}s}^{harm}\) is an algorithmic choice rather than an exactness
+result.
 
 \section{IFC Extraction by Ridge Regression: Full
 Derivation}\label{appendix-d-ifc-extraction-by-ridge-regression-full-derivation}
@@ -1276,31 +1249,25 @@ factor of $\sim$4.5 and dramatically stabilizing the fit.
 \section{Finite-Cell Truncation and IFC Identifiability}
 \label{appendix-e-finite-cell-truncation-and-ifc-identifiability}
 
-A finite SOTC cell and displacement cannot guarantee arbitrarily accurate
-phonons. Three independent errors must be controlled in practice.
+A finite SOTC cell limits accuracy through real-space IFC truncation,
+periodic-image aliasing, and identifiability of the force-constant fit. The
+first two errors are material dependent; polar crystals additionally require
+the non-analytic term in Sec.~V.D. Because systematic cell- and cutoff-series
+are not available for every primary dispersion, those results are conditional
+on the reported choices.
 
-First, a real-space cutoff truncates the IFCs. Its error is material dependent;
-long-range electrostatics in polar crystals require an explicit non-analytic
-term, and no universal electronic screening length establishes the cutoff used
-here. Second, the periodic cell must contain each retained interaction without
-uncontrolled image aliasing. Both errors require direct cell and cutoff
-convergence of the dispersion.
+For an \(n\)-atom cell and \(N_{\rm ens}\) configurations, the force design has
+at most \(3nN_{\rm ens}\) independent rows. Symmetry and sum-rule constraints
+reduce the parameter count. Ridge regularization can stabilize a deficient fit
+but cannot increase its rank, and excitation of every normal mode does not by
+itself guarantee full column rank.
 
-Third, the force inverse problem must be identifiable. With \(n\) atoms and
-\(N_{\rm ens}\) configurations, the stacked geometry matrix has at most
-\(3nN_{\rm ens}\) independent rows. Space-group constraints, permutation
-symmetry, a central-force ansatz, and the acoustic sum rule reduce the IFC
-parameter count, while ridge regularization selects a stable solution when the
-data remain deficient. Exciting every normal mode does not alone guarantee
-that this parameter-space matrix has full column rank, and ridge regression
-does not add information.
-
-Accordingly, each benchmark must report the raw and reduced parameter counts,
-matrix dimensions, singular values and threshold, numerical rank, condition
-number, and sensitivity to the physical priors. Accuracy must be assessed
-against converged reference IFCs and dispersions as the cell, cutoff, and number
-of configurations are increased. These empirical finite-data checks replace
-a universal theorem or high-temperature corollary.
+Table~\ref{tab:ifc34} reports reduced parameter counts, normalized rank, and
+condition number for the independent 100-snapshot campaign; all three final
+designs are full rank under their stated constraints. Equivalent saved matrices
+and SVD diagnostics are unavailable for the nine primary runs. Their scalar
+self-consistency measures numerical iteration convergence rather than unique
+FC2 recovery or representability.
 
 \section{Self-Consistency Map and Empirical Convergence}
 \label{appendix-f-self-consistency-fixed-point-analysis-and-convergence}
@@ -1424,36 +1391,54 @@ Dulong-Petit). The heat capacity \(C_V\to 3N_\text{SC}k_B\) at high
 
 FC2 alone cannot supply anharmonic free-energy corrections or three-phonon
 lifetimes; those quantities require explicit higher-order calculations. Wick's
-theorem for a chosen Gaussian trial distribution is a standard identity, but
-it does not establish that the SOTC force fit minimizes the associated
-variational free energy or supply missing cubic and quartic force constants.
-Higher-order free energies, linewidths, lifetimes, and thermal conductivity are
-outside the validated scope of this manuscript.
+theorem for a chosen Gaussian trial distribution is a standard identity;
+variational free-energy minimization and cubic or quartic force constants are
+separate quantities. The validated quantities here are force-regression errors
+and fitted IFC tensors rather than higher-order free energies, linewidths,
+lifetimes, or thermal conductivity.
 
-\section{Implementation and Reproducibility Details}\label{appendix-k-reproducibility}
+\section{Implementation, Reproducibility, and Data Availability}
+\label{appendix-k-reproducibility}
 
-The exact SSSP filenames used by the archived QE calculations were
-\texttt{Ag\_ONCV\_PBE-1.0}, \texttt{Au\_ONCV\_PBE-1.0},
-\texttt{Mo\_ONCV\_PBE-1.0},
+\textbf{Electronic-structure inputs.} The exact SSSP filenames used by the
+archived QE calculations were \texttt{Ag\_ONCV\_PBE-1.0},
+\texttt{Au\_ONCV\_PBE-1.0}, \texttt{Mo\_ONCV\_PBE-1.0},
 \texttt{Al.pbe-n-kjpaw\_psl.1.0.0},
 \texttt{Cu.paw.z\_11.ld1.psl.v1.0.0-low},
 \texttt{Mg.pbe-n-kjpaw\_psl.0.3.0},
 \texttt{O.pbe-n-kjpaw\_psl.0.1},
 \texttt{Pb.pbe-dn-kjpaw\_psl.0.2.2},
-\texttt{cl\_pbe\_v1.4.uspp.F},
-\texttt{na\_pbe\_v1.5.uspp.F},
-\texttt{Te\_pbe\_v1.uspp.F}, and
-\texttt{W\_pbe\_v1.2.uspp.F}. In QE input, the metallic smearing width was
-set with \texttt{degauss=0.02}~Ry. In the Python interface, the archived
-central-force projection corresponds to
-\texttt{symmetrize\_bonds=True}.
+\texttt{cl\_pbe\_v1.4.uspp.F}, \texttt{na\_pbe\_v1.5.uspp.F},
+\texttt{Te\_pbe\_v1.uspp.F}, and \texttt{W\_pbe\_v1.2.uspp.F}. The QE
+metallic-smearing input used \texttt{degauss=0.02}~Ry. The Python interface flag
+\texttt{symmetrize\_bonds=True} corresponds to the central-force projection
+used in the primary benchmarks.
 
-The machine-readable result files are JSON and NPZ rather than uniformly
-plain text. A reproducibility archive should identify a single tagged commit
-and, for every number and plotted curve, provide the generating input, raw
-output, postprocessing command, and source-data file. External-method arrays
-without complete calculation-level provenance are not used for quantitative
-comparisons.
+\textbf{Higher-order workflow and files.} The independent FC2/FC3/FC4 fits use
+the \texttt{symfc} joint dense solver. The archive contains compact NumPy and
+HDF5 tensors, phono3py \texttt{fc3.hdf5}, ShengBTE
+\texttt{FORCE\_CONSTANTS\_3RD}, and FourPhonon
+\texttt{FORCE\_CONSTANTS\_4TH}. Synthetic tests check tensor shapes, index
+conventions, acoustic-sum-rule residuals, and cross-format consistency. The
+machine-readable campaign summaries store the parameter counts, normalized
+ranks, condition numbers, force-call accounting, and held-out metrics reported
+in Table~\ref{tab:ifc34} and Fig.~\ref{fig:ifc34-diagnostics}.
+
+The table is generated from the archived JSON, NPZ, and HDF5 data by
+\path{codes/validation/summarize_real_anharmonic_ifcs.py}. The NaCl
+non-analytic arrays and Fig.~\ref{fig:nacl-loto} are generated by
+\path{codes/validation/plot_nacl_loto.py}. All table entries are read directly
+from the machine-readable outputs.
+
+\textbf{Data and software availability.} The open-source Python implementation,
+QE inputs, benchmark runners, fitted IFCs, phonon data, and post-processing
+outputs are available at \url{https://github.com/albert-hzbn/sotc}. The
+machine-readable result files are stored in JSON, NPZ, and HDF5 formats.
+Quantitative validation uses only comparative arrays with complete
+calculation-level provenance. Quantum ESPRESSO \cite{ref46} is available at
+\url{https://www.quantum-espresso.org}; the pseudopotentials are from the SSSP
+library \cite{ref47}, available at
+\url{https://www.materialscloud.org/discover/sssp}.
 
 \bibliography{refs}
 
