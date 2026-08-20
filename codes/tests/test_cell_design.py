@@ -117,5 +117,20 @@ class TestDisplacementOptimizer:
         assert Q >= 0.0
 
 
+    def test_shell_tolerance_is_explicit_and_validated(self):
+        debye = DebyeCorrelator(T_D=26.0, M_amu=4.0026)
+        optimizer = DisplacementOptimizer(
+            target_correlator=debye,
+            T=1.6,
+            shell_tolerance_ang=0.025,
+        )
+        assert optimizer.shell_tolerance_ang == pytest.approx(0.025)
+        with pytest.raises(ValueError, match="shell_tolerance_ang"):
+            DisplacementOptimizer(
+                target_correlator=debye,
+                T=1.6,
+                shell_tolerance_ang=0.0,
+            )
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

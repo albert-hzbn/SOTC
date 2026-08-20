@@ -1,0 +1,4615 @@
+{
+  "material": "nacl",
+  "scope": "same 3x3x3 cell, equilibrium structure, QE settings, force subtraction, force-drift projection, IFC priors, held-out set, and q path; displacement selection is the controlled variable",
+  "temperature_k": 700.0,
+  "supercell_atoms": 54,
+  "supercell_cell_ang": [
+    [
+      0.0,
+      8.595,
+      8.595
+    ],
+    [
+      8.595,
+      0.0,
+      8.595
+    ],
+    [
+      8.595,
+      8.595,
+      0.0
+    ]
+  ],
+  "electronic_settings": {
+    "ecutwfc_ry": 60.0,
+    "ecutrho_ry": 480.0,
+    "supercell_kmesh": [
+      2,
+      2,
+      2
+    ],
+    "conv_thr_ry": 1e-09,
+    "smearing": null,
+    "degauss_ry": 0.0
+  },
+  "fit_settings": {
+    "fc2_cutoff_ang": 4.3,
+    "ridge_alpha": 0.001,
+    "central_force_projection": true,
+    "acoustic_sum_rule": true
+  },
+  "counts": [
+    1,
+    2,
+    4,
+    8,
+    16
+  ],
+  "canonical_seed_count": 20,
+  "test_snapshot_count": 20,
+  "displacement_amplitudes_ang": {
+    "definition": "RMS over atoms and Cartesian components per configuration",
+    "canonical_training_pool": {
+      "median": 0.20312956781861125,
+      "p10": 0.1802006204904308,
+      "p90": 0.22122684696893696
+    },
+    "sotc_by_initialization": {
+      "td_0.75": [
+        0.22626154285551792,
+        0.2262973167033235,
+        0.22648993369621492,
+        0.22649851888126754,
+        0.2263306217892846,
+        0.22636607321899696,
+        0.22619766800397492,
+        0.226505493840626,
+        0.22645165020319075,
+        0.226438008034606,
+        0.22653611161039797,
+        0.22630228681876144,
+        0.2261953099674238,
+        0.22650184993150554,
+        0.2264496630702319,
+        0.2265263336427318
+      ],
+      "td_1.00": [
+        0.1701243984961906,
+        0.17001334105055402,
+        0.17008893907673336,
+        0.1700324591772061,
+        0.16989623695724387,
+        0.17000563629942048,
+        0.17009864691185486,
+        0.17008273932195328,
+        0.1700435997232764,
+        0.1700204305288287,
+        0.1701046632626289,
+        0.17008410687918385,
+        0.17007248980386636,
+        0.17007243109655218,
+        0.17005721767239804,
+        0.16999194872439155
+      ],
+      "td_1.25": [
+        0.13632302900974377,
+        0.13630816165543266,
+        0.13627905628564313,
+        0.1363197118595061,
+        0.13629667289206285,
+        0.13617018112180657,
+        0.13629060869921827,
+        0.1362721747788857,
+        0.13626659651171086,
+        0.1363272683074111,
+        0.13629983823630423,
+        0.13638387296944054,
+        0.13626396417649225,
+        0.13636344264598954,
+        0.13633068509350235,
+        0.13631684233962812
+      ]
+    }
+  },
+  "sotc_initialization_series": {
+    "td_0.75": [
+      {
+        "n_configurations": 1,
+        "dispersion": {
+          "mae_thz": 2.229097780378851,
+          "rmse_thz": 2.4087757272482664,
+          "max_abs_thz": 4.080663449721739,
+          "unstable_fraction_below_minus_0p05_thz": 0.01195219123505976
+        },
+        "held_out_force": {
+          "mae_ev_ang": 0.4296394220639099,
+          "rmse_ev_ang": 0.5604236023218326,
+          "max_abs_ev_ang": 4.667010175369162
+        },
+        "design": {
+          "n_snapshots": 1,
+          "n_force_observations": 162,
+          "raw_parameter_count": 162,
+          "projected_parameter_count": 6,
+          "data_rank": 149,
+          "rank": 149,
+          "rank_deficiency": 13,
+          "rank_tolerance": 9.076733713228712e-10,
+          "condition_number": null,
+          "condition_number_nonzero_subspace": 151.59957283477468,
+          "ridge_alpha": 0.001,
+          "ridge_solver_rank": 162,
+          "symmetrize_bonds": true,
+          "acoustic_sum_rule": "post-fit on-site construction",
+          "ridge_creates_information": false
+        }
+      },
+      {
+        "n_configurations": 2,
+        "dispersion": {
+          "mae_thz": 1.239882664146496,
+          "rmse_thz": 1.6676221887282092,
+          "max_abs_thz": 5.041519532412121,
+          "unstable_fraction_below_minus_0p05_thz": 0.1301460823373174
+        },
+        "held_out_force": {
+          "mae_ev_ang": 0.32059297235787326,
+          "rmse_ev_ang": 0.4325794099560752,
+          "max_abs_ev_ang": 4.969716196546848
+        },
+        "design": {
+          "n_snapshots": 2,
+          "n_force_observations": 324,
+          "raw_parameter_count": 162,
+          "projected_parameter_count": 6,
+          "data_rank": 162,
+          "rank": 162,
+          "rank_deficiency": 0,
+          "rank_tolerance": 1.1188084728304342e-09,
+          "condition_number": 23.725287914094782,
+          "condition_number_nonzero_subspace": 23.725287914094782,
+          "ridge_alpha": 0.001,
+          "ridge_solver_rank": 162,
+          "symmetrize_bonds": true,
+          "acoustic_sum_rule": "post-fit on-site construction",
+          "ridge_creates_information": false
+        }
+      },
+      {
+        "n_configurations": 4,
+        "dispersion": {
+          "mae_thz": 0.8413478261181021,
+          "rmse_thz": 1.1611727791398496,
+          "max_abs_thz": 3.875449928675504,
+          "unstable_fraction_below_minus_0p05_thz": 0.1102257636122178
+        },
+        "held_out_force": {
+          "mae_ev_ang": 0.23626308416779385,
+          "rmse_ev_ang": 0.3538654448408091,
+          "max_abs_ev_ang": 5.444075388046776
+        },
+        "design": {
+          "n_snapshots": 4,
+          "n_force_observations": 648,
+          "raw_parameter_count": 162,
+          "projected_parameter_count": 6,
+          "data_rank": 162,
+          "rank": 162,
+          "rank_deficiency": 0,
+          "rank_tolerance": 1.5399538958824484e-09,
+          "condition_number": 12.984822597161315,
+          "condition_number_nonzero_subspace": 12.984822597161315,
+          "ridge_alpha": 0.001,
+          "ridge_solver_rank": 162,
+          "symmetrize_bonds": true,
+          "acoustic_sum_rule": "post-fit on-site construction",
+          "ridge_creates_information": false
+        }
+      },
+      {
+        "n_configurations": 8,
+        "dispersion": {
+          "mae_thz": 0.617922949039942,
+          "rmse_thz": 0.7618864102014297,
+          "max_abs_thz": 1.884567809070437,
+          "unstable_fraction_below_minus_0p05_thz": 0.023240371845949535
+        },
+        "held_out_force": {
+          "mae_ev_ang": 0.21459800055751746,
+          "rmse_ev_ang": 0.3386282721357908,
+          "max_abs_ev_ang": 5.559841769831111
+        },
+        "design": {
+          "n_snapshots": 8,
+          "n_force_observations": 1296,
+          "raw_parameter_count": 162,
+          "projected_parameter_count": 6,
+          "data_rank": 162,
+          "rank": 162,
+          "rank_deficiency": 0,
+          "rank_tolerance": 2.2169254222074208e-09,
+          "condition_number": 11.009072268056675,
+          "condition_number_nonzero_subspace": 11.009072268056675,
+          "ridge_alpha": 0.001,
+          "ridge_solver_rank": 162,
+          "symmetrize_bonds": true,
+          "acoustic_sum_rule": "post-fit on-site construction",
+          "ridge_creates_information": false
+        }
+      },
+      {
+        "n_configurations": 16,
+        "dispersion": {
+          "mae_thz": 0.7482990178356624,
+          "rmse_thz": 0.9276876571036772,
+          "max_abs_thz": 2.4607549353023943,
+          "unstable_fraction_below_minus_0p05_thz": 0.01859229747675963
+        },
+        "held_out_force": {
+          "mae_ev_ang": 0.2330644585920012,
+          "rmse_ev_ang": 0.349753907609841,
+          "max_abs_ev_ang": 5.470429643899829
+        },
+        "design": {
+          "n_snapshots": 16,
+          "n_force_observations": 2592,
+          "raw_parameter_count": 162,
+          "projected_parameter_count": 6,
+          "data_rank": 162,
+          "rank": 162,
+          "rank_deficiency": 0,
+          "rank_tolerance": 2.9868669878187786e-09,
+          "condition_number": 10.1982761471983,
+          "condition_number_nonzero_subspace": 10.1982761471983,
+          "ridge_alpha": 0.001,
+          "ridge_solver_rank": 162,
+          "symmetrize_bonds": true,
+          "acoustic_sum_rule": "post-fit on-site construction",
+          "ridge_creates_information": false
+        }
+      }
+    ],
+    "td_1.00": [
+      {
+        "n_configurations": 1,
+        "dispersion": {
+          "mae_thz": 1.5259734212364766,
+          "rmse_thz": 2.3904419126555405,
+          "max_abs_thz": 6.541623081606499,
+          "unstable_fraction_below_minus_0p05_thz": 0.2410358565737052
+        },
+        "held_out_force": {
+          "mae_ev_ang": 0.3162381041255215,
+          "rmse_ev_ang": 0.43348576466289035,
+          "max_abs_ev_ang": 5.453971387580536
+        },
+        "design": {
+          "n_snapshots": 1,
+          "n_force_observations": 162,
+          "raw_parameter_count": 162,
+          "projected_parameter_count": 6,
+          "data_rank": 149,
+          "rank": 149,
+          "rank_deficiency": 13,
+          "rank_tolerance": 7.370033486794162e-10,
+          "condition_number": null,
+          "condition_number_nonzero_subspace": 246.75199090138565,
+          "ridge_alpha": 0.001,
+          "ridge_solver_rank": 162,
+          "symmetrize_bonds": true,
+          "acoustic_sum_rule": "post-fit on-site construction",
+          "ridge_creates_information": false
+        }
+      },
+      {
+        "n_configurations": 2,
+        "dispersion": {
+          "mae_thz": 0.4338558870871769,
+          "rmse_thz": 0.5627938781049913,
+          "max_abs_thz": 1.8727627819186567,
+          "unstable_fraction_below_minus_0p05_thz": 0.01859229747675963
+        },
+        "held_out_force": {
+          "mae_ev_ang": 0.1923843640857277,
+          "rmse_ev_ang": 0.33469416999754004,
+          "max_abs_ev_ang": 5.721167273363809
+        },
+        "design": {
+          "n_snapshots": 2,
+          "n_force_observations": 324,
+          "raw_parameter_count": 162,
+          "projected_parameter_count": 6,
+          "data_rank": 162,
+          "rank": 162,
+          "rank_deficiency": 0,
+          "rank_tolerance": 8.506413537094876e-10,
+          "condition_number": 24.603984735469652,
+          "condition_number_nonzero_subspace": 24.603984735469652,
+          "ridge_alpha": 0.001,
+          "ridge_solver_rank": 162,
+          "symmetrize_bonds": true,
+          "acoustic_sum_rule": "post-fit on-site construction",
+          "ridge_creates_information": false
+        }
+      },
+      {
+        "n_configurations": 4,
+        "dispersion": {
+          "mae_thz": 0.46310420297380245,
+          "rmse_thz": 0.6139806770055005,
+          "max_abs_thz": 1.9279628084385765,
+          "unstable_fraction_below_minus_0p05_thz": 0.01859229747675963
+        },
+        "held_out_force": {
+          "mae_ev_ang": 0.20156888230794237,
+          "rmse_ev_ang": 0.3351712030974168,
+          "max_abs_ev_ang": 5.65405279298498
+        },
+        "design": {
+          "n_snapshots": 4,
+          "n_force_observations": 648,
+          "raw_parameter_count": 162,
+          "projected_parameter_count": 6,
+          "data_rank": 162,
+          "rank": 162,
+          "rank_deficiency": 0,
+          "rank_tolerance": 1.1819669186476136e-09,
+          "condition_number": 14.508397033753983,
+          "condition_number_nonzero_subspace": 14.508397033753983,
+          "ridge_alpha": 0.001,
+          "ridge_solver_rank": 162,
+          "symmetrize_bonds": true,
+          "acoustic_sum_rule": "post-fit on-site construction",
+          "ridge_creates_information": false
+        }
+      },
+      {
+        "n_configurations": 8,
+        "dispersion": {
+          "mae_thz": 0.4729233900357431,
+          "rmse_thz": 0.5981664432764452,
+          "max_abs_thz": 1.7620543852043538,
+          "unstable_fraction_below_minus_0p05_thz": 0.019256308100929615
+        },
+        "held_out_force": {
+          "mae_ev_ang": 0.20045449692341463,
+          "rmse_ev_ang": 0.33386842705111675,
+          "max_abs_ev_ang": 5.665888845243758
+        },
+        "design": {
+          "n_snapshots": 8,
+          "n_force_observations": 1296,
+          "raw_parameter_count": 162,
+          "projected_parameter_count": 6,
+          "data_rank": 162,
+          "rank": 162,
+          "rank_deficiency": 0,
+          "rank_tolerance": 1.6199148696872062e-09,
+          "condition_number": 10.685999517131693,
+          "condition_number_nonzero_subspace": 10.685999517131693,
+          "ridge_alpha": 0.001,
+          "ridge_solver_rank": 162,
+          "symmetrize_bonds": true,
+          "acoustic_sum_rule": "post-fit on-site construction",
+          "ridge_creates_information": false
+        }
+      },
+      {
+        "n_configurations": 16,
+        "dispersion": {
+          "mae_thz": 0.42510556203819233,
+          "rmse_thz": 0.5482195282366548,
+          "max_abs_thz": 1.8204455239133246,
+          "unstable_fraction_below_minus_0p05_thz": 0.017928286852589643
+        },
+        "held_out_force": {
+          "mae_ev_ang": 0.19578169783056004,
+          "rmse_ev_ang": 0.33283651162378985,
+          "max_abs_ev_ang": 5.694869048556434
+        },
+        "design": {
+          "n_snapshots": 16,
+          "n_force_observations": 2592,
+          "raw_parameter_count": 162,
+          "projected_parameter_count": 6,
+          "data_rank": 162,
+          "rank": 162,
+          "rank_deficiency": 0,
+          "rank_tolerance": 2.3380862772613437e-09,
+          "condition_number": 11.011832064308376,
+          "condition_number_nonzero_subspace": 11.011832064308376,
+          "ridge_alpha": 0.001,
+          "ridge_solver_rank": 162,
+          "symmetrize_bonds": true,
+          "acoustic_sum_rule": "post-fit on-site construction",
+          "ridge_creates_information": false
+        }
+      }
+    ],
+    "td_1.25": [
+      {
+        "n_configurations": 1,
+        "dispersion": {
+          "mae_thz": 0.6600332314483052,
+          "rmse_thz": 0.978727609479974,
+          "max_abs_thz": 3.4092436832956756,
+          "unstable_fraction_below_minus_0p05_thz": 0.1254980079681275
+        },
+        "held_out_force": {
+          "mae_ev_ang": 0.21903381232370522,
+          "rmse_ev_ang": 0.35305376749324185,
+          "max_abs_ev_ang": 5.823206933982006
+        },
+        "design": {
+          "n_snapshots": 1,
+          "n_force_observations": 162,
+          "raw_parameter_count": 162,
+          "projected_parameter_count": 6,
+          "data_rank": 149,
+          "rank": 149,
+          "rank_deficiency": 13,
+          "rank_tolerance": 5.178713843880445e-10,
+          "condition_number": null,
+          "condition_number_nonzero_subspace": 188.2993583836318,
+          "ridge_alpha": 0.001,
+          "ridge_solver_rank": 162,
+          "symmetrize_bonds": true,
+          "acoustic_sum_rule": "post-fit on-site construction",
+          "ridge_creates_information": false
+        }
+      },
+      {
+        "n_configurations": 2,
+        "dispersion": {
+          "mae_thz": 0.40280314128645345,
+          "rmse_thz": 0.5356726879390524,
+          "max_abs_thz": 2.0518500421120702,
+          "unstable_fraction_below_minus_0p05_thz": 0.021912350597609563
+        },
+        "held_out_force": {
+          "mae_ev_ang": 0.1926050848382678,
+          "rmse_ev_ang": 0.3370643590732315,
+          "max_abs_ev_ang": 5.80038807020598
+        },
+        "design": {
+          "n_snapshots": 2,
+          "n_force_observations": 324,
+          "raw_parameter_count": 162,
+          "projected_parameter_count": 6,
+          "data_rank": 162,
+          "rank": 162,
+          "rank_deficiency": 0,
+          "rank_tolerance": 7.238173845431484e-10,
+          "condition_number": 34.58787929087747,
+          "condition_number_nonzero_subspace": 34.58787929087747,
+          "ridge_alpha": 0.001,
+          "ridge_solver_rank": 162,
+          "symmetrize_bonds": true,
+          "acoustic_sum_rule": "post-fit on-site construction",
+          "ridge_creates_information": false
+        }
+      },
+      {
+        "n_configurations": 4,
+        "dispersion": {
+          "mae_thz": 0.32818729808928243,
+          "rmse_thz": 0.46509712417018,
+          "max_abs_thz": 2.038321057501239,
+          "unstable_fraction_below_minus_0p05_thz": 0.016600265604249667
+        },
+        "held_out_force": {
+          "mae_ev_ang": 0.18243401847572613,
+          "rmse_ev_ang": 0.33791453202974264,
+          "max_abs_ev_ang": 5.87753856058378
+        },
+        "design": {
+          "n_snapshots": 4,
+          "n_force_observations": 648,
+          "raw_parameter_count": 162,
+          "projected_parameter_count": 6,
+          "data_rank": 162,
+          "rank": 162,
+          "rank_deficiency": 0,
+          "rank_tolerance": 1.049196064570886e-09,
+          "condition_number": 17.125071018571372,
+          "condition_number_nonzero_subspace": 17.125071018571372,
+          "ridge_alpha": 0.001,
+          "ridge_solver_rank": 162,
+          "symmetrize_bonds": true,
+          "acoustic_sum_rule": "post-fit on-site construction",
+          "ridge_creates_information": false
+        }
+      },
+      {
+        "n_configurations": 8,
+        "dispersion": {
+          "mae_thz": 0.3438870106507683,
+          "rmse_thz": 0.48062655283813266,
+          "max_abs_thz": 1.9714105014456722,
+          "unstable_fraction_below_minus_0p05_thz": 0.015272244355909695
+        },
+        "held_out_force": {
+          "mae_ev_ang": 0.18627124633050585,
+          "rmse_ev_ang": 0.334807207442435,
+          "max_abs_ev_ang": 5.8084736197680344
+        },
+        "design": {
+          "n_snapshots": 8,
+          "n_force_observations": 1296,
+          "raw_parameter_count": 162,
+          "projected_parameter_count": 6,
+          "data_rank": 162,
+          "rank": 162,
+          "rank_deficiency": 0,
+          "rank_tolerance": 1.3352203276346505e-09,
+          "condition_number": 11.050920384725206,
+          "condition_number_nonzero_subspace": 11.050920384725206,
+          "ridge_alpha": 0.001,
+          "ridge_solver_rank": 162,
+          "symmetrize_bonds": true,
+          "acoustic_sum_rule": "post-fit on-site construction",
+          "ridge_creates_information": false
+        }
+      },
+      {
+        "n_configurations": 16,
+        "dispersion": {
+          "mae_thz": 0.32445359648232935,
+          "rmse_thz": 0.45864944627164655,
+          "max_abs_thz": 2.0179275208429504,
+          "unstable_fraction_below_minus_0p05_thz": 0.015272244355909695
+        },
+        "held_out_force": {
+          "mae_ev_ang": 0.18518458186713277,
+          "rmse_ev_ang": 0.3366975332647561,
+          "max_abs_ev_ang": 5.827702996231715
+        },
+        "design": {
+          "n_snapshots": 16,
+          "n_force_observations": 2592,
+          "raw_parameter_count": 162,
+          "projected_parameter_count": 6,
+          "data_rank": 162,
+          "rank": 162,
+          "rank_deficiency": 0,
+          "rank_tolerance": 1.7716247458323235e-09,
+          "condition_number": 9.49463824007969,
+          "condition_number_nonzero_subspace": 9.49463824007969,
+          "ridge_alpha": 0.001,
+          "ridge_solver_rank": 162,
+          "symmetrize_bonds": true,
+          "acoustic_sum_rule": "post-fit on-site construction",
+          "ridge_creates_information": false
+        }
+      }
+    ]
+  },
+  "canonical_series": [
+    {
+      "seed": 0,
+      "counts": [
+        {
+          "n_configurations": 1,
+          "chosen_training_indices": [
+            26
+          ],
+          "dispersion": {
+            "mae_thz": 1.0456286969193425,
+            "rmse_thz": 1.4919921674088192,
+            "max_abs_thz": 4.282482116279294,
+            "unstable_fraction_below_minus_0p05_thz": 0.19654714475431606
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.25227624250479175,
+            "rmse_ev_ang": 0.38251185010872085,
+            "max_abs_ev_ang": 5.615763628340522
+          },
+          "design": {
+            "n_snapshots": 1,
+            "n_force_observations": 162,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 149,
+            "rank": 149,
+            "rank_deficiency": 13,
+            "rank_tolerance": 8.066654419753877e-10,
+            "condition_number": null,
+            "condition_number_nonzero_subspace": 124.48076622587479,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 2,
+          "chosen_training_indices": [
+            26,
+            9
+          ],
+          "dispersion": {
+            "mae_thz": 0.45990338428612787,
+            "rmse_thz": 0.6325860285716388,
+            "max_abs_thz": 2.632467615371894,
+            "unstable_fraction_below_minus_0p05_thz": 0.0
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19258069130165478,
+            "rmse_ev_ang": 0.34330396922731443,
+            "max_abs_ev_ang": 5.767251251561749
+          },
+          "design": {
+            "n_snapshots": 2,
+            "n_force_observations": 324,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.0195282170040544e-09,
+            "condition_number": 22.362262557263225,
+            "condition_number_nonzero_subspace": 22.362262557263225,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 4,
+          "chosen_training_indices": [
+            26,
+            9,
+            56,
+            45
+          ],
+          "dispersion": {
+            "mae_thz": 0.39983673053915014,
+            "rmse_thz": 0.5395792363190212,
+            "max_abs_thz": 2.061862099174112,
+            "unstable_fraction_below_minus_0p05_thz": 0.009296148738379814
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.2017552609734662,
+            "rmse_ev_ang": 0.3353422888675115,
+            "max_abs_ev_ang": 5.5885994264810375
+          },
+          "design": {
+            "n_snapshots": 4,
+            "n_force_observations": 648,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.3763497682035162e-09,
+            "condition_number": 10.908358941075576,
+            "condition_number_nonzero_subspace": 10.908358941075576,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 8,
+          "chosen_training_indices": [
+            26,
+            9,
+            56,
+            45,
+            21,
+            12,
+            2,
+            79
+          ],
+          "dispersion": {
+            "mae_thz": 0.4249174772227339,
+            "rmse_thz": 0.5663781689278453,
+            "max_abs_thz": 1.9695864822327556,
+            "unstable_fraction_below_minus_0p05_thz": 0.015272244355909695
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.1956930304265839,
+            "rmse_ev_ang": 0.33305892273183113,
+            "max_abs_ev_ang": 5.658900599884554
+          },
+          "design": {
+            "n_snapshots": 8,
+            "n_force_observations": 1296,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.9474330953432204e-09,
+            "condition_number": 7.8673801048577126,
+            "condition_number_nonzero_subspace": 7.8673801048577126,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 16,
+          "chosen_training_indices": [
+            26,
+            9,
+            56,
+            45,
+            21,
+            12,
+            2,
+            79,
+            36,
+            18,
+            41,
+            54,
+            64,
+            30,
+            11,
+            31
+          ],
+          "dispersion": {
+            "mae_thz": 0.42708343025205797,
+            "rmse_thz": 0.5573295515213615,
+            "max_abs_thz": 1.8350220972354547,
+            "unstable_fraction_below_minus_0p05_thz": 0.01859229747675963
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19276565274829796,
+            "rmse_ev_ang": 0.3318909070314623,
+            "max_abs_ev_ang": 5.710908098156481
+          },
+          "design": {
+            "n_snapshots": 16,
+            "n_force_observations": 2592,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 2.696598184899854e-09,
+            "condition_number": 6.928435535712811,
+            "condition_number_nonzero_subspace": 6.928435535712811,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "counts": [
+        {
+          "n_configurations": 1,
+          "chosen_training_indices": [
+            48
+          ],
+          "dispersion": {
+            "mae_thz": 0.5994794596093793,
+            "rmse_thz": 0.7341263441245535,
+            "max_abs_thz": 1.8492547537472848,
+            "unstable_fraction_below_minus_0p05_thz": 0.00398406374501992
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.251918475020429,
+            "rmse_ev_ang": 0.3766571290409005,
+            "max_abs_ev_ang": 5.574851223309132
+          },
+          "design": {
+            "n_snapshots": 1,
+            "n_force_observations": 162,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 149,
+            "rank": 149,
+            "rank_deficiency": 13,
+            "rank_tolerance": 7.94719332332992e-10,
+            "condition_number": null,
+            "condition_number_nonzero_subspace": 103.501529102624,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 2,
+          "chosen_training_indices": [
+            48,
+            50
+          ],
+          "dispersion": {
+            "mae_thz": 0.589625049608045,
+            "rmse_thz": 0.7392477771628673,
+            "max_abs_thz": 1.7349535688268851,
+            "unstable_fraction_below_minus_0p05_thz": 0.017928286852589643
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.21632574995789686,
+            "rmse_ev_ang": 0.3394703538190162,
+            "max_abs_ev_ang": 5.4736244483561975
+          },
+          "design": {
+            "n_snapshots": 2,
+            "n_force_observations": 324,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.0870931226849586e-09,
+            "condition_number": 22.206939592906284,
+            "condition_number_nonzero_subspace": 22.206939592906284,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 4,
+          "chosen_training_indices": [
+            48,
+            50,
+            53,
+            26
+          ],
+          "dispersion": {
+            "mae_thz": 0.41448203624392693,
+            "rmse_thz": 0.5465109977792706,
+            "max_abs_thz": 1.7025818845768343,
+            "unstable_fraction_below_minus_0p05_thz": 0.013280212483399735
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19505070235419797,
+            "rmse_ev_ang": 0.33184696997489377,
+            "max_abs_ev_ang": 5.664839753057228
+          },
+          "design": {
+            "n_snapshots": 4,
+            "n_force_observations": 648,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.400535219405793e-09,
+            "condition_number": 11.734949042016313,
+            "condition_number_nonzero_subspace": 11.734949042016313,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 8,
+          "chosen_training_indices": [
+            48,
+            50,
+            53,
+            26,
+            57,
+            63,
+            32,
+            71
+          ],
+          "dispersion": {
+            "mae_thz": 0.4261059993292308,
+            "rmse_thz": 0.5787308882045409,
+            "max_abs_thz": 1.623660397879239,
+            "unstable_fraction_below_minus_0p05_thz": 0.015272244355909695
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19440419186293315,
+            "rmse_ev_ang": 0.3320830497054408,
+            "max_abs_ev_ang": 5.751834246071704
+          },
+          "design": {
+            "n_snapshots": 8,
+            "n_force_observations": 1296,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.868347455896038e-09,
+            "condition_number": 8.135787866678513,
+            "condition_number_nonzero_subspace": 8.135787866678513,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 16,
+          "chosen_training_indices": [
+            48,
+            50,
+            53,
+            26,
+            57,
+            63,
+            32,
+            71,
+            39,
+            24,
+            7,
+            2,
+            25,
+            79,
+            9,
+            14
+          ],
+          "dispersion": {
+            "mae_thz": 0.41558216280127275,
+            "rmse_thz": 0.561864809957396,
+            "max_abs_thz": 1.6806956393145143,
+            "unstable_fraction_below_minus_0p05_thz": 0.014608233731739707
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19399845313855876,
+            "rmse_ev_ang": 0.3318523757981556,
+            "max_abs_ev_ang": 5.737336389142505
+          },
+          "design": {
+            "n_snapshots": 16,
+            "n_force_observations": 2592,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 2.621135098909083e-09,
+            "condition_number": 7.05788713819332,
+            "condition_number_nonzero_subspace": 7.05788713819332,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        }
+      ]
+    },
+    {
+      "seed": 2,
+      "counts": [
+        {
+          "n_configurations": 1,
+          "chosen_training_indices": [
+            58
+          ],
+          "dispersion": {
+            "mae_thz": 1.004086028139637,
+            "rmse_thz": 1.5483522849312843,
+            "max_abs_thz": 4.670780937353899,
+            "unstable_fraction_below_minus_0p05_thz": 0.17928286852589642
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.22994609636908567,
+            "rmse_ev_ang": 0.3733786322298578,
+            "max_abs_ev_ang": 5.860299871678068
+          },
+          "design": {
+            "n_snapshots": 1,
+            "n_force_observations": 162,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 149,
+            "rank": 149,
+            "rank_deficiency": 13,
+            "rank_tolerance": 7.053949819285287e-10,
+            "condition_number": null,
+            "condition_number_nonzero_subspace": 137.05617380369142,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 2,
+          "chosen_training_indices": [
+            58,
+            68
+          ],
+          "dispersion": {
+            "mae_thz": 0.6674349623162933,
+            "rmse_thz": 0.8040815137709926,
+            "max_abs_thz": 1.9075578091386274,
+            "unstable_fraction_below_minus_0p05_thz": 0.012616201859229747
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.22456594137859429,
+            "rmse_ev_ang": 0.3485002386947524,
+            "max_abs_ev_ang": 5.518108824573212
+          },
+          "design": {
+            "n_snapshots": 2,
+            "n_force_observations": 324,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 9.957004090027692e-10,
+            "condition_number": 24.406584275406455,
+            "condition_number_nonzero_subspace": 24.406584275406455,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 4,
+          "chosen_training_indices": [
+            58,
+            68,
+            15,
+            24
+          ],
+          "dispersion": {
+            "mae_thz": 0.48268726019392466,
+            "rmse_thz": 0.6007030089214145,
+            "max_abs_thz": 1.6014875752789388,
+            "unstable_fraction_below_minus_0p05_thz": 0.020584329349269587
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19647524421312484,
+            "rmse_ev_ang": 0.33272872442647544,
+            "max_abs_ev_ang": 5.6755752123484795
+          },
+          "design": {
+            "n_snapshots": 4,
+            "n_force_observations": 648,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.4430741196159992e-09,
+            "condition_number": 10.900455743102569,
+            "condition_number_nonzero_subspace": 10.900455743102569,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 8,
+          "chosen_training_indices": [
+            58,
+            68,
+            15,
+            24,
+            56,
+            75,
+            57,
+            19
+          ],
+          "dispersion": {
+            "mae_thz": 0.4337500467482098,
+            "rmse_thz": 0.5788586769583867,
+            "max_abs_thz": 1.5761497847029506,
+            "unstable_fraction_below_minus_0p05_thz": 0.015272244355909695
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.1938944741475768,
+            "rmse_ev_ang": 0.33164949902290686,
+            "max_abs_ev_ang": 5.7253058154792456
+          },
+          "design": {
+            "n_snapshots": 8,
+            "n_force_observations": 1296,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.874392373979745e-09,
+            "condition_number": 8.028743545454004,
+            "condition_number_nonzero_subspace": 8.028743545454004,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 16,
+          "chosen_training_indices": [
+            58,
+            68,
+            15,
+            24,
+            56,
+            75,
+            57,
+            19,
+            21,
+            61,
+            12,
+            54,
+            36,
+            73,
+            8,
+            22
+          ],
+          "dispersion": {
+            "mae_thz": 0.4472879923055116,
+            "rmse_thz": 0.5853689058184709,
+            "max_abs_thz": 1.5944568338717025,
+            "unstable_fraction_below_minus_0p05_thz": 0.017928286852589643
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19405710022212927,
+            "rmse_ev_ang": 0.3316492745678594,
+            "max_abs_ev_ang": 5.7161543659876255
+          },
+          "design": {
+            "n_snapshots": 16,
+            "n_force_observations": 2592,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 2.7343963374434588e-09,
+            "condition_number": 7.279745490027901,
+            "condition_number_nonzero_subspace": 7.279745490027901,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        }
+      ]
+    },
+    {
+      "seed": 3,
+      "counts": [
+        {
+          "n_configurations": 1,
+          "chosen_training_indices": [
+            7
+          ],
+          "dispersion": {
+            "mae_thz": 0.727909232887122,
+            "rmse_thz": 0.8518961026196386,
+            "max_abs_thz": 2.0065671596537915,
+            "unstable_fraction_below_minus_0p05_thz": 0.01195219123505976
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.23368053395931965,
+            "rmse_ev_ang": 0.36348918750023185,
+            "max_abs_ev_ang": 5.878237111541534
+          },
+          "design": {
+            "n_snapshots": 1,
+            "n_force_observations": 162,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 149,
+            "rank": 149,
+            "rank_deficiency": 13,
+            "rank_tolerance": 7.223438121633502e-10,
+            "condition_number": null,
+            "condition_number_nonzero_subspace": 105.641744648286,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 2,
+          "chosen_training_indices": [
+            7,
+            43
+          ],
+          "dispersion": {
+            "mae_thz": 0.4182698181194591,
+            "rmse_thz": 0.5648913881123161,
+            "max_abs_thz": 2.1511786348858584,
+            "unstable_fraction_below_minus_0p05_thz": 0.016600265604249667
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19734408173355728,
+            "rmse_ev_ang": 0.3374305980230296,
+            "max_abs_ev_ang": 5.661712087910933
+          },
+          "design": {
+            "n_snapshots": 2,
+            "n_force_observations": 324,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.0041503694352634e-09,
+            "condition_number": 21.801255528904754,
+            "condition_number_nonzero_subspace": 21.801255528904754,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 4,
+          "chosen_training_indices": [
+            7,
+            43,
+            5,
+            21
+          ],
+          "dispersion": {
+            "mae_thz": 0.3683760831891539,
+            "rmse_thz": 0.48937438642235304,
+            "max_abs_thz": 1.905780341262071,
+            "unstable_fraction_below_minus_0p05_thz": 0.016600265604249667
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.1872886710700019,
+            "rmse_ev_ang": 0.33441710468435865,
+            "max_abs_ev_ang": 5.762389455835143
+          },
+          "design": {
+            "n_snapshots": 4,
+            "n_force_observations": 648,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.3572608415445711e-09,
+            "condition_number": 11.541688303558974,
+            "condition_number_nonzero_subspace": 11.541688303558974,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 8,
+          "chosen_training_indices": [
+            7,
+            43,
+            5,
+            21,
+            23,
+            51,
+            58,
+            63
+          ],
+          "dispersion": {
+            "mae_thz": 0.3756835158995955,
+            "rmse_thz": 0.4990469858912317,
+            "max_abs_thz": 1.8993203034998318,
+            "unstable_fraction_below_minus_0p05_thz": 0.012616201859229747
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19071589996125327,
+            "rmse_ev_ang": 0.33284844118661666,
+            "max_abs_ev_ang": 5.706343801371894
+          },
+          "design": {
+            "n_snapshots": 8,
+            "n_force_observations": 1296,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.8907448667837216e-09,
+            "condition_number": 8.334726064381112,
+            "condition_number_nonzero_subspace": 8.334726064381112,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 16,
+          "chosen_training_indices": [
+            7,
+            43,
+            5,
+            21,
+            23,
+            51,
+            58,
+            63,
+            60,
+            41,
+            15,
+            3,
+            29,
+            70,
+            6,
+            24
+          ],
+          "dispersion": {
+            "mae_thz": 0.46809521645459584,
+            "rmse_thz": 0.600454285519763,
+            "max_abs_thz": 1.6442197729322654,
+            "unstable_fraction_below_minus_0p05_thz": 0.017928286852589643
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19720457316433423,
+            "rmse_ev_ang": 0.33178447950386813,
+            "max_abs_ev_ang": 5.674117059381013
+          },
+          "design": {
+            "n_snapshots": 16,
+            "n_force_observations": 2592,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 2.6329530083321144e-09,
+            "condition_number": 6.98937917791888,
+            "condition_number_nonzero_subspace": 6.98937917791888,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        }
+      ]
+    },
+    {
+      "seed": 4,
+      "counts": [
+        {
+          "n_configurations": 1,
+          "chosen_training_indices": [
+            1
+          ],
+          "dispersion": {
+            "mae_thz": 0.7868823736362204,
+            "rmse_thz": 0.9705616113335491,
+            "max_abs_thz": 3.0585948520256974,
+            "unstable_fraction_below_minus_0p05_thz": 0.0026560424966799467
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.2317195897421337,
+            "rmse_ev_ang": 0.4004109303866458,
+            "max_abs_ev_ang": 6.2484931000988135
+          },
+          "design": {
+            "n_snapshots": 1,
+            "n_force_observations": 162,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 149,
+            "rank": 149,
+            "rank_deficiency": 13,
+            "rank_tolerance": 7.950952577971226e-10,
+            "condition_number": null,
+            "condition_number_nonzero_subspace": 134.26237112506652,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 2,
+          "chosen_training_indices": [
+            1,
+            62
+          ],
+          "dispersion": {
+            "mae_thz": 0.2986972734256481,
+            "rmse_thz": 0.4420066633306127,
+            "max_abs_thz": 1.9484094856816423,
+            "unstable_fraction_below_minus_0p05_thz": 0.01195219123505976
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.18376583728530305,
+            "rmse_ev_ang": 0.3379728511729,
+            "max_abs_ev_ang": 5.823823981001717
+          },
+          "design": {
+            "n_snapshots": 2,
+            "n_force_observations": 324,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 9.520173351631297e-10,
+            "condition_number": 20.399582776495834,
+            "condition_number_nonzero_subspace": 20.399582776495834,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 4,
+          "chosen_training_indices": [
+            1,
+            62,
+            11,
+            15
+          ],
+          "dispersion": {
+            "mae_thz": 0.3723176549528631,
+            "rmse_thz": 0.49803190676877485,
+            "max_abs_thz": 1.7690395735292546,
+            "unstable_fraction_below_minus_0p05_thz": 0.01593625498007968
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19103447365402745,
+            "rmse_ev_ang": 0.33287696298415625,
+            "max_abs_ev_ang": 5.768572946328453
+          },
+          "design": {
+            "n_snapshots": 4,
+            "n_force_observations": 648,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.4811659837087506e-09,
+            "condition_number": 11.400273762081287,
+            "condition_number_nonzero_subspace": 11.400273762081287,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 8,
+          "chosen_training_indices": [
+            1,
+            62,
+            11,
+            15,
+            44,
+            33,
+            8,
+            12
+          ],
+          "dispersion": {
+            "mae_thz": 0.41892623698720566,
+            "rmse_thz": 0.5506970651210993,
+            "max_abs_thz": 1.6585619641953988,
+            "unstable_fraction_below_minus_0p05_thz": 0.013944223107569721
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19705271610764666,
+            "rmse_ev_ang": 0.33259560489280915,
+            "max_abs_ev_ang": 5.68052344230803
+          },
+          "design": {
+            "n_snapshots": 8,
+            "n_force_observations": 1296,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.973264331667291e-09,
+            "condition_number": 8.26473064079775,
+            "condition_number_nonzero_subspace": 8.26473064079775,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 16,
+          "chosen_training_indices": [
+            1,
+            62,
+            11,
+            15,
+            44,
+            33,
+            8,
+            12,
+            3,
+            5,
+            36,
+            75,
+            60,
+            23,
+            25,
+            14
+          ],
+          "dispersion": {
+            "mae_thz": 0.4643744833019405,
+            "rmse_thz": 0.6077316912513734,
+            "max_abs_thz": 1.624748861957909,
+            "unstable_fraction_below_minus_0p05_thz": 0.013944223107569721
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19964114656504653,
+            "rmse_ev_ang": 0.3324352891357031,
+            "max_abs_ev_ang": 5.665982973517683
+          },
+          "design": {
+            "n_snapshots": 16,
+            "n_force_observations": 2592,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 2.850075023121245e-09,
+            "condition_number": 7.3856248439105885,
+            "condition_number_nonzero_subspace": 7.3856248439105885,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        }
+      ]
+    },
+    {
+      "seed": 5,
+      "counts": [
+        {
+          "n_configurations": 1,
+          "chosen_training_indices": [
+            36
+          ],
+          "dispersion": {
+            "mae_thz": 0.8796588087971872,
+            "rmse_thz": 1.247577443177755,
+            "max_abs_thz": 4.197562280490038,
+            "unstable_fraction_below_minus_0p05_thz": 0.11354581673306773
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.31989729249270615,
+            "rmse_ev_ang": 0.4356082074754327,
+            "max_abs_ev_ang": 5.182613691947704
+          },
+          "design": {
+            "n_snapshots": 1,
+            "n_force_observations": 162,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 149,
+            "rank": 149,
+            "rank_deficiency": 13,
+            "rank_tolerance": 8.774244598902817e-10,
+            "condition_number": null,
+            "condition_number_nonzero_subspace": 137.50959535706076,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 2,
+          "chosen_training_indices": [
+            36,
+            34
+          ],
+          "dispersion": {
+            "mae_thz": 0.4743824721115593,
+            "rmse_thz": 0.5956668109654841,
+            "max_abs_thz": 1.6232550842790765,
+            "unstable_fraction_below_minus_0p05_thz": 0.020584329349269587
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.20000575837430765,
+            "rmse_ev_ang": 0.3341111577663187,
+            "max_abs_ev_ang": 5.697622370070013
+          },
+          "design": {
+            "n_snapshots": 2,
+            "n_force_observations": 324,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.0399287830779588e-09,
+            "condition_number": 23.081540861763738,
+            "condition_number_nonzero_subspace": 23.081540861763738,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 4,
+          "chosen_training_indices": [
+            36,
+            34,
+            24,
+            75
+          ],
+          "dispersion": {
+            "mae_thz": 0.49232677072218467,
+            "rmse_thz": 0.6470246490930917,
+            "max_abs_thz": 1.7570031257584642,
+            "unstable_fraction_below_minus_0p05_thz": 0.013280212483399735
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.2034442489554297,
+            "rmse_ev_ang": 0.3335447921688488,
+            "max_abs_ev_ang": 5.625864634483884
+          },
+          "design": {
+            "n_snapshots": 4,
+            "n_force_observations": 648,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.407758598723144e-09,
+            "condition_number": 11.287601570398053,
+            "condition_number_nonzero_subspace": 11.287601570398053,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 8,
+          "chosen_training_indices": [
+            36,
+            34,
+            24,
+            75,
+            22,
+            27,
+            15,
+            42
+          ],
+          "dispersion": {
+            "mae_thz": 0.4440900329175175,
+            "rmse_thz": 0.5834460686526466,
+            "max_abs_thz": 1.6798846644035548,
+            "unstable_fraction_below_minus_0p05_thz": 0.017264276228419653
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19543651070787338,
+            "rmse_ev_ang": 0.33194424591352667,
+            "max_abs_ev_ang": 5.700359838945593
+          },
+          "design": {
+            "n_snapshots": 8,
+            "n_force_observations": 1296,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.984792250727365e-09,
+            "condition_number": 8.756289542260944,
+            "condition_number_nonzero_subspace": 8.756289542260944,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 16,
+          "chosen_training_indices": [
+            36,
+            34,
+            24,
+            75,
+            22,
+            27,
+            15,
+            42,
+            71,
+            62,
+            46,
+            12,
+            10,
+            60,
+            52,
+            57
+          ],
+          "dispersion": {
+            "mae_thz": 0.49170625219914327,
+            "rmse_thz": 0.6394025108196272,
+            "max_abs_thz": 1.7211095335623838,
+            "unstable_fraction_below_minus_0p05_thz": 0.01593625498007968
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.20189861234287906,
+            "rmse_ev_ang": 0.33298692758280624,
+            "max_abs_ev_ang": 5.646425649549218
+          },
+          "design": {
+            "n_snapshots": 16,
+            "n_force_observations": 2592,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 2.7043869861382064e-09,
+            "condition_number": 7.347368219197402,
+            "condition_number_nonzero_subspace": 7.347368219197402,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        }
+      ]
+    },
+    {
+      "seed": 6,
+      "counts": [
+        {
+          "n_configurations": 1,
+          "chosen_training_indices": [
+            10
+          ],
+          "dispersion": {
+            "mae_thz": 0.40918901975538524,
+            "rmse_thz": 0.5964325592253744,
+            "max_abs_thz": 1.857391064680705,
+            "unstable_fraction_below_minus_0p05_thz": 0.020584329349269587
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.20817538020081383,
+            "rmse_ev_ang": 0.3568776395166593,
+            "max_abs_ev_ang": 6.14032765135833
+          },
+          "design": {
+            "n_snapshots": 1,
+            "n_force_observations": 162,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 149,
+            "rank": 149,
+            "rank_deficiency": 13,
+            "rank_tolerance": 7.668698138810713e-10,
+            "condition_number": null,
+            "condition_number_nonzero_subspace": 101.1306195494696,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 2,
+          "chosen_training_indices": [
+            10,
+            27
+          ],
+          "dispersion": {
+            "mae_thz": 0.4938196474394469,
+            "rmse_thz": 0.6755300645844402,
+            "max_abs_thz": 2.011772702501209,
+            "unstable_fraction_below_minus_0p05_thz": 0.013944223107569721
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.2045427949412799,
+            "rmse_ev_ang": 0.3359291239066576,
+            "max_abs_ev_ang": 5.710534477358172
+          },
+          "design": {
+            "n_snapshots": 2,
+            "n_force_observations": 324,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.0754061461799947e-09,
+            "condition_number": 19.111821300529872,
+            "condition_number_nonzero_subspace": 19.111821300529872,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 4,
+          "chosen_training_indices": [
+            10,
+            27,
+            17,
+            20
+          ],
+          "dispersion": {
+            "mae_thz": 0.8183637076926269,
+            "rmse_thz": 1.0055902005445172,
+            "max_abs_thz": 2.4292228113945695,
+            "unstable_fraction_below_minus_0p05_thz": 0.011288180610889775
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.232429215535474,
+            "rmse_ev_ang": 0.35038396834861474,
+            "max_abs_ev_ang": 5.404054660409874
+          },
+          "design": {
+            "n_snapshots": 4,
+            "n_force_observations": 648,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.4115424442683589e-09,
+            "condition_number": 10.426868858638665,
+            "condition_number_nonzero_subspace": 10.426868858638665,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 8,
+          "chosen_training_indices": [
+            10,
+            27,
+            17,
+            20,
+            30,
+            55,
+            18,
+            39
+          ],
+          "dispersion": {
+            "mae_thz": 0.5962564959888734,
+            "rmse_thz": 0.7556501495130558,
+            "max_abs_thz": 1.9189599001388205,
+            "unstable_fraction_below_minus_0p05_thz": 0.011288180610889775
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.21401454258904418,
+            "rmse_ev_ang": 0.3379945790193645,
+            "max_abs_ev_ang": 5.508184107636792
+          },
+          "design": {
+            "n_snapshots": 8,
+            "n_force_observations": 1296,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.9033057867750707e-09,
+            "condition_number": 7.696185939749726,
+            "condition_number_nonzero_subspace": 7.696185939749726,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 16,
+          "chosen_training_indices": [
+            10,
+            27,
+            17,
+            20,
+            30,
+            55,
+            18,
+            39,
+            40,
+            61,
+            56,
+            58,
+            74,
+            46,
+            57,
+            7
+          ],
+          "dispersion": {
+            "mae_thz": 0.5072224943338272,
+            "rmse_thz": 0.6505417147125019,
+            "max_abs_thz": 1.6923068174859628,
+            "unstable_fraction_below_minus_0p05_thz": 0.012616201859229747
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.20704357759637576,
+            "rmse_ev_ang": 0.33472475720280154,
+            "max_abs_ev_ang": 5.55777347024558
+          },
+          "design": {
+            "n_snapshots": 16,
+            "n_force_observations": 2592,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 2.681757322882338e-09,
+            "condition_number": 6.881864632479229,
+            "condition_number_nonzero_subspace": 6.881864632479229,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        }
+      ]
+    },
+    {
+      "seed": 7,
+      "counts": [
+        {
+          "n_configurations": 1,
+          "chosen_training_indices": [
+            3
+          ],
+          "dispersion": {
+            "mae_thz": 0.5690514257753627,
+            "rmse_thz": 0.741185636611652,
+            "max_abs_thz": 2.3932440944672964,
+            "unstable_fraction_below_minus_0p05_thz": 0.006640106241699867
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.23357782796762677,
+            "rmse_ev_ang": 0.39534499240905446,
+            "max_abs_ev_ang": 6.2022146990711455
+          },
+          "design": {
+            "n_snapshots": 1,
+            "n_force_observations": 162,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 149,
+            "rank": 149,
+            "rank_deficiency": 13,
+            "rank_tolerance": 9.127539692898129e-10,
+            "condition_number": null,
+            "condition_number_nonzero_subspace": 133.0749458469333,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 2,
+          "chosen_training_indices": [
+            3,
+            79
+          ],
+          "dispersion": {
+            "mae_thz": 0.39890895932457876,
+            "rmse_thz": 0.5549554138273127,
+            "max_abs_thz": 1.7671452766192042,
+            "unstable_fraction_below_minus_0p05_thz": 0.00398406374501992
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.20023800921858131,
+            "rmse_ev_ang": 0.33726174243181184,
+            "max_abs_ev_ang": 5.668021987814759
+          },
+          "design": {
+            "n_snapshots": 2,
+            "n_force_observations": 324,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.114843537970213e-09,
+            "condition_number": 21.06899300129466,
+            "condition_number_nonzero_subspace": 21.06899300129466,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 4,
+          "chosen_training_indices": [
+            3,
+            79,
+            17,
+            33
+          ],
+          "dispersion": {
+            "mae_thz": 0.38074958581445145,
+            "rmse_thz": 0.5361380026005964,
+            "max_abs_thz": 2.065423043846864,
+            "unstable_fraction_below_minus_0p05_thz": 0.0026560424966799467
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.20381264126565776,
+            "rmse_ev_ang": 0.3367184515620401,
+            "max_abs_ev_ang": 5.582912904363807
+          },
+          "design": {
+            "n_snapshots": 4,
+            "n_force_observations": 648,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.445760882825895e-09,
+            "condition_number": 10.626327622567665,
+            "condition_number_nonzero_subspace": 10.626327622567665,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 8,
+          "chosen_training_indices": [
+            3,
+            79,
+            17,
+            33,
+            21,
+            53,
+            50,
+            40
+          ],
+          "dispersion": {
+            "mae_thz": 0.3854779490272543,
+            "rmse_thz": 0.5236344490207279,
+            "max_abs_thz": 1.932597061648523,
+            "unstable_fraction_below_minus_0p05_thz": 0.009296148738379814
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19680580236074843,
+            "rmse_ev_ang": 0.3330388574421018,
+            "max_abs_ev_ang": 5.6274323566669455
+          },
+          "design": {
+            "n_snapshots": 8,
+            "n_force_observations": 1296,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.8987612197994792e-09,
+            "condition_number": 8.109905473905453,
+            "condition_number_nonzero_subspace": 8.109905473905453,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 16,
+          "chosen_training_indices": [
+            3,
+            79,
+            17,
+            33,
+            21,
+            53,
+            50,
+            40,
+            19,
+            72,
+            41,
+            76,
+            34,
+            13,
+            23,
+            35
+          ],
+          "dispersion": {
+            "mae_thz": 0.3962738632829458,
+            "rmse_thz": 0.5256562407986893,
+            "max_abs_thz": 1.8900916900307436,
+            "unstable_fraction_below_minus_0p05_thz": 0.013944223107569721
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.1912601959931458,
+            "rmse_ev_ang": 0.3322385636427572,
+            "max_abs_ev_ang": 5.7067521176887555
+          },
+          "design": {
+            "n_snapshots": 16,
+            "n_force_observations": 2592,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 2.635394514591016e-09,
+            "condition_number": 7.2322451677254955,
+            "condition_number_nonzero_subspace": 7.2322451677254955,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        }
+      ]
+    },
+    {
+      "seed": 8,
+      "counts": [
+        {
+          "n_configurations": 1,
+          "chosen_training_indices": [
+            41
+          ],
+          "dispersion": {
+            "mae_thz": 0.6798474099652764,
+            "rmse_thz": 0.8946090169695221,
+            "max_abs_thz": 2.285840045107572,
+            "unstable_fraction_below_minus_0p05_thz": 0.00796812749003984
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.26110029994283984,
+            "rmse_ev_ang": 0.37566949111527503,
+            "max_abs_ev_ang": 5.243339570523035
+          },
+          "design": {
+            "n_snapshots": 1,
+            "n_force_observations": 162,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 149,
+            "rank": 149,
+            "rank_deficiency": 13,
+            "rank_tolerance": 7.092037541661246e-10,
+            "condition_number": null,
+            "condition_number_nonzero_subspace": 124.47095124849417,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 2,
+          "chosen_training_indices": [
+            41,
+            36
+          ],
+          "dispersion": {
+            "mae_thz": 0.9909727212876898,
+            "rmse_thz": 1.4747528921534923,
+            "max_abs_thz": 4.813904578766311,
+            "unstable_fraction_below_minus_0p05_thz": 0.13612217795484727
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.249374719218925,
+            "rmse_ev_ang": 0.36575770670251084,
+            "max_abs_ev_ang": 5.428381664872919
+          },
+          "design": {
+            "n_snapshots": 2,
+            "n_force_observations": 324,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.0548078384329242e-09,
+            "condition_number": 22.09395496758305,
+            "condition_number_nonzero_subspace": 22.09395496758305,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 4,
+          "chosen_training_indices": [
+            41,
+            36,
+            47,
+            79
+          ],
+          "dispersion": {
+            "mae_thz": 0.49883596008336883,
+            "rmse_thz": 0.6440840037635878,
+            "max_abs_thz": 1.7125113459416177,
+            "unstable_fraction_below_minus_0p05_thz": 0.014608233731739707
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.2047783599773602,
+            "rmse_ev_ang": 0.3340979964379713,
+            "max_abs_ev_ang": 5.578831440442376
+          },
+          "design": {
+            "n_snapshots": 4,
+            "n_force_observations": 648,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.4174337228508808e-09,
+            "condition_number": 11.513348825673988,
+            "condition_number_nonzero_subspace": 11.513348825673988,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 8,
+          "chosen_training_indices": [
+            41,
+            36,
+            47,
+            79,
+            49,
+            37,
+            35,
+            0
+          ],
+          "dispersion": {
+            "mae_thz": 0.4437131774758712,
+            "rmse_thz": 0.5904571112412602,
+            "max_abs_thz": 1.76243547234649,
+            "unstable_fraction_below_minus_0p05_thz": 0.013944223107569721
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19975503781628504,
+            "rmse_ev_ang": 0.33273948913159473,
+            "max_abs_ev_ang": 5.642649998549439
+          },
+          "design": {
+            "n_snapshots": 8,
+            "n_force_observations": 1296,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 2.021162070555022e-09,
+            "condition_number": 9.227237030795173,
+            "condition_number_nonzero_subspace": 9.227237030795173,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 16,
+          "chosen_training_indices": [
+            41,
+            36,
+            47,
+            79,
+            49,
+            37,
+            35,
+            0,
+            61,
+            24,
+            20,
+            31,
+            6,
+            74,
+            26,
+            3
+          ],
+          "dispersion": {
+            "mae_thz": 0.4684648306231133,
+            "rmse_thz": 0.6122194570228775,
+            "max_abs_thz": 1.6376884861531886,
+            "unstable_fraction_below_minus_0p05_thz": 0.013944223107569721
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.20187449974055016,
+            "rmse_ev_ang": 0.33301947836648843,
+            "max_abs_ev_ang": 5.632761320751838
+          },
+          "design": {
+            "n_snapshots": 16,
+            "n_force_observations": 2592,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 2.7795380095325997e-09,
+            "condition_number": 7.480234559884375,
+            "condition_number_nonzero_subspace": 7.480234559884375,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        }
+      ]
+    },
+    {
+      "seed": 9,
+      "counts": [
+        {
+          "n_configurations": 1,
+          "chosen_training_indices": [
+            31
+          ],
+          "dispersion": {
+            "mae_thz": 0.5079674351689444,
+            "rmse_thz": 0.6526976878617543,
+            "max_abs_thz": 1.848261819242886,
+            "unstable_fraction_below_minus_0p05_thz": 0.02390438247011952
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.2080004214441832,
+            "rmse_ev_ang": 0.33991035581948764,
+            "max_abs_ev_ang": 5.818715455786896
+          },
+          "design": {
+            "n_snapshots": 1,
+            "n_force_observations": 162,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 149,
+            "rank": 149,
+            "rank_deficiency": 13,
+            "rank_tolerance": 7.476497110239201e-10,
+            "condition_number": null,
+            "condition_number_nonzero_subspace": 119.25784203891244,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 2,
+          "chosen_training_indices": [
+            31,
+            9
+          ],
+          "dispersion": {
+            "mae_thz": 0.38486216733455825,
+            "rmse_thz": 0.550162633166559,
+            "max_abs_thz": 2.1500632029218414,
+            "unstable_fraction_below_minus_0p05_thz": 0.0033200531208499337
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19767959023994372,
+            "rmse_ev_ang": 0.34312665415811233,
+            "max_abs_ev_ang": 5.776621362352978
+          },
+          "design": {
+            "n_snapshots": 2,
+            "n_force_observations": 324,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.0659279922754192e-09,
+            "condition_number": 21.001361085555303,
+            "condition_number_nonzero_subspace": 21.001361085555303,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 4,
+          "chosen_training_indices": [
+            31,
+            9,
+            5,
+            30
+          ],
+          "dispersion": {
+            "mae_thz": 0.3976723394368779,
+            "rmse_thz": 0.5693742276614413,
+            "max_abs_thz": 2.133816651291573,
+            "unstable_fraction_below_minus_0p05_thz": 0.01195219123505976
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.1902604466491802,
+            "rmse_ev_ang": 0.33562401922697827,
+            "max_abs_ev_ang": 5.741886269584615
+          },
+          "design": {
+            "n_snapshots": 4,
+            "n_force_observations": 648,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.4341859203477248e-09,
+            "condition_number": 15.162347704304214,
+            "condition_number_nonzero_subspace": 15.162347704304214,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 8,
+          "chosen_training_indices": [
+            31,
+            9,
+            5,
+            30,
+            54,
+            35,
+            42,
+            46
+          ],
+          "dispersion": {
+            "mae_thz": 0.43332073288303136,
+            "rmse_thz": 0.5769547895883306,
+            "max_abs_thz": 1.8408363652241375,
+            "unstable_fraction_below_minus_0p05_thz": 0.01195219123505976
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19812575506744468,
+            "rmse_ev_ang": 0.33328225098730535,
+            "max_abs_ev_ang": 5.633335291375241
+          },
+          "design": {
+            "n_snapshots": 8,
+            "n_force_observations": 1296,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.9359791637422695e-09,
+            "condition_number": 8.582119033554743,
+            "condition_number_nonzero_subspace": 8.582119033554743,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 16,
+          "chosen_training_indices": [
+            31,
+            9,
+            5,
+            30,
+            54,
+            35,
+            42,
+            46,
+            16,
+            76,
+            19,
+            23,
+            7,
+            3,
+            51,
+            72
+          ],
+          "dispersion": {
+            "mae_thz": 0.3687577024096287,
+            "rmse_thz": 0.5083622838762928,
+            "max_abs_thz": 1.8835964822868787,
+            "unstable_fraction_below_minus_0p05_thz": 0.013280212483399735
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19011902561762714,
+            "rmse_ev_ang": 0.3326601872294032,
+            "max_abs_ev_ang": 5.723119202574123
+          },
+          "design": {
+            "n_snapshots": 16,
+            "n_force_observations": 2592,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 2.6894572999949297e-09,
+            "condition_number": 7.446492654476609,
+            "condition_number_nonzero_subspace": 7.446492654476609,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        }
+      ]
+    },
+    {
+      "seed": 10,
+      "counts": [
+        {
+          "n_configurations": 1,
+          "chosen_training_indices": [
+            11
+          ],
+          "dispersion": {
+            "mae_thz": 0.4044935992198918,
+            "rmse_thz": 0.5763602815586093,
+            "max_abs_thz": 2.2828943201247602,
+            "unstable_fraction_below_minus_0p05_thz": 0.0013280212483399733
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.23634025539953568,
+            "rmse_ev_ang": 0.3752182460249502,
+            "max_abs_ev_ang": 5.792312638501101
+          },
+          "design": {
+            "n_snapshots": 1,
+            "n_force_observations": 162,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 149,
+            "rank": 149,
+            "rank_deficiency": 13,
+            "rank_tolerance": 7.668698138810713e-10,
+            "condition_number": null,
+            "condition_number_nonzero_subspace": 101.1306195494696,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 2,
+          "chosen_training_indices": [
+            11,
+            70
+          ],
+          "dispersion": {
+            "mae_thz": 0.4286026797125994,
+            "rmse_thz": 0.559886230703786,
+            "max_abs_thz": 1.8162502634616198,
+            "unstable_fraction_below_minus_0p05_thz": 0.019256308100929615
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19569966849929035,
+            "rmse_ev_ang": 0.333514514002285,
+            "max_abs_ev_ang": 5.723535134700461
+          },
+          "design": {
+            "n_snapshots": 2,
+            "n_force_observations": 324,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 9.870939514444558e-10,
+            "condition_number": 21.032675589978993,
+            "condition_number_nonzero_subspace": 21.032675589978993,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 4,
+          "chosen_training_indices": [
+            11,
+            70,
+            24,
+            26
+          ],
+          "dispersion": {
+            "mae_thz": 0.39850119444997373,
+            "rmse_thz": 0.5327079827687449,
+            "max_abs_thz": 1.8654262089473033,
+            "unstable_fraction_below_minus_0p05_thz": 0.017928286852589643
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.18955294084514474,
+            "rmse_ev_ang": 0.33269995654940226,
+            "max_abs_ev_ang": 5.776926074589623
+          },
+          "design": {
+            "n_snapshots": 4,
+            "n_force_observations": 648,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.4360514985267943e-09,
+            "condition_number": 11.136038777050283,
+            "condition_number_nonzero_subspace": 11.136038777050283,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 8,
+          "chosen_training_indices": [
+            11,
+            70,
+            24,
+            26,
+            16,
+            75,
+            39,
+            10
+          ],
+          "dispersion": {
+            "mae_thz": 0.3922242196536516,
+            "rmse_thz": 0.5393615202263249,
+            "max_abs_thz": 1.735002196946457,
+            "unstable_fraction_below_minus_0p05_thz": 0.013944223107569721
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.1926244294439684,
+            "rmse_ev_ang": 0.33186535583204124,
+            "max_abs_ev_ang": 5.733675960566334
+          },
+          "design": {
+            "n_snapshots": 8,
+            "n_force_observations": 1296,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.9604680963578065e-09,
+            "condition_number": 8.383276975416118,
+            "condition_number_nonzero_subspace": 8.383276975416118,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 16,
+          "chosen_training_indices": [
+            11,
+            70,
+            24,
+            26,
+            16,
+            75,
+            39,
+            10,
+            43,
+            42,
+            15,
+            32,
+            36,
+            3,
+            74,
+            62
+          ],
+          "dispersion": {
+            "mae_thz": 0.40379412540842835,
+            "rmse_thz": 0.5454371823537217,
+            "max_abs_thz": 1.7214163268012337,
+            "unstable_fraction_below_minus_0p05_thz": 0.013944223107569721
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19298729841419332,
+            "rmse_ev_ang": 0.33160890851695496,
+            "max_abs_ev_ang": 5.721011217914366
+          },
+          "design": {
+            "n_snapshots": 16,
+            "n_force_observations": 2592,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 2.8181598249735617e-09,
+            "condition_number": 7.58261492022313,
+            "condition_number_nonzero_subspace": 7.58261492022313,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        }
+      ]
+    },
+    {
+      "seed": 11,
+      "counts": [
+        {
+          "n_configurations": 1,
+          "chosen_training_indices": [
+            22
+          ],
+          "dispersion": {
+            "mae_thz": 1.3680775594749093,
+            "rmse_thz": 2.2067078148233383,
+            "max_abs_thz": 6.096111583925149,
+            "unstable_fraction_below_minus_0p05_thz": 0.23107569721115537
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.321150653749905,
+            "rmse_ev_ang": 0.44892607561146586,
+            "max_abs_ev_ang": 5.547684029579095
+          },
+          "design": {
+            "n_snapshots": 1,
+            "n_force_observations": 162,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 149,
+            "rank": 149,
+            "rank_deficiency": 13,
+            "rank_tolerance": 8.116733105232026e-10,
+            "condition_number": null,
+            "condition_number_nonzero_subspace": 188.8116823386191,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 2,
+          "chosen_training_indices": [
+            22,
+            76
+          ],
+          "dispersion": {
+            "mae_thz": 0.5785906086669653,
+            "rmse_thz": 0.7286699104254616,
+            "max_abs_thz": 1.6720854505789706,
+            "unstable_fraction_below_minus_0p05_thz": 0.04714475431606906
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19752460182290285,
+            "rmse_ev_ang": 0.34733694324045905,
+            "max_abs_ev_ang": 6.018111632801175
+          },
+          "design": {
+            "n_snapshots": 2,
+            "n_force_observations": 324,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.0609451416770425e-09,
+            "condition_number": 26.074466448858566,
+            "condition_number_nonzero_subspace": 26.074466448858566,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 4,
+          "chosen_training_indices": [
+            22,
+            76,
+            9,
+            70
+          ],
+          "dispersion": {
+            "mae_thz": 0.3796781086250343,
+            "rmse_thz": 0.5236515875260719,
+            "max_abs_thz": 1.8068303068241116,
+            "unstable_fraction_below_minus_0p05_thz": 0.017928286852589643
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.18694554525731225,
+            "rmse_ev_ang": 0.33664387411398766,
+            "max_abs_ev_ang": 5.846499470910225
+          },
+          "design": {
+            "n_snapshots": 4,
+            "n_force_observations": 648,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.36285772649592e-09,
+            "condition_number": 11.176193964526398,
+            "condition_number_nonzero_subspace": 11.176193964526398,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 8,
+          "chosen_training_indices": [
+            22,
+            76,
+            9,
+            70,
+            20,
+            41,
+            46,
+            67
+          ],
+          "dispersion": {
+            "mae_thz": 0.557941627553751,
+            "rmse_thz": 0.7027446430153262,
+            "max_abs_thz": 1.8080148825554794,
+            "unstable_fraction_below_minus_0p05_thz": 0.012616201859229747
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.21470273066585904,
+            "rmse_ev_ang": 0.338705557388176,
+            "max_abs_ev_ang": 5.500086258797821
+          },
+          "design": {
+            "n_snapshots": 8,
+            "n_force_observations": 1296,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.952694440211473e-09,
+            "condition_number": 8.496614138411989,
+            "condition_number_nonzero_subspace": 8.496614138411989,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 16,
+          "chosen_training_indices": [
+            22,
+            76,
+            9,
+            70,
+            20,
+            41,
+            46,
+            67,
+            14,
+            16,
+            66,
+            51,
+            29,
+            61,
+            75,
+            6
+          ],
+          "dispersion": {
+            "mae_thz": 0.515124867425335,
+            "rmse_thz": 0.6637313965471915,
+            "max_abs_thz": 1.7624986011747446,
+            "unstable_fraction_below_minus_0p05_thz": 0.013944223107569721
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.2065162759351396,
+            "rmse_ev_ang": 0.3345920633499623,
+            "max_abs_ev_ang": 5.594015946909412
+          },
+          "design": {
+            "n_snapshots": 16,
+            "n_force_observations": 2592,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 2.7235082051888424e-09,
+            "condition_number": 7.353476415442761,
+            "condition_number_nonzero_subspace": 7.353476415442761,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        }
+      ]
+    },
+    {
+      "seed": 12,
+      "counts": [
+        {
+          "n_configurations": 1,
+          "chosen_training_indices": [
+            46
+          ],
+          "dispersion": {
+            "mae_thz": 1.3545224570515975,
+            "rmse_thz": 1.536728242829171,
+            "max_abs_thz": 2.7906762588786562,
+            "unstable_fraction_below_minus_0p05_thz": 0.00597609561752988
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.4150844494325671,
+            "rmse_ev_ang": 0.5348183674541055,
+            "max_abs_ev_ang": 4.468922033869168
+          },
+          "design": {
+            "n_snapshots": 1,
+            "n_force_observations": 162,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 149,
+            "rank": 149,
+            "rank_deficiency": 13,
+            "rank_tolerance": 7.982155663217139e-10,
+            "condition_number": null,
+            "condition_number_nonzero_subspace": 105.38778059393373,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 2,
+          "chosen_training_indices": [
+            46,
+            16
+          ],
+          "dispersion": {
+            "mae_thz": 0.673631316713113,
+            "rmse_thz": 0.8372542280382735,
+            "max_abs_thz": 2.0991398496828415,
+            "unstable_fraction_below_minus_0p05_thz": 0.0099601593625498
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.22654322818926845,
+            "rmse_ev_ang": 0.3457419421728053,
+            "max_abs_ev_ang": 5.384175427526143
+          },
+          "design": {
+            "n_snapshots": 2,
+            "n_force_observations": 324,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.0404137540336967e-09,
+            "condition_number": 20.407743901000902,
+            "condition_number_nonzero_subspace": 20.407743901000902,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 4,
+          "chosen_training_indices": [
+            46,
+            16,
+            22,
+            17
+          ],
+          "dispersion": {
+            "mae_thz": 0.4726351083740389,
+            "rmse_thz": 0.6229743883180578,
+            "max_abs_thz": 1.716026331525609,
+            "unstable_fraction_below_minus_0p05_thz": 0.011288180610889775
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.20530637763037807,
+            "rmse_ev_ang": 0.33620972411615896,
+            "max_abs_ev_ang": 5.575319126579336
+          },
+          "design": {
+            "n_snapshots": 4,
+            "n_force_observations": 648,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.4549319830845565e-09,
+            "condition_number": 14.74375015106655,
+            "condition_number_nonzero_subspace": 14.74375015106655,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 8,
+          "chosen_training_indices": [
+            46,
+            16,
+            22,
+            17,
+            4,
+            71,
+            54,
+            8
+          ],
+          "dispersion": {
+            "mae_thz": 0.42851217938100605,
+            "rmse_thz": 0.5621971568050234,
+            "max_abs_thz": 1.7242547576489589,
+            "unstable_fraction_below_minus_0p05_thz": 0.013944223107569721
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.194520695605582,
+            "rmse_ev_ang": 0.3318295613484852,
+            "max_abs_ev_ang": 5.683640114190378
+          },
+          "design": {
+            "n_snapshots": 8,
+            "n_force_observations": 1296,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.942246594025714e-09,
+            "condition_number": 8.616728356781842,
+            "condition_number_nonzero_subspace": 8.616728356781842,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 16,
+          "chosen_training_indices": [
+            46,
+            16,
+            22,
+            17,
+            4,
+            71,
+            54,
+            8,
+            77,
+            32,
+            0,
+            53,
+            55,
+            39,
+            2,
+            74
+          ],
+          "dispersion": {
+            "mae_thz": 0.4128635561811822,
+            "rmse_thz": 0.5467705317262086,
+            "max_abs_thz": 1.748320355523317,
+            "unstable_fraction_below_minus_0p05_thz": 0.013944223107569721
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19355932258515265,
+            "rmse_ev_ang": 0.3316479027441133,
+            "max_abs_ev_ang": 5.695798860805286
+          },
+          "design": {
+            "n_snapshots": 16,
+            "n_force_observations": 2592,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 2.6454318462039737e-09,
+            "condition_number": 6.838153866859615,
+            "condition_number_nonzero_subspace": 6.838153866859615,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        }
+      ]
+    },
+    {
+      "seed": 13,
+      "counts": [
+        {
+          "n_configurations": 1,
+          "chosen_training_indices": [
+            6
+          ],
+          "dispersion": {
+            "mae_thz": 1.4350158490999356,
+            "rmse_thz": 1.5807720633552094,
+            "max_abs_thz": 3.7867879149720056,
+            "unstable_fraction_below_minus_0p05_thz": 0.04847277556440903
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.24715290796698383,
+            "rmse_ev_ang": 0.4050417510523226,
+            "max_abs_ev_ang": 6.093496615338156
+          },
+          "design": {
+            "n_snapshots": 1,
+            "n_force_observations": 162,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 149,
+            "rank": 149,
+            "rank_deficiency": 13,
+            "rank_tolerance": 7.223438121633502e-10,
+            "condition_number": null,
+            "condition_number_nonzero_subspace": 105.641744648286,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 2,
+          "chosen_training_indices": [
+            6,
+            34
+          ],
+          "dispersion": {
+            "mae_thz": 0.4632621476313703,
+            "rmse_thz": 0.6270468925310938,
+            "max_abs_thz": 1.8537838009488254,
+            "unstable_fraction_below_minus_0p05_thz": 0.0199203187250996
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19460948636626102,
+            "rmse_ev_ang": 0.33411017785374164,
+            "max_abs_ev_ang": 5.81451482261518
+          },
+          "design": {
+            "n_snapshots": 2,
+            "n_force_observations": 324,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 9.373979940206948e-10,
+            "condition_number": 20.286936762651283,
+            "condition_number_nonzero_subspace": 20.286936762651283,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 4,
+          "chosen_training_indices": [
+            6,
+            34,
+            42,
+            75
+          ],
+          "dispersion": {
+            "mae_thz": 0.45843391435356107,
+            "rmse_thz": 0.6038047905852002,
+            "max_abs_thz": 1.6431065280934387,
+            "unstable_fraction_below_minus_0p05_thz": 0.015272244355909695
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.1980767249025659,
+            "rmse_ev_ang": 0.3320785648712207,
+            "max_abs_ev_ang": 5.695768674038446
+          },
+          "design": {
+            "n_snapshots": 4,
+            "n_force_observations": 648,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.2965381222081531e-09,
+            "condition_number": 10.644177171094087,
+            "condition_number_nonzero_subspace": 10.644177171094087,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 8,
+          "chosen_training_indices": [
+            6,
+            34,
+            42,
+            75,
+            12,
+            29,
+            32,
+            71
+          ],
+          "dispersion": {
+            "mae_thz": 0.4302647924837565,
+            "rmse_thz": 0.574604542360406,
+            "max_abs_thz": 1.708179080258156,
+            "unstable_fraction_below_minus_0p05_thz": 0.013944223107569721
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19525739298100345,
+            "rmse_ev_ang": 0.33173856740173996,
+            "max_abs_ev_ang": 5.700933555339262
+          },
+          "design": {
+            "n_snapshots": 8,
+            "n_force_observations": 1296,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.787998886122346e-09,
+            "condition_number": 7.706986673358044,
+            "condition_number_nonzero_subspace": 7.706986673358044,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 16,
+          "chosen_training_indices": [
+            6,
+            34,
+            42,
+            75,
+            12,
+            29,
+            32,
+            71,
+            76,
+            17,
+            67,
+            21,
+            1,
+            19,
+            2,
+            28
+          ],
+          "dispersion": {
+            "mae_thz": 0.39612752110567695,
+            "rmse_thz": 0.5330402044704069,
+            "max_abs_thz": 1.8137142143889564,
+            "unstable_fraction_below_minus_0p05_thz": 0.017928286852589643
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.18986217379764134,
+            "rmse_ev_ang": 0.33185183374353233,
+            "max_abs_ev_ang": 5.756740290252319
+          },
+          "design": {
+            "n_snapshots": 16,
+            "n_force_observations": 2592,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 2.6632898585232407e-09,
+            "condition_number": 6.9493684042883945,
+            "condition_number_nonzero_subspace": 6.9493684042883945,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        }
+      ]
+    },
+    {
+      "seed": 14,
+      "counts": [
+        {
+          "n_configurations": 1,
+          "chosen_training_indices": [
+            15
+          ],
+          "dispersion": {
+            "mae_thz": 0.5451804135452274,
+            "rmse_thz": 0.6487606359280069,
+            "max_abs_thz": 1.7431670738008256,
+            "unstable_fraction_below_minus_0p05_thz": 0.004648074369189907
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.2520207797368964,
+            "rmse_ev_ang": 0.3929401890216373,
+            "max_abs_ev_ang": 6.139986865740563
+          },
+          "design": {
+            "n_snapshots": 1,
+            "n_force_observations": 162,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 149,
+            "rank": 149,
+            "rank_deficiency": 13,
+            "rank_tolerance": 9.584435251651416e-10,
+            "condition_number": null,
+            "condition_number_nonzero_subspace": 107.5818119891556,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 2,
+          "chosen_training_indices": [
+            15,
+            32
+          ],
+          "dispersion": {
+            "mae_thz": 0.3757017572686202,
+            "rmse_thz": 0.5232365069274713,
+            "max_abs_thz": 1.9622343917850271,
+            "unstable_fraction_below_minus_0p05_thz": 0.01593625498007968
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.18668811798872018,
+            "rmse_ev_ang": 0.3398150908758308,
+            "max_abs_ev_ang": 5.903399238503415
+          },
+          "design": {
+            "n_snapshots": 2,
+            "n_force_observations": 324,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.1512639084386985e-09,
+            "condition_number": 24.978415798554373,
+            "condition_number_nonzero_subspace": 24.978415798554373,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 4,
+          "chosen_training_indices": [
+            15,
+            32,
+            76,
+            72
+          ],
+          "dispersion": {
+            "mae_thz": 0.3573435196115456,
+            "rmse_thz": 0.49260875816344274,
+            "max_abs_thz": 2.03584813034373,
+            "unstable_fraction_below_minus_0p05_thz": 0.016600265604249667
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.18163120027660445,
+            "rmse_ev_ang": 0.3416491913635768,
+            "max_abs_ev_ang": 5.949413474620954
+          },
+          "design": {
+            "n_snapshots": 4,
+            "n_force_observations": 648,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.3723423556598282e-09,
+            "condition_number": 11.101481331969392,
+            "condition_number_nonzero_subspace": 11.101481331969392,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 8,
+          "chosen_training_indices": [
+            15,
+            32,
+            76,
+            72,
+            23,
+            64,
+            28,
+            70
+          ],
+          "dispersion": {
+            "mae_thz": 0.3240928305144974,
+            "rmse_thz": 0.46832728781683935,
+            "max_abs_thz": 1.9987651866047251,
+            "unstable_fraction_below_minus_0p05_thz": 0.015272244355909695
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.18174221249358027,
+            "rmse_ev_ang": 0.338930884223855,
+            "max_abs_ev_ang": 5.914630973968057
+          },
+          "design": {
+            "n_snapshots": 8,
+            "n_force_observations": 1296,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.909241208114511e-09,
+            "condition_number": 9.11911504198381,
+            "condition_number_nonzero_subspace": 9.11911504198381,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 16,
+          "chosen_training_indices": [
+            15,
+            32,
+            76,
+            72,
+            23,
+            64,
+            28,
+            70,
+            30,
+            56,
+            50,
+            29,
+            52,
+            12,
+            51,
+            38
+          ],
+          "dispersion": {
+            "mae_thz": 0.36909257912248794,
+            "rmse_thz": 0.5080349732297519,
+            "max_abs_thz": 1.883295621612124,
+            "unstable_fraction_below_minus_0p05_thz": 0.013944223107569721
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.1886060698932555,
+            "rmse_ev_ang": 0.3322752260662271,
+            "max_abs_ev_ang": 5.759514143906794
+          },
+          "design": {
+            "n_snapshots": 16,
+            "n_force_observations": 2592,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 2.665411565641945e-09,
+            "condition_number": 7.432399675516522,
+            "condition_number_nonzero_subspace": 7.432399675516522,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        }
+      ]
+    },
+    {
+      "seed": 15,
+      "counts": [
+        {
+          "n_configurations": 1,
+          "chosen_training_indices": [
+            63
+          ],
+          "dispersion": {
+            "mae_thz": 0.38633227673076703,
+            "rmse_thz": 0.5419902984802029,
+            "max_abs_thz": 2.347644830977841,
+            "unstable_fraction_below_minus_0p05_thz": 0.0099601593625498
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19787385945607983,
+            "rmse_ev_ang": 0.36972126110359516,
+            "max_abs_ev_ang": 6.055940680641397
+          },
+          "design": {
+            "n_snapshots": 1,
+            "n_force_observations": 162,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 149,
+            "rank": 149,
+            "rank_deficiency": 13,
+            "rank_tolerance": 6.603430457832409e-10,
+            "condition_number": null,
+            "condition_number_nonzero_subspace": 134.53584455400562,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 2,
+          "chosen_training_indices": [
+            63,
+            10
+          ],
+          "dispersion": {
+            "mae_thz": 0.30965782029995653,
+            "rmse_thz": 0.475839028137687,
+            "max_abs_thz": 1.893825547947583,
+            "unstable_fraction_below_minus_0p05_thz": 0.01195219123505976
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.18836232421882845,
+            "rmse_ev_ang": 0.34333230691455097,
+            "max_abs_ev_ang": 5.955360112525269
+          },
+          "design": {
+            "n_snapshots": 2,
+            "n_force_observations": 324,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 9.158186128666673e-10,
+            "condition_number": 22.1980248783707,
+            "condition_number_nonzero_subspace": 22.1980248783707,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 4,
+          "chosen_training_indices": [
+            63,
+            10,
+            29,
+            54
+          ],
+          "dispersion": {
+            "mae_thz": 0.3879245554715241,
+            "rmse_thz": 0.5366003750725487,
+            "max_abs_thz": 1.8584313207003476,
+            "unstable_fraction_below_minus_0p05_thz": 0.017928286852589643
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.1871230604221946,
+            "rmse_ev_ang": 0.3336267615445399,
+            "max_abs_ev_ang": 5.82224657270361
+          },
+          "design": {
+            "n_snapshots": 4,
+            "n_force_observations": 648,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.357388333965434e-09,
+            "condition_number": 10.9675884607019,
+            "condition_number_nonzero_subspace": 10.9675884607019,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 8,
+          "chosen_training_indices": [
+            63,
+            10,
+            29,
+            54,
+            5,
+            76,
+            32,
+            3
+          ],
+          "dispersion": {
+            "mae_thz": 0.37133655973178226,
+            "rmse_thz": 0.5192572918200304,
+            "max_abs_thz": 1.792266287811083,
+            "unstable_fraction_below_minus_0p05_thz": 0.015272244355909695
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.18863383795408126,
+            "rmse_ev_ang": 0.33351262018164224,
+            "max_abs_ev_ang": 5.81349063910489
+          },
+          "design": {
+            "n_snapshots": 8,
+            "n_force_observations": 1296,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.942685119302576e-09,
+            "condition_number": 7.967926020789221,
+            "condition_number_nonzero_subspace": 7.967926020789221,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 16,
+          "chosen_training_indices": [
+            63,
+            10,
+            29,
+            54,
+            5,
+            76,
+            32,
+            3,
+            55,
+            36,
+            1,
+            73,
+            41,
+            14,
+            13,
+            15
+          ],
+          "dispersion": {
+            "mae_thz": 0.4539455246741573,
+            "rmse_thz": 0.5965960489567972,
+            "max_abs_thz": 1.622574065963617,
+            "unstable_fraction_below_minus_0p05_thz": 0.017928286852589643
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19593430390925937,
+            "rmse_ev_ang": 0.331792073936635,
+            "max_abs_ev_ang": 5.71985909847021
+          },
+          "design": {
+            "n_snapshots": 16,
+            "n_force_observations": 2592,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 2.733564806004993e-09,
+            "condition_number": 7.524155370223464,
+            "condition_number_nonzero_subspace": 7.524155370223464,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        }
+      ]
+    },
+    {
+      "seed": 16,
+      "counts": [
+        {
+          "n_configurations": 1,
+          "chosen_training_indices": [
+            51
+          ],
+          "dispersion": {
+            "mae_thz": 1.4578956639684404,
+            "rmse_thz": 2.024465313228166,
+            "max_abs_thz": 5.436064279477055,
+            "unstable_fraction_below_minus_0p05_thz": 0.1852589641434263
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.26620198686232865,
+            "rmse_ev_ang": 0.4034214849548313,
+            "max_abs_ev_ang": 5.8400971130058785
+          },
+          "design": {
+            "n_snapshots": 1,
+            "n_force_observations": 162,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 149,
+            "rank": 149,
+            "rank_deficiency": 13,
+            "rank_tolerance": 7.940917967317039e-10,
+            "condition_number": null,
+            "condition_number_nonzero_subspace": 88.4125162356713,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 2,
+          "chosen_training_indices": [
+            51,
+            20
+          ],
+          "dispersion": {
+            "mae_thz": 0.7370007617069815,
+            "rmse_thz": 0.8853834531372505,
+            "max_abs_thz": 2.0263868651847163,
+            "unstable_fraction_below_minus_0p05_thz": 0.0013280212483399733
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.26846201013461485,
+            "rmse_ev_ang": 0.3789090620442551,
+            "max_abs_ev_ang": 5.112861743979391
+          },
+          "design": {
+            "n_snapshots": 2,
+            "n_force_observations": 324,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.0913495585917993e-09,
+            "condition_number": 21.69174717286874,
+            "condition_number_nonzero_subspace": 21.69174717286874,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 4,
+          "chosen_training_indices": [
+            51,
+            20,
+            60,
+            49
+          ],
+          "dispersion": {
+            "mae_thz": 0.7698258485285333,
+            "rmse_thz": 0.9180706171700278,
+            "max_abs_thz": 2.1737814058649407,
+            "unstable_fraction_below_minus_0p05_thz": 0.0073041168658698535
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.2616101832425413,
+            "rmse_ev_ang": 0.3735925329347504,
+            "max_abs_ev_ang": 5.203733504434197
+          },
+          "design": {
+            "n_snapshots": 4,
+            "n_force_observations": 648,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.5979965123495253e-09,
+            "condition_number": 12.537800450579386,
+            "condition_number_nonzero_subspace": 12.537800450579386,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 8,
+          "chosen_training_indices": [
+            51,
+            20,
+            60,
+            49,
+            70,
+            67,
+            79,
+            77
+          ],
+          "dispersion": {
+            "mae_thz": 0.522773947462998,
+            "rmse_thz": 0.6755382259055711,
+            "max_abs_thz": 1.761429276517184,
+            "unstable_fraction_below_minus_0p05_thz": 0.009296148738379814
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.21288702926372857,
+            "rmse_ev_ang": 0.3377823688321298,
+            "max_abs_ev_ang": 5.5206456082465385
+          },
+          "design": {
+            "n_snapshots": 8,
+            "n_force_observations": 1296,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 2.019290568125415e-09,
+            "condition_number": 8.77302360101731,
+            "condition_number_nonzero_subspace": 8.77302360101731,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 16,
+          "chosen_training_indices": [
+            51,
+            20,
+            60,
+            49,
+            70,
+            67,
+            79,
+            77,
+            78,
+            47,
+            9,
+            72,
+            25,
+            52,
+            14,
+            63
+          ],
+          "dispersion": {
+            "mae_thz": 0.44447245081894743,
+            "rmse_thz": 0.5886446467326072,
+            "max_abs_thz": 1.635324221422504,
+            "unstable_fraction_below_minus_0p05_thz": 0.013944223107569721
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19890169703731683,
+            "rmse_ev_ang": 0.3323400877595472,
+            "max_abs_ev_ang": 5.666509341930423
+          },
+          "design": {
+            "n_snapshots": 16,
+            "n_force_observations": 2592,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 2.669080238202683e-09,
+            "condition_number": 7.224857501627604,
+            "condition_number_nonzero_subspace": 7.224857501627604,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        }
+      ]
+    },
+    {
+      "seed": 17,
+      "counts": [
+        {
+          "n_configurations": 1,
+          "chosen_training_indices": [
+            28
+          ],
+          "dispersion": {
+            "mae_thz": 0.44373167774123146,
+            "rmse_thz": 0.5727237720415218,
+            "max_abs_thz": 2.097832191799383,
+            "unstable_fraction_below_minus_0p05_thz": 0.05312084993359894
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.21146359160308906,
+            "rmse_ev_ang": 0.3692935130577144,
+            "max_abs_ev_ang": 6.006411450327609
+          },
+          "design": {
+            "n_snapshots": 1,
+            "n_force_observations": 162,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 149,
+            "rank": 149,
+            "rank_deficiency": 13,
+            "rank_tolerance": 7.603380206081812e-10,
+            "condition_number": null,
+            "condition_number_nonzero_subspace": 151.08787890294508,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 2,
+          "chosen_training_indices": [
+            28,
+            19
+          ],
+          "dispersion": {
+            "mae_thz": 0.4059576227511112,
+            "rmse_thz": 0.5287437045008568,
+            "max_abs_thz": 2.0953222978741,
+            "unstable_fraction_below_minus_0p05_thz": 0.020584329349269587
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.18144533294525514,
+            "rmse_ev_ang": 0.35018976232495846,
+            "max_abs_ev_ang": 6.0588477048628215
+          },
+          "design": {
+            "n_snapshots": 2,
+            "n_force_observations": 324,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 9.925130691758224e-10,
+            "condition_number": 21.040988094796504,
+            "condition_number_nonzero_subspace": 21.040988094796504,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 4,
+          "chosen_training_indices": [
+            28,
+            19,
+            33,
+            17
+          ],
+          "dispersion": {
+            "mae_thz": 0.3800629726718478,
+            "rmse_thz": 0.5357923196868047,
+            "max_abs_thz": 2.1211497492672517,
+            "unstable_fraction_below_minus_0p05_thz": 0.015272244355909695
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.18671618058624476,
+            "rmse_ev_ang": 0.3345513786430683,
+            "max_abs_ev_ang": 5.783354914198748
+          },
+          "design": {
+            "n_snapshots": 4,
+            "n_force_observations": 648,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.3462454683309806e-09,
+            "condition_number": 10.08726299141321,
+            "condition_number_nonzero_subspace": 10.08726299141321,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 8,
+          "chosen_training_indices": [
+            28,
+            19,
+            33,
+            17,
+            59,
+            67,
+            55,
+            14
+          ],
+          "dispersion": {
+            "mae_thz": 0.40929275362141704,
+            "rmse_thz": 0.5356399478722547,
+            "max_abs_thz": 1.8639497376989906,
+            "unstable_fraction_below_minus_0p05_thz": 0.01593625498007968
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19304567814431492,
+            "rmse_ev_ang": 0.33215515594838646,
+            "max_abs_ev_ang": 5.6986610868747105
+          },
+          "design": {
+            "n_snapshots": 8,
+            "n_force_observations": 1296,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.8953644754193638e-09,
+            "condition_number": 7.4733777114541855,
+            "condition_number_nonzero_subspace": 7.4733777114541855,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 16,
+          "chosen_training_indices": [
+            28,
+            19,
+            33,
+            17,
+            59,
+            67,
+            55,
+            14,
+            71,
+            79,
+            62,
+            76,
+            4,
+            27,
+            70,
+            44
+          ],
+          "dispersion": {
+            "mae_thz": 0.39469902751286656,
+            "rmse_thz": 0.5293540941338472,
+            "max_abs_thz": 1.8199655310529907,
+            "unstable_fraction_below_minus_0p05_thz": 0.013944223107569721
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19232552617829635,
+            "rmse_ev_ang": 0.33167447596072747,
+            "max_abs_ev_ang": 5.706632499697572
+          },
+          "design": {
+            "n_snapshots": 16,
+            "n_force_observations": 2592,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 2.598211286732432e-09,
+            "condition_number": 6.641069456726322,
+            "condition_number_nonzero_subspace": 6.641069456726322,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        }
+      ]
+    },
+    {
+      "seed": 18,
+      "counts": [
+        {
+          "n_configurations": 1,
+          "chosen_training_indices": [
+            52
+          ],
+          "dispersion": {
+            "mae_thz": 0.7545399916625889,
+            "rmse_thz": 1.1983508197332042,
+            "max_abs_thz": 4.0280896238947586,
+            "unstable_fraction_below_minus_0p05_thz": 0.11952191235059761
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.2042603652336655,
+            "rmse_ev_ang": 0.3457169479616007,
+            "max_abs_ev_ang": 5.779669341550744
+          },
+          "design": {
+            "n_snapshots": 1,
+            "n_force_observations": 162,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 149,
+            "rank": 149,
+            "rank_deficiency": 13,
+            "rank_tolerance": 6.784064803614272e-10,
+            "condition_number": null,
+            "condition_number_nonzero_subspace": 133.4546585738363,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 2,
+          "chosen_training_indices": [
+            52,
+            67
+          ],
+          "dispersion": {
+            "mae_thz": 0.365306272761505,
+            "rmse_thz": 0.4967733508746273,
+            "max_abs_thz": 1.8560632594721183,
+            "unstable_fraction_below_minus_0p05_thz": 0.009296148738379814
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19952531922942388,
+            "rmse_ev_ang": 0.33425846512313806,
+            "max_abs_ev_ang": 5.646672862967776
+          },
+          "design": {
+            "n_snapshots": 2,
+            "n_force_observations": 324,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 9.347668854251147e-10,
+            "condition_number": 21.509953995028663,
+            "condition_number_nonzero_subspace": 21.509953995028663,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 4,
+          "chosen_training_indices": [
+            52,
+            67,
+            25,
+            6
+          ],
+          "dispersion": {
+            "mae_thz": 0.3386404567137744,
+            "rmse_thz": 0.4794663573682626,
+            "max_abs_thz": 1.88375602948428,
+            "unstable_fraction_below_minus_0p05_thz": 0.01195219123505976
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.18793320673745828,
+            "rmse_ev_ang": 0.3328277460335409,
+            "max_abs_ev_ang": 5.758276117522645
+          },
+          "design": {
+            "n_snapshots": 4,
+            "n_force_observations": 648,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.338304161154811e-09,
+            "condition_number": 11.603844965819246,
+            "condition_number_nonzero_subspace": 11.603844965819246,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 8,
+          "chosen_training_indices": [
+            52,
+            67,
+            25,
+            6,
+            39,
+            30,
+            24,
+            32
+          ],
+          "dispersion": {
+            "mae_thz": 0.3844742868456725,
+            "rmse_thz": 0.5364523507585723,
+            "max_abs_thz": 1.6592477417532603,
+            "unstable_fraction_below_minus_0p05_thz": 0.015272244355909695
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.18876503829265226,
+            "rmse_ev_ang": 0.3332789362677587,
+            "max_abs_ev_ang": 5.805663458551057
+          },
+          "design": {
+            "n_snapshots": 8,
+            "n_force_observations": 1296,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.9110725551383476e-09,
+            "condition_number": 8.58498011654401,
+            "condition_number_nonzero_subspace": 8.58498011654401,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 16,
+          "chosen_training_indices": [
+            52,
+            67,
+            25,
+            6,
+            39,
+            30,
+            24,
+            32,
+            42,
+            56,
+            38,
+            27,
+            40,
+            62,
+            70,
+            51
+          ],
+          "dispersion": {
+            "mae_thz": 0.4015333328445714,
+            "rmse_thz": 0.5378095857115579,
+            "max_abs_thz": 1.7462049576601713,
+            "unstable_fraction_below_minus_0p05_thz": 0.017264276228419653
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19060443768981766,
+            "rmse_ev_ang": 0.3316593915183259,
+            "max_abs_ev_ang": 5.749956325237639
+          },
+          "design": {
+            "n_snapshots": 16,
+            "n_force_observations": 2592,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 2.600580801060822e-09,
+            "condition_number": 6.89839542922049,
+            "condition_number_nonzero_subspace": 6.89839542922049,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        }
+      ]
+    },
+    {
+      "seed": 19,
+      "counts": [
+        {
+          "n_configurations": 1,
+          "chosen_training_indices": [
+            38
+          ],
+          "dispersion": {
+            "mae_thz": 2.11435964463368,
+            "rmse_thz": 2.799368173067439,
+            "max_abs_thz": 7.732366680410428,
+            "unstable_fraction_below_minus_0p05_thz": 0.22841965471447542
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.39611287453200067,
+            "rmse_ev_ang": 0.5436099153720974,
+            "max_abs_ev_ang": 6.1909376700827785
+          },
+          "design": {
+            "n_snapshots": 1,
+            "n_force_observations": 162,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 149,
+            "rank": 149,
+            "rank_deficiency": 13,
+            "rank_tolerance": 7.675305447319213e-10,
+            "condition_number": null,
+            "condition_number_nonzero_subspace": 122.10053199378677,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 2,
+          "chosen_training_indices": [
+            38,
+            61
+          ],
+          "dispersion": {
+            "mae_thz": 0.7349850099240463,
+            "rmse_thz": 0.906397398267176,
+            "max_abs_thz": 2.165219162142093,
+            "unstable_fraction_below_minus_0p05_thz": 0.045816733067729085
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.22047821062962253,
+            "rmse_ev_ang": 0.34339248077864815,
+            "max_abs_ev_ang": 5.636176531624521
+          },
+          "design": {
+            "n_snapshots": 2,
+            "n_force_observations": 324,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.1034675825095732e-09,
+            "condition_number": 20.87583549049024,
+            "condition_number_nonzero_subspace": 20.87583549049024,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 4,
+          "chosen_training_indices": [
+            38,
+            61,
+            56,
+            14
+          ],
+          "dispersion": {
+            "mae_thz": 0.5059600826744791,
+            "rmse_thz": 0.6673100318836074,
+            "max_abs_thz": 1.748945383633643,
+            "unstable_fraction_below_minus_0p05_thz": 0.02257636122177955
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.2039803752155456,
+            "rmse_ev_ang": 0.3356583468632341,
+            "max_abs_ev_ang": 5.719892658800774
+          },
+          "design": {
+            "n_snapshots": 4,
+            "n_force_observations": 648,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 1.5437365374873295e-09,
+            "condition_number": 11.21923256289129,
+            "condition_number_nonzero_subspace": 11.21923256289129,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 8,
+          "chosen_training_indices": [
+            38,
+            61,
+            56,
+            14,
+            25,
+            18,
+            2,
+            5
+          ],
+          "dispersion": {
+            "mae_thz": 0.4483939720810816,
+            "rmse_thz": 0.5918667749387624,
+            "max_abs_thz": 1.7779857301449598,
+            "unstable_fraction_below_minus_0p05_thz": 0.019256308100929615
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19561443374957294,
+            "rmse_ev_ang": 0.3321223876177628,
+            "max_abs_ev_ang": 5.708187013430509
+          },
+          "design": {
+            "n_snapshots": 8,
+            "n_force_observations": 1296,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 2.007372421706579e-09,
+            "condition_number": 7.810450808473419,
+            "condition_number_nonzero_subspace": 7.810450808473419,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        {
+          "n_configurations": 16,
+          "chosen_training_indices": [
+            38,
+            61,
+            56,
+            14,
+            25,
+            18,
+            2,
+            5,
+            69,
+            21,
+            58,
+            52,
+            55,
+            16,
+            62,
+            37
+          ],
+          "dispersion": {
+            "mae_thz": 0.43164418199053445,
+            "rmse_thz": 0.5657945616669396,
+            "max_abs_thz": 1.7322800579572988,
+            "unstable_fraction_below_minus_0p05_thz": 0.013944223107569721
+          },
+          "held_out_force": {
+            "mae_ev_ang": 0.19587716314105075,
+            "rmse_ev_ang": 0.3316718908443871,
+            "max_abs_ev_ang": 5.678942588111815
+          },
+          "design": {
+            "n_snapshots": 16,
+            "n_force_observations": 2592,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 2.692440065862208e-09,
+            "condition_number": 6.818149858124878,
+            "condition_number_nonzero_subspace": 6.818149858124878,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        }
+      ]
+    }
+  ],
+  "force_call_accounting": {
+    "new_sotc_displaced_calls": 48,
+    "new_reference_calls": 0,
+    "reused_canonical_calls": 100,
+    "reused_finite_displacement_calls": 4
+  }
+}

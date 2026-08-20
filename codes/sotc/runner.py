@@ -78,7 +78,8 @@ class SOTCRunner:
     r_cutoff : float [Å]
         IFC regression cutoff radius.
     xi_T : float [Å]
-        Thermal coherence length (overrides Debye estimate if given).
+        Legacy keyword for the numerical exponential shell-weighting length;
+        it is not a phonon lifetime, mean free path, or correlation length.
     r_max_corr : float [Å]
         Maximum shell distance included in Q_SOTC.
     n_ensemble : int
@@ -123,6 +124,7 @@ class SOTCRunner:
         symmetrize_bonds: bool = False,
         elements: Optional[List[str]] = None,
         masses_amu: Optional[List[float]] = None,
+        shell_tolerance_ang: float = 0.05,
     ):
         self.element = element
         self.mass_amu = mass_amu
@@ -141,6 +143,9 @@ class SOTCRunner:
         self.verbosity = verbosity
         self.ridge_alpha = ridge_alpha
         self.symmetrize_bonds = symmetrize_bonds
+        self.shell_tolerance_ang = float(shell_tolerance_ang)
+        if self.shell_tolerance_ang <= 0.0:
+            raise ValueError("shell_tolerance_ang must be positive")
 
         self.n_b = len(prim_positions)
 
@@ -416,6 +421,7 @@ class SOTCRunner:
             r_max=self.r_max_corr,
             basis_indices=self._supercell_basis_classes(len(sc_pos)),
             masses_amu=masses,
+            shell_tolerance_ang=self.shell_tolerance_ang,
         )
 
         if self.verbosity >= 1:
@@ -1018,6 +1024,7 @@ class SOTCRunner:
         summary["symmetrize_bonds"] = self.symmetrize_bonds
         summary["n_ensemble"] = self.n_ensemble
         summary["weighting_length_ang"] = self.xi_w
+        summary["shell_tolerance_ang"] = self.shell_tolerance_ang
         summary["weighting_length_interpretation"] = "numerical exponential shell weight"
         summary["reference_state"] = self._reference_state
         if self.force_calc is not None and hasattr(self.force_calc, "provenance"):

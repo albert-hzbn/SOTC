@@ -78,10 +78,7 @@ requirements.txt           ← Python dependencies
 README.md                  ← this file
 ```
 
-The manuscript sources are kept separate: `manuscript.tex` is the original,
-`manuscript_updated.tex` highlights added text in blue, and
-`manuscript_clean.tex` is the uncolored submission copy. Each updated source
-has a matching PDF.
+The manuscript sources are kept separate: `manuscript_original.tex`/`.pdf` archive the original submission, `manuscript_clean.tex`/`.pdf` are the uncolored revised submission, and `manuscript_updated.tex`/`.pdf` are the selectively marked revision. The marked source contains only the revised text plus blue color commands; hidden deleted text and `latexdiff` tracking macros have been removed.
 
 ---
 
@@ -154,10 +151,12 @@ python3 codes/validation/run_real_anharmonic_ifcs.py al
 Each campaign uses 100 paired quantum-canonical snapshots, an 80/20
 pair-independent train/test split, joint symmetry- and acoustic-sum-rule
 constrained fits, and explicit snapshot-count, cutoff, plane-wave-cutoff, and
-k-mesh controls. Every QE state is checkpointed. Outputs include raw
-displacements/forces/stresses, rank and condition diagnostics, compact HDF5/NPY
-tensors, phono3py `fc3.hdf5`, ShengBTE `FORCE_CONSTANTS_3RD`, and
-FourPhonon `FORCE_CONSTANTS_4TH`.
+k-mesh controls. QE states are checkpointed locally so interrupted campaigns
+can be restarted. The public repository contains the validation scripts,
+compact summaries, selected figure arrays, constrained IFC tensors, and final
+figures needed to audit the revised manuscript. Large QE scratch directories
+and restart checkpoints are deliberately excluded from Git; they can be
+regenerated from the archived inputs and drivers.
 
 After all three campaigns finish, regenerate the cross-material acceptance
 report directly from their machine-readable archives:
@@ -171,6 +170,8 @@ Regenerate the manuscript validation plots from the same archives:
 ```bash
 python3 codes/validation/plot_ifc34_diagnostics.py
 python3 codes/validation/plot_nacl_loto.py
+python3 codes/validation/plot_matched_sampling_ablation.py
+python3 codes/validation/plot_sotc_polar_nac.py
 ```
 
 ---
@@ -481,59 +482,23 @@ python3 codes/sotc/postprocessor.py \
 
 ---
 
-## Example 4 — Quasi-harmonic approximation (QHA) with QE
+## Quasi-harmonic API (outside the revised manuscript validation)
 
-The QHA gives the thermal expansion coefficient $\alpha(T)$, equilibrium
-volume $V(T)$, isobaric heat capacity $C_P(T)$, and bulk modulus $B(T)$ at a
-tiny fraction of the phonopy-QHA cost: three SOTC runs at volumes
-$V^-, V^0, V^+$ (±3% from equilibrium) plus three static primitive-cell SCF
-calculations.
+The underconverged three-volume QHA result from the original manuscript was
+withdrawn and is not part of the revised validation. No QHA cost or accuracy
+claim is made here.
 
-### Run (fcc Al)
+The current `SOTCQuasiHarmonic` API requires at least five directly calculated
+volumes, uses static reference-lattice energies, distinguishes volumetric and
+cubic linear expansion, includes the external-pressure term explicitly, and
+forbids phonon-free-energy extrapolation outside the direct volume grid. Users
+must still demonstrate convergence with respect to the volume grid, EOS model,
+electronic settings, and interpolation before interpreting a QHA result.
 
-```bash
-python3 codes/benchmarks/run_sotc_al_qha_qe.py
-```
-
-### Python API sketch
-
-```python
-from sotc import SOTCRunner, SOTCQuasiHarmonic
-from sotc.phonons import PhononCalculator
-import numpy as np
-
-# 1. Run SOTC at three volumes V−, V0, V+ (±3%)
-delta = 0.03
-a0 = 4.05                                  # Å — DFT-PBE equilibrium
-volumes = [(a0 * (1 + s*delta/3))**3 / 4   # Å³/atom for fcc
-           for s in (-1, 0, 1)]
-
-# runners[0,1,2] are SOTCRunner instances at the three volumes
-# ...set up and call runner.run() for each volume...
-
-# 2. Three primitive-cell static SCF calculations give E0(V)
-static_energies = [-E_minus_eV, -E_0_eV, -E_plus_eV]   # eV/atom
-
-# 3. Fit the QHA
-qha = SOTCQuasiHarmonic(
-    volumes_ang3=volumes,
-    static_energies_ev=static_energies,
-    phonon_calcs=[phon_Vm, phon_V0, phon_Vp],  # PhononCalculator instances
-)
-T = np.arange(10, 1000, 10)
-res = qha.compute(T_values=T)
-
-print(f"α(300 K) = {res['alpha_K'][29]*1e6:.1f} × 10⁻⁶ K⁻¹  (expt: 23.1)")
-print(f"B₀       = {res['B_GPa'][0]:.1f} GPa              (expt: 76.5)")
-```
-
-Post-process:
+The safeguards are covered by:
 
 ```bash
-python3 codes/sotc/postprocessor.py \
-    --run-dir sotc_al_qha_qe_run \
-    --structure fcc              \
-    --calculator qe
+pytest codes/tests/test_qha_convergence.py -v
 ```
 
 ---
@@ -554,11 +519,6 @@ All scripts live in `codes/benchmarks/`.
 | `run_sotc_mgo_qe.py` | MgO | Rocksalt | 1500 K | 64 atoms |
 | `run_sotc_nacl_qe.py` | NaCl | Rocksalt | 700 K | 64 atoms |
 | `run_sotc_pbte_qe.py` | PbTe | Rocksalt | 700 K | 64 atoms |
-| `run_sotc_al_qha_qe.py` | Al | FCC (QHA, 3 vol.) | 300 K | 32 atoms |
-| `run_sotc_au_qha_qe.py` | Au | FCC (QHA, 3 vol.) | 1200 K | 32 atoms |
-| `run_sotc_cu_qha_qe.py` | Cu | FCC (QHA, 3 vol.) | 1200 K | 32 atoms |
-| `run_sotc_mgo_qha_qe.py` | MgO | Rocksalt (QHA) | 1500 K | 64 atoms |
-| `run_sotc_nacl_qha_qe.py` | NaCl | Rocksalt (QHA) | 700 K | 64 atoms |
 
 ---
 
@@ -604,8 +564,10 @@ Output files written to `<run_dir>/postproc/`:
 
 ## Key Design Choices
 
-**Single cell per iteration** — only one DFT calculation per SOTC step (vs.
-dozens in TDEP/SSCHA), making convergence cheap.
+**Designed configurations per iteration** — the archived benchmarks use
+material-specific ensembles of one to eight displaced configurations per
+iteration plus an undisplaced reference. Force-call counts are reported
+directly and are not converted into a universal external-method speedup.
 
 **Ridge regression** — Tikhonov regularisation with default $\lambda = 10^{-3}$
 eV/Å² suppresses noise amplification in under-determined IFC fits.
@@ -629,11 +591,12 @@ C_V(T') = k_B N_A \frac{1}{N_q} \sum_{\mathbf{q},s}
 \text{csch}^2\left(\frac{\hbar\omega_s(\mathbf{q})}{2 k_B T'}\right)
 $$
 
-using the thermally-renormalised SOTC frequencies $\{\omega_s\}$.  The
-anharmonic effect is already absorbed into the IFCs at $T_\text{design}$;
-no multi-volume calculation is required for isochoric ($V = \text{const}$)
-properties.  Add QHA (three-volume runs, `run_sotc_*_qha_qe.py`) only when
-thermal expansion, $C_P(T)$, or the bulk modulus $B(T)$ are needed.
+using the effective-FC2 frequencies $\{\omega_s\}$ fitted at
+$T_\text{design}$. This is a fixed-volume, independent-phonon evaluation using
+one fitted spectrum; it is not a calculation of the full temperature evolution
+of anharmonic phonons. Thermal expansion, $C_P(T)$, and bulk modulus require a
+separate, converged multi-volume workflow and are outside the revised
+manuscript's demonstrated scope.
 
 ---
 

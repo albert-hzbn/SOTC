@@ -11,8 +11,12 @@
     "L"
   ],
   "gamma_to_without_nac_thz": 4.3693534642715015,
-  "gamma_lo_with_nac_thz": 7.263980952424557,
-  "gamma_lo_to_split_thz": 2.8946274881530556,
+  "gamma_lo_with_nac_thz": 7.263980952424554,
+  "gamma_lo_to_split_thz": 2.894627488153053,
+  "neutron_reference": "Raunio, Almqvist, and Stedman, Phys. Rev. 178, 1496 (1969), Table I",
+  "neutron_temperature_k": 80.0,
+  "neutron_table": "/viper/u1/alli/calculations/sotc/data/nacl_neutron_80k.csv",
+  "neutron_point_count": 39,
   "literature_reference": "NBS Special Publication 301 (1969)",
   "literature_gamma_to_cm1": 164.0,
   "literature_gamma_lo_cm1": 268.0,
@@ -20,9 +24,9 @@
   "literature_gamma_lo_thz": 8.0344378744,
   "literature_gamma_split_thz": 3.1178415632000007,
   "gamma_to_error_percent": -11.13052226154666,
-  "gamma_lo_error_percent": -9.58943156969746,
-  "gamma_split_error_percent": -7.1592500940890975,
-  "lo_to_ratio_error_percent": 1.7341057144328875,
+  "gamma_lo_error_percent": -9.589431569697492,
+  "gamma_split_error_percent": -7.159250094089186,
+  "lo_to_ratio_error_percent": 1.7341057144328653,
   "born_effective_charges": [
     [
       [

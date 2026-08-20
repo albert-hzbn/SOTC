@@ -10,6 +10,7 @@ build/
 *.egg
 
 # ── Virtual environment ───────────────────────────────────────────────────────
+.venv
 .venv/
 venv/
 env/
@@ -94,6 +95,8 @@ manuscript/*
 !manuscript/manuscript_clean.pdf
 !manuscript/manuscript_updated.tex
 !manuscript/manuscript_updated.pdf
+!manuscript/cover_letter.tex
+!manuscript/cover_letter.pdf
 !manuscript/FILE_MAP.md
 !manuscript/refs.bib
 !manuscript/figures/
@@ -102,6 +105,8 @@ manuscript/figures/*
 !manuscript/figures/fig_nacl_loto.pdf
 !manuscript/figures/fig_ifc34_diagnostics.pdf
 !manuscript/figures/fig_dispersion_controls.pdf
+!manuscript/figures/fig_matched_sampling.pdf
+!manuscript/figures/fig_polar_sotc_nac.pdf
 
 # Point-by-point response included in the submission package
 !reviews/
@@ -115,4 +120,18 @@ validation_results/**/*.err
 validation_results/**/scratch/
 validation_results/**/thermal_qe/
 validation_results/**/fc4_compact.npy
+validation_results/mgo/dfpt_nac/
+validation_results/pbte/dfpt_nac/
 core.*
+
+# Compact arrays required to reproduce revised polar-dispersion figures
+!validation_results/nacl/dfpt_nac/nac_tensors.npz
+!validation_results/nacl/dfpt_nac/nacl_loto_dispersion.npz
+!validation_results/mgo/dfpt_nac_production_volume/nac_tensors.npz
+!validation_results/pbte/dfpt_nac_production_volume/nac_tensors.npz
+!validation_results/al/matched_sampling/matched_sampling_summary.json
+!validation_results/w/matched_sampling/matched_sampling_summary.json
+!validation_results/nacl/matched_sampling/matched_sampling_summary.json
+!validation_results/nacl/production_sotc_nac/production_sotc_nac_bands.npz
+!validation_results/mgo/production_sotc_nac/production_sotc_nac_bands.npz
+!validation_results/pbte/production_sotc_nac/production_sotc_nac_bands.npz

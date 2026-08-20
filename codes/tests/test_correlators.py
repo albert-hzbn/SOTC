@@ -89,10 +89,5 @@ class TestDebyeCorrelatorTable:
         # Correlator at small R should be larger than at large R
         assert table[0] >= table[-1]
 
-    def test_coherence_length_positive(self):
-        xi = debye.coherence_length(T=1.6, gruneisen=2.0)
-        assert xi > 0.0
-
-
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

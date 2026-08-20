@@ -1,0 +1,35 @@
+{
+  "backend": "Quantum ESPRESSO pw.x + ph.x DFPT",
+  "pw_cmd": "mpiexec -np 128 /viper/u1/alli/Softwares/qe-7.5/PW/src/pw.x",
+  "ph_cmd": "mpiexec -np 128 /viper/u1/alli/Softwares/qe-7.5/PHonon/PH/ph.x",
+  "prefix": "pbte_nac",
+  "ecutwfc_Ry": 60.0,
+  "ecutrho_Ry": 480.0,
+  "kpts": [
+    8,
+    8,
+    8
+  ],
+  "conv_thr_Ry": 1e-10,
+  "tr2_ph": 1e-14,
+  "enforce_charge_neutrality": true,
+  "reused_existing_outputs": false,
+  "pseudopotentials": {
+    "Pb": {
+      "filename": "Pb.pbe-dn-kjpaw_psl.0.2.2.UPF",
+      "sha256": "b67ab5c757bc89933ccd96deecdf3b629c72783a38b6c23d78457e4abb61219d"
+    },
+    "Te": {
+      "filename": "Te_pbe_v1.uspp.F.UPF",
+      "sha256": "5f18f14282ab78c660a46a08ed8787a1247036c7509b7c0436d8441faf497e36"
+    }
+  },
+  "dielectric_eigenvalues": [
+    28.826866135,
+    28.826866135,
+    28.826866135
+  ],
+  "born_charge_neutrality_max_abs_raw": 0.027339999999999698,
+  "born_charge_neutrality_max_abs_corrected": 0.0,
+  "born_convention": "rows are electric-field/polarization direction and columns are force/displacement direction; NAC uses q @ Z*"
+}

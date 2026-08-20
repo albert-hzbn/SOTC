@@ -1,0 +1,350 @@
+{
+  "scope": "QE-DFPT tensors applied to FC2 refits of the actual selected production SOTC iteration for each polar benchmark",
+  "materials": {
+    "nacl": {
+      "material": "nacl",
+      "label": "NaCl",
+      "selected_iteration": 5,
+      "n_ensemble": 3,
+      "snapshot_indices": {
+        "equilibrium_snapshot_index": 16,
+        "displaced_snapshot_indices": [
+          17,
+          18,
+          19
+        ]
+      },
+      "supercell_matrix": [
+        [
+          4,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          1
+        ],
+        [
+          0,
+          0,
+          4
+        ]
+      ],
+      "supercell_atoms": 64,
+      "fit_report": {
+        "rmse_ev_ang": 0.25531611941749494,
+        "max_error_ev_ang": 1.912693873716898,
+        "r2": 0.7779745581717809,
+        "n_snapshots": 3,
+        "n_force_observations": 576,
+        "raw_parameter_count": 162,
+        "projected_parameter_count": 6,
+        "data_rank": 162,
+        "rank": 162,
+        "rank_deficiency": 0,
+        "rank_tolerance": 1.232374522593058e-09,
+        "condition_number": 12.640606091585452,
+        "condition_number_nonzero_subspace": 12.640606091585452,
+        "ridge_alpha": 0.001,
+        "ridge_solver_rank": 162,
+        "symmetrize_bonds": true,
+        "acoustic_sum_rule": "post-fit on-site construction",
+        "ridge_creates_information": false
+      },
+      "native_vs_archived_no_nac_rmse_thz": 0.17590573417162086,
+      "phonopy_vs_native_no_nac_rmse_thz": 1.7667364928702128e-06,
+      "gamma_to_without_nac_thz": 6.222908665361769,
+      "gamma_lo_with_nac_thz": 8.508750657726372,
+      "gamma_lo_to_split_thz": 2.2858419923646034,
+      "production_lattice_parameter_ang": 5.7299991256781,
+      "dfpt_lattice_parameter_ang": 5.73,
+      "dfpt_summary": "/viper/u1/alli/calculations/sotc/validation_results/nacl/dfpt_nac/dfpt_summary.json",
+      "born": [
+        [
+          [
+            1.1109149999999999,
+            -0.0,
+            -0.0
+          ],
+          [
+            -0.0,
+            1.1109149999999999,
+            0.0
+          ],
+          [
+            -0.0,
+            0.0,
+            1.1109149999999999
+          ]
+        ],
+        [
+          [
+            -1.1109149999999999,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            -1.1109149999999999,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            -1.1109149999999999
+          ]
+        ]
+      ],
+      "dielectric": [
+        [
+          2.470969409,
+          -0.0,
+          0.0
+        ],
+        [
+          -0.0,
+          2.470969409,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          2.470969409
+        ]
+      ],
+      "output_npz": "/viper/u1/alli/calculations/sotc/validation_results/nacl/production_sotc_nac/production_sotc_nac_bands.npz"
+    },
+    "mgo": {
+      "material": "mgo",
+      "label": "MgO",
+      "selected_iteration": 4,
+      "n_ensemble": 3,
+      "snapshot_indices": {
+        "equilibrium_snapshot_index": 12,
+        "displaced_snapshot_indices": [
+          13,
+          14,
+          15
+        ]
+      },
+      "supercell_matrix": [
+        [
+          2,
+          0,
+          1
+        ],
+        [
+          0,
+          4,
+          0
+        ],
+        [
+          0,
+          0,
+          4
+        ]
+      ],
+      "supercell_atoms": 64,
+      "fit_report": {
+        "rmse_ev_ang": 0.686671125710348,
+        "max_error_ev_ang": 3.204982811628928,
+        "r2": 0.8622002953586447,
+        "n_snapshots": 3,
+        "n_force_observations": 576,
+        "raw_parameter_count": 162,
+        "projected_parameter_count": 6,
+        "data_rank": 162,
+        "rank": 162,
+        "rank_deficiency": 0,
+        "rank_tolerance": 9.37927041444091e-10,
+        "condition_number": 12.130642924917217,
+        "condition_number_nonzero_subspace": 12.130642924917217,
+        "ridge_alpha": 0.001,
+        "ridge_solver_rank": 162,
+        "symmetrize_bonds": true,
+        "acoustic_sum_rule": "post-fit on-site construction",
+        "ridge_creates_information": false
+      },
+      "native_vs_archived_no_nac_rmse_thz": 0.3700640230387337,
+      "phonopy_vs_native_no_nac_rmse_thz": 1.56694191778045e-06,
+      "gamma_to_without_nac_thz": 14.097001940633533,
+      "gamma_lo_with_nac_thz": 22.143638342391007,
+      "gamma_lo_to_split_thz": 8.046636401757475,
+      "production_lattice_parameter_ang": 4.259999987017948,
+      "dfpt_lattice_parameter_ang": 4.26,
+      "dfpt_summary": "/viper/u1/alli/calculations/sotc/validation_results/mgo/dfpt_nac_production_volume/dfpt_summary.json",
+      "born": [
+        [
+          [
+            1.973385,
+            0.0,
+            -0.0
+          ],
+          [
+            -0.0,
+            1.973385,
+            0.0
+          ],
+          [
+            -0.0,
+            -0.0,
+            1.973385
+          ]
+        ],
+        [
+          [
+            -1.973385,
+            0.0,
+            -0.0
+          ],
+          [
+            0.0,
+            -1.973385,
+            -0.0
+          ],
+          [
+            -0.0,
+            -0.0,
+            -1.973385
+          ]
+        ]
+      ],
+      "dielectric": [
+        [
+          3.167142559,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          3.167142559,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          3.167142559
+        ]
+      ],
+      "output_npz": "/viper/u1/alli/calculations/sotc/validation_results/mgo/production_sotc_nac/production_sotc_nac_bands.npz"
+    },
+    "pbte": {
+      "material": "pbte",
+      "label": "PbTe",
+      "selected_iteration": 2,
+      "n_ensemble": 5,
+      "snapshot_indices": {
+        "equilibrium_snapshot_index": 6,
+        "displaced_snapshot_indices": [
+          7,
+          8,
+          9,
+          10,
+          11
+        ]
+      },
+      "supercell_matrix": [
+        [
+          4,
+          0,
+          0
+        ],
+        [
+          0,
+          3,
+          0
+        ],
+        [
+          0,
+          0,
+          3
+        ]
+      ],
+      "supercell_atoms": 72,
+      "fit_report": {
+        "rmse_ev_ang": 0.5935396888264206,
+        "max_error_ev_ang": 6.282858754535689,
+        "r2": 0.6430793285185133,
+        "n_snapshots": 5,
+        "n_force_observations": 1080,
+        "raw_parameter_count": 162,
+        "projected_parameter_count": 6,
+        "data_rank": 162,
+        "rank": 162,
+        "rank_deficiency": 0,
+        "rank_tolerance": 1.689545213320814e-09,
+        "condition_number": 8.927916351805854,
+        "condition_number_nonzero_subspace": 8.927916351805854,
+        "ridge_alpha": 0.001,
+        "ridge_solver_rank": 162,
+        "symmetrize_bonds": true,
+        "acoustic_sum_rule": "post-fit on-site construction",
+        "ridge_creates_information": false
+      },
+      "native_vs_archived_no_nac_rmse_thz": 0.11590507934874188,
+      "phonopy_vs_native_no_nac_rmse_thz": 4.3789058111977644e-07,
+      "gamma_to_without_nac_thz": 2.9033508412353166,
+      "gamma_lo_with_nac_thz": 4.218538361712851,
+      "gamma_lo_to_split_thz": 1.3151875204775347,
+      "production_lattice_parameter_ang": 6.510000009039198,
+      "dfpt_lattice_parameter_ang": 6.51,
+      "dfpt_summary": "/viper/u1/alli/calculations/sotc/validation_results/pbte/dfpt_nac_production_volume/dfpt_summary.json",
+      "born": [
+        [
+          [
+            5.7667,
+            0.0,
+            0.0
+          ],
+          [
+            -0.0,
+            5.7667,
+            -0.0
+          ],
+          [
+            0.0,
+            -0.0,
+            5.7667
+          ]
+        ],
+        [
+          [
+            -5.7667,
+            0.0,
+            -0.0
+          ],
+          [
+            -0.0,
+            -5.7667,
+            0.0
+          ],
+          [
+            0.0,
+            -0.0,
+            -5.7667
+          ]
+        ]
+      ],
+      "dielectric": [
+        [
+          28.826866135,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          28.826866135,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          28.826866135
+        ]
+      ],
+      "output_npz": "/viper/u1/alli/calculations/sotc/validation_results/pbte/production_sotc_nac/production_sotc_nac_bands.npz"
+    }
+  },
+  "figure": "/viper/u1/alli/calculations/sotc/manuscript/figures/fig_polar_sotc_nac.pdf"
+}

@@ -1,0 +1,44 @@
+&CONTROL
+   calculation      = 'scf'
+   tprnfor          = .true.
+   outdir           = '/viper/u1/alli/calculations/sotc/validation_results/mgo/dfpt_nac_production_volume/scratch'
+   prefix           = 'mgo_nac'
+   disk_io          = 'low'
+   pseudo_dir       = '/viper/u1/alli/calculations/sotc/pseudopotentials'
+/
+&SYSTEM
+   ecutwfc          = 60.0
+   ecutrho          = 480.0
+   occupations      = 'fixed'
+   ntyp             = 2
+   nat              = 2
+   ibrav            = 0
+/
+&ELECTRONS
+   electron_maxstep = 300
+   conv_thr         = 1e-10
+   mixing_beta      = 0.4
+/
+&IONS
+/
+&CELL
+/
+&FCP
+/
+&RISM
+/
+ATOMIC_SPECIES
+Mg 24.305 Mg.pbe-n-kjpaw_psl.0.3.0.UPF
+O 15.999 O.pbe-n-kjpaw_psl.0.1.UPF
+
+K_POINTS automatic
+8 8 8  0 0 0
+
+CELL_PARAMETERS angstrom
+0.00000000000000 2.13000000000000 2.13000000000000
+2.13000000000000 0.00000000000000 2.13000000000000
+2.13000000000000 2.13000000000000 0.00000000000000
+
+ATOMIC_POSITIONS angstrom
+Mg 0.0000000000 0.0000000000 0.0000000000
+O 2.1300000000 0.0000000000 0.0000000000

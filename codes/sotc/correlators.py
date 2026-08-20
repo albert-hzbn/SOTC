@@ -197,23 +197,6 @@ class DebyeCorrelator:
         from .constants import NA
         return self.heat_capacity_v(T) * NA * n_atoms_per_fu
 
-    # ── Thermal coherence length ──────────────────────────────────────────────
-
-    def coherence_length(self, T: float, gruneisen: float = 2.0) -> float:
-        """
-        Thermal coherence length ξ_T [Å].
-
-        ξ_T = ℏ · v_D / (γ · k_B · T)
-
-        This is the thermal de Broglie wavelength of phonons at the dominant
-        thermal wavevector k_T = k_B T / (ℏ v_D).  γ is the Grüneisen parameter.
-        """
-        if T < 1e-9:
-            return 1e6  # diverges at T=0
-        xi_m = self._v_D * HBAR / (gruneisen * KB * T)
-        return xi_m * 1e10  # m → Å
-
-
 @dataclass
 class PhononCorrelator:
     """

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 from pathlib import Path
 
@@ -33,6 +34,7 @@ DEFAULT_DFPT = (
 )
 DEFAULT_DATA_DIR = ROOT / "validation_results" / "nacl" / "dfpt_nac"
 DEFAULT_FIGURE = ROOT / "manuscript" / "figures" / "fig_nacl_loto"
+DEFAULT_NEUTRON = ROOT / "data" / "nacl_neutron_80k.csv"
 
 # Zone-center optical limits reported in NBS Special Publication 301
 # (Carter and Rush, eds., 1969), converted using the exact speed of light.
@@ -97,12 +99,37 @@ def make_path(cell, points_per_segment):
     )
 
 
+
+def load_neutron_table(path, ticks):
+    """Load tabulated 80 K neutron points and map them to this plot path."""
+    rows = []
+    with path.open() as handle:
+        reader = csv.DictReader(line for line in handle if not line.startswith("#"))
+        for row in reader:
+            direction = row["direction"]
+            fraction = float(row["lambda"])
+            if direction == "100":
+                path_distance = ticks[0] + fraction * (ticks[1] - ticks[0])
+            elif direction == "111":
+                path_distance = ticks[-2] + fraction * (ticks[-1] - ticks[-2])
+            else:
+                raise ValueError(f"Unsupported neutron direction: {direction}")
+            rows.append((
+                direction,
+                fraction,
+                row["branch"],
+                float(row["omega_1e13_rad_s"]),
+                path_distance,
+            ))
+    omega = np.asarray([row[3] for row in rows])
+    return rows, omega * 10.0 / (2.0 * np.pi)
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--phonopy-yaml", type=Path, default=DEFAULT_PHONOPY)
     parser.add_argument("--dfpt-summary", type=Path, default=DEFAULT_DFPT)
     parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR)
     parser.add_argument("--figure", type=Path, default=DEFAULT_FIGURE)
+    parser.add_argument("--neutron-table", type=Path, default=DEFAULT_NEUTRON)
     parser.add_argument("--points-per-segment", type=int, default=81)
     args = parser.parse_args()
 
@@ -115,6 +142,7 @@ def main():
         "born": born,
         "dielectric": dielectric,
         "factor": NAC_FACTOR,
+        "method": "wang",
     }
 
     qpoints, distance, directions, ticks = make_path(
@@ -142,6 +170,14 @@ def main():
     literature_to = LITERATURE_TO_CM1 * CM1_TO_THZ
     literature_lo = LITERATURE_LO_CM1 * CM1_TO_THZ
     literature_split = literature_lo - literature_to
+    neutron_rows, neutron_frequency_thz = load_neutron_table(
+        args.neutron_table, ticks
+    )
+    neutron_distance = np.asarray([row[4] for row in neutron_rows])
+    neutron_direction = np.asarray([row[0] for row in neutron_rows])
+    neutron_fraction = np.asarray([row[1] for row in neutron_rows])
+    neutron_branch = np.asarray([row[2] for row in neutron_rows])
+    neutron_omega = np.asarray([row[3] for row in neutron_rows])
 
     args.data_dir.mkdir(parents=True, exist_ok=True)
     args.figure.parent.mkdir(parents=True, exist_ok=True)
@@ -155,6 +191,12 @@ def main():
         frequencies_with_nac_thz=frequencies_with_nac,
         born=born,
         dielectric=dielectric,
+        neutron_direction=neutron_direction,
+        neutron_reduced_coordinate=neutron_fraction,
+        neutron_branch=neutron_branch,
+        neutron_omega_1e13_rad_s=neutron_omega,
+        neutron_path_distance=neutron_distance,
+        neutron_frequency_thz=neutron_frequency_thz,
     )
     plot_summary = {
         "backend": "QE pw.x + ph.x DFPT tensors applied with phonopy NAC",
@@ -164,6 +206,12 @@ def main():
         "gamma_to_without_nac_thz": float(gamma_to),
         "gamma_lo_with_nac_thz": float(gamma_lo),
         "gamma_lo_to_split_thz": float(split),
+        "neutron_reference": (
+            "Raunio, Almqvist, and Stedman, Phys. Rev. 178, 1496 (1969), Table I"
+        ),
+        "neutron_temperature_k": 80.0,
+        "neutron_table": str(args.neutron_table),
+        "neutron_point_count": len(neutron_rows),
         "literature_reference": "NBS Special Publication 301 (1969)",
         "literature_gamma_to_cm1": LITERATURE_TO_CM1,
         "literature_gamma_lo_cm1": LITERATURE_LO_CM1,
@@ -206,6 +254,16 @@ def main():
             distance, frequencies_with_nac[:, branch],
             color="#0057b8", linewidth=1.35, label=label_yes,
         )
+    ax.scatter(
+        neutron_distance,
+        neutron_frequency_thz,
+        marker="x",
+        s=18,
+        linewidths=0.8,
+        color="#b21f2d",
+        zorder=5,
+        label="80 K neutron (Raunio et al.)",
+    )
     for tick in ticks:
         ax.axvline(tick, color="0.82", linewidth=0.7)
     ax.axhline(0.0, color="black", linewidth=0.7)

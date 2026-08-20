@@ -212,12 +212,16 @@ class DisplacementOptimizer:
         lambda_2: float = 1.0,
         basis_indices: Optional[np.ndarray] = None,
         masses_amu: Optional[np.ndarray] = None,
+        shell_tolerance_ang: float = 0.05,
     ):
         self.corr = target_correlator
         self.T = T
         self.xi_T = xi_T
         self.r_max = r_max
         self.lambda_2 = lambda_2
+        self.shell_tolerance_ang = float(shell_tolerance_ang)
+        if self.shell_tolerance_ang <= 0.0:
+            raise ValueError("shell_tolerance_ang must be positive")
         self.basis_indices = (
             None if basis_indices is None
             else np.asarray(basis_indices, dtype=int)
@@ -271,7 +275,7 @@ class DisplacementOptimizer:
         self,
         positions: np.ndarray,
         cell: np.ndarray,
-        tol: float = 0.05,
+        tol: Optional[float] = None,
     ) -> Tuple[List[Tuple[float, List[Tuple[int, int]]]], np.ndarray]:
         """
         Find all pair shells within r_max and compute target C̄₂ for each.
@@ -281,6 +285,10 @@ class DisplacementOptimizer:
         shells : list of (R [Å], [(i,j) pairs])
         target_C2 : (n_shells,) [Å²]
         """
+        if tol is None:
+            tol = self.shell_tolerance_ang
+        if tol <= 0.0:
+            raise ValueError("tol must be positive")
         n = len(positions)
         basis = (
             self.basis_indices
@@ -294,7 +302,7 @@ class DisplacementOptimizer:
             if self.masses_amu is not None
             else np.ones(n, dtype=float)
         )
-        # Exact discrete shells are binned only within ``tol`` and kept
+        # Finite radial bins of width ``tol`` are kept
         # separate for every ordered primitive-basis pair.
         images = list(itertools.product([-1, 0, 1], repeat=3))
         distances = {}
