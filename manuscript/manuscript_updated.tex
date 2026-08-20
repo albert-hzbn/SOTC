@@ -20,29 +20,33 @@
 
 \author{Albert Linda}
 \email{albert.hzbn@gmail.com}
-\affiliation{Department of Materials Science and Engineering, Indian Institute of Technology, Kanpur}
+\affiliation{Department of Materials Science and Engineering, Indian Institute of Technology Kanpur, Kanpur 208016, India}
 
 \date{\today}
 
 \begin{abstract}
 
 \color{revisionblue}
-We present the Special Optimal Thermal Cell (SOTC), a deterministic method for
-choosing collective displacements in small periodic supercells by matching
-shell-averaged correlators of a harmonic trial model. Density-functional-theory
-forces from the selected structures are used to fit symmetry-constrained
-effective second-order force constants (FC2) and update the trial phonons.
-Across nine metal and rocksalt benchmarks, the scalar correlator criterion is
-reached in 2--5 iterations using 4--36 force calculations, including reference
-structures. A matched Quantum ESPRESSO test for Al, W, and NaCl compares SOTC
-with 20 canonical-Gaussian sequences at equal force-call counts. At 16 calls,
-the nominal SOTC dispersion errors differ from the canonical medians by
-+3.2\%, +8.1\%, and -2.8\%, respectively; other pre-specified starts reveal
-substantial initialization dependence. SOTC therefore gives comparable
-accuracy in these tests, but no universal sampling or wall-time advantage is
-claimed. Non-analytic corrections supply LO--TO splitting for the polar
-benchmarks, while the demonstrated thermodynamic scope remains fixed-volume
-effective FC2 rather than variational anharmonic or quasi-harmonic theory.
+Finite-temperature effective-harmonic calculations commonly estimate thermal
+displacement statistics from many stochastically sampled configurations. We
+introduce the Special Optimal Thermal Cell (SOTC), which instead designs
+configurations to reproduce selected statistics. Given a harmonic trial model,
+SOTC constructs collective displacements in a fixed periodic supercell so that
+shell-averaged displacement correlations match thermal targets within the
+force-constant interaction range. First-principles forces from these structures
+are fitted to a symmetry-constrained effective second-order force-constant
+(FC2) model. The fitted phonons then provide new targets for the next iteration.
+The method adapts the special-structure approach used for chemical disorder to
+thermal motion: ensemble pair correlations are imposed through configuration
+design rather than recovered only by stochastic averaging. Configuration design
+remains separate from force evaluation and can be paired with different
+electronic-structure engines. Applications to metal and rocksalt systems
+demonstrate fixed-volume phonon and thermodynamic calculations, including
+non-analytic LO--TO corrections for polar crystals. Matched stochastic controls
+give comparable accuracy at equal force-call counts and expose sensitivity to
+initialization. SOTC is a deterministic configuration-design method for
+effective-harmonic inference. It is not a variational anharmonic theory, and
+the present results do not establish a universal acceleration.
 \color{black}
 
 \end{abstract}
