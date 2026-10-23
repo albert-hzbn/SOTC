@@ -90,6 +90,14 @@ def json_default(value):
 
 def primitive_structure(spec):
     a = float(spec["a"])
+    if spec["bravais"] == "diamond":
+        cell = 0.5 * a * np.array([[0., 1., 1.], [1., 0., 1.], [1., 1., 0.]])
+        return cell, np.array([[0., 0., 0.], [a / 4., a / 4., a / 4.]])
+    if spec["bravais"] == "hcp":
+        c = float(spec["c"])
+        cell = np.array([[a, 0., 0.], [-a / 2., a * np.sqrt(3.) / 2., 0.], [0., 0., c]])
+        frac = np.array([[1. / 3., 2. / 3., 0.25], [2. / 3., 1. / 3., 0.75]])
+        return cell, frac @ cell
     if spec["bravais"] == "fcc":
         cell = 0.5 * a * np.array([[0., 1., 1.], [1., 0., 1.], [1., 1., 0.]])
     elif spec["bravais"] == "bcc":
@@ -103,11 +111,18 @@ def primitive_structure(spec):
     return cell, positions
 
 
+def structure_symbols(spec, positions):
+    """Per-atom symbols of the primitive cell (species list for compounds,
+    the single element repeated for elemental crystals with a basis)."""
+    elements = list(spec["elements"])
+    return elements if len(elements) == len(positions) else elements[:1] * len(positions)
+
+
 def make_phonon(spec):
     from phonopy import Phonopy
 
     cell, positions = primitive_structure(spec)
-    unit = phonopy_atoms(spec["elements"], cell, positions)
+    unit = phonopy_atoms(structure_symbols(spec, positions), cell, positions)
     return Phonopy(unit, np.diag([3, 3, 3]))
 
 
@@ -126,7 +141,7 @@ def calculation_settings(spec, args, symbols, workdir, prefix, overrides=None):
         "pseudo_dir": Path(os.environ.get("SSSP_DIR", ROOT / "pseudopotentials")),
         "ecutwfc": spec["ecutwfc"], "ecutrho": spec["ecutrho"],
         "kpts": tuple(spec["kpts"]), "smearing": spec["smearing"],
-        "degauss": spec["degauss"], "conv_thr": 1.0e-9,
+        "degauss": spec["degauss"], "conv_thr": spec.get("conv_thr", 1.0e-9),
         "pw_cmd": os.environ.get("QE_PW_CMD"),
         "workdir": workdir, "prefix": prefix, "n_parallel": 1,
         "extra_input_data": spec.get("extra"),

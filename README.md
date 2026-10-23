@@ -80,6 +80,44 @@ README.md                  ← this file
 
 The manuscript sources are kept separate: `manuscript_original.tex`/`.pdf` archive the original submission, `manuscript_clean.tex`/`.pdf` are the uncolored revised submission, and `manuscript_updated.tex`/`.pdf` are the selectively marked revision. The marked source contains only the revised text plus blue color commands; hidden deleted text and `latexdiff` tracking macros have been removed.
 
+`manuscript/jap/` holds the Journal of Applied Physics version (`sotc_jap.tex`, `sotc_jap_supplementary.tex`, `cover_letter_jap.tex`, generated `tables/` and `figures/`). Its validation pipeline is:
+
+```bash
+python codes/validation/run_fd_references.py <mat> [--large]      # converged harmonic FD references
+python codes/validation/run_primary_cell_controls.py <mat>        # same-cell FD, canonical and SOTC-D states (QE)
+python codes/validation/analyze_primary_archives.py <mat>         # audit of the archived SOTC fits
+python codes/validation/analyze_robustness.py <mat>               # matched comparison, thermodynamics, U_iso
+python codes/validation/surrogate_design_study.py <mat>           # design ablation on FC2+FC3+FC4 surrogates
+# designs from the same trial: canonical1/sotcd1 (updated trial), boot (bootstrapped SOTC-D), rattle, zg,
+# stdep (two-iteration sTDEP, 8 and 16 calls, three seeds)
+python codes/validation/run_primary_cell_controls.py <mat> <stage>  # stage in canonical1 sotcd1 boot rattle zg stdep
+python codes/validation/analyze_designs.py <mat>                  # all designs, supercell vs crystal basis, iter 0/1
+python codes/validation/compare_fitters.py <mat>                  # hiPhive/trainstation regression methods
+python codes/validation/analyze_new_classes.py si mg              # diamond Si, hcp Mg reference accuracy
+python codes/validation/fit_primary_surrogates.py si mg             # FC2+FC3+FC4 surrogates of Si, Mg from all same-cell data
+python codes/validation/surrogate_self_consistent.py <mat>        # sTDEP, SOTC-D-SC (and SSCHA) vs SC target
+python codes/validation/surrogate_amplitude_bias.py <mat>         # fixed vs moment-matched SOTC-D-SC amplitudes
+python codes/validation/make_jap_tables.py && python codes/validation/plot_robustness.py \
+    && python codes/validation/plot_designs.py
+```
+
+The SSCHA benchmark (`codes/validation/surrogate_sscha.py`, writes
+`validation_results/<mat>/surrogate_design/sscha_runs.npz`, read by
+`surrogate_self_consistent.py`) needs python-sscha/CellConstructor, which
+require Python >= 3.10 with development headers and a LAPACK/BLAS library:
+
+```bash
+python3.13 -m venv venv313 && venv313/bin/pip install numpy scipy ase spglib h5py phonopy symfc
+LIBRARY_PATH=/path/to/openblas/lib venv313/bin/pip install cellconstructor python-sscha \
+    -Ccompile-args=-j2
+```
+
+SOTC-D (exact thermal amplitudes, D-optimal signs, antithetic pairs; sequential
+design with a prior information matrix for the self-consistent variant) and
+the ZG and thermal-rattle competitors are implemented in
+`codes/sotc/optimal_design.py`; `codes/tests/test_optimal_design.py` checks the
+estimator theory (fixed-amplitude bias, exact cubic cancellation, D-optimality). Compact JSON/NPZ outputs of these runs are kept in `validation_results/summaries/`; the full QE run directories live on scratch and are linked from `validation_results/<mat>/`.
+
 ---
 
 ## Installation

@@ -1,0 +1,20 @@
+\begin{table*}[t]
+\caption{Regression frameworks (hiPhive cluster space with crystal symmetry, trainstation fit methods) on the same DFT data, 8 force calls. Entries: mesh RMSE (THz) against the disjoint effective FC2 (supercell basis, so the entries include the basis difference listed in the main text) for random canonical subsets (median of 10) / SOTC-D.}
+\label{tab:fitters}
+\footnotesize
+\begin{ruledtabular}
+\begin{tabular}{lccccccccccc}
+Method & Al & Ag & Au & Cu & Mo & W & NaCl & MgO & PbTe & Si & Mg\\
+\hline
+least-squares & 0.20/0.18 & 0.11/0.09 & 0.12/0.13 & 0.23/0.20 & 0.09/0.08 & 0.06/0.05 & 0.13/0.11 & 0.31/0.26 & 0.06/0.11 & 0.10/0.05 & 0.08/0.04\\
+ridge & 0.20/0.18 & 0.11/0.09 & 0.12/0.13 & 0.24/0.20 & 0.09/0.08 & 0.06/0.05 & 0.13/0.12 & 0.31/0.26 & 0.06/0.12 & 0.10/0.05 & 0.08/0.04\\
+bayesian-ridge & 0.20/0.18 & 0.11/0.09 & 0.12/0.14 & 0.24/0.20 & 0.09/0.08 & 0.06/0.05 & 0.13/0.12 & 0.31/0.26 & 0.06/0.12 & 0.10/0.05 & 0.08/0.03\\
+ardr & 0.20/0.18 & 0.11/0.09 & 0.12/0.14 & 0.24/0.20 & 0.09/0.08 & 0.06/0.05 & 0.14/0.11 & 0.32/0.27 & 0.07/0.12 & 0.08/0.06 & 0.07/0.04\\
+rfe & 0.20/0.18 & 0.11/0.09 & 0.12/0.13 & 0.23/0.20 & 0.09/0.08 & 0.06/0.05 & 0.13/0.11 & 0.33/0.26 & 0.06/0.12 & 0.10/0.07 & 0.07/0.04\\
+omp & 0.20/0.18 & 0.11/0.09 & 0.12/0.13 & 0.23/0.20 & 0.09/0.08 & 0.06/0.05 & 0.14/0.11 & 0.31/0.26 & 0.06/0.11 & 0.10/0.08 & 0.07/0.04\\
+lasso & 0.20/0.18 & 0.11/0.09 & 0.12/0.13 & 0.23/0.20 & 0.09/0.08 & 0.06/0.05 & 0.14/0.11 & 0.31/0.26 & 0.06/0.11 & 0.09/0.06 & 0.07/0.04\\
+adaptive-lasso & 0.20/0.18 & 0.13/0.12 & 0.12/0.16 & 0.23/0.20 & 0.09/0.08 & 0.06/0.05 & 0.14/0.11 & 0.31/0.26 & 0.06/0.11 & 0.09/0.05 & 0.08/0.06\\
+elasticnet & 0.20/0.18 & 0.11/0.09 & 0.12/0.13 & 0.23/0.20 & 0.09/0.08 & 0.06/0.05 & 0.14/0.11 & 0.31/0.26 & 0.06/0.11 & 0.09/0.06 & 0.07/0.04\\
+\end{tabular}
+\end{ruledtabular}
+\end{table*}

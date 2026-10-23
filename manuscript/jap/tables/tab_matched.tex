@@ -1,0 +1,38 @@
+\begin{table*}[t]
+\caption{Matched comparison in the SOTC cell at equal numbers of displaced force calls, all designed from the same-cell harmonic FD trial and fitted in the supercell space-group basis. D: SOTC-D; C: random canonical subsets; P: random canonical $\pm\mathbf u$ pairs (medians over 20 draws); Z: special displacements with Walsh sign patterns (ZG); R: thermal rattle (independent Gaussian atoms with the canonical per-atom variance). Upper block: held-out force RMSE on 8 canonical test snapshots relative to that of the 40-snapshot effective FC2. Lower block: mesh RMSE (THz) against an effective FC2 fitted to $40-n$ canonical snapshots disjoint from the scored design. The best entry is bold; the last row counts the materials in which D is best. Entries $>$10~THz ($>$100 in force) are singular fits of designs that do not identify the model.}
+\label{tab:matched}
+\begin{ruledtabular}
+\begin{tabular}{lcccccccccc}
+ & \multicolumn{5}{c}{2 calls} & \multicolumn{5}{c}{8 calls}\\
+ & D & C & P & Z & R & D & C & P & Z & R\\
+\hline
+\multicolumn{11}{l}{Held-out force RMSE / floor}\\
+Al & \textbf{1.016} & 1.100 & 1.047 & 1.064 & 1.087 & \textbf{0.999} & 1.017 & 1.010 & 1.017 & 1.032\\
+Ag & \textbf{1.008} & 1.103 & 1.071 & 1.123 & 1.444 & \textbf{0.999} & 1.028 & 1.016 & 1.011 & 1.042\\
+Au & \textbf{1.007} & 1.099 & 1.094 & 1.124 & 1.302 & \textbf{1.009} & 1.026 & 1.013 & 1.024 & 1.083\\
+Cu & \textbf{1.614} & 1.739 & 2.173 & $>$100 & 3.044 & \textbf{1.002} & 1.071 & 1.033 & 1.045 & 1.079\\
+Mo & \textbf{1.022} & 1.152 & 1.069 & 1.250 & 1.120 & \textbf{0.999} & 1.028 & 1.008 & 1.012 & 1.021\\
+W & \textbf{1.018} & 1.151 & 1.054 & 1.129 & 1.103 & \textbf{1.001} & 1.024 & 1.007 & 1.010 & 1.008\\
+NaCl & \textbf{1.005} & 1.010 & 1.009 & 1.057 & 1.014 & 1.005 & 1.001 & 1.001 & 0.997 & \textbf{0.985}\\
+MgO & \textbf{1.021} & 1.085 & 1.059 & 1.054 & 1.355 & 1.006 & 1.015 & 1.012 & \textbf{0.999} & 1.077\\
+PbTe & 1.038 & 1.054 & 1.060 & 1.082 & \textbf{1.028} & 1.016 & 1.003 & \textbf{1.002} & 1.021 & 1.147\\
+Si & \textbf{0.999} & 1.015 & 1.006 & 1.024 & 1.133 & \textbf{0.998} & 1.002 & 1.000 & 1.036 & 1.151\\
+Mg & \textbf{1.002} & 1.016 & 1.005 & 1.006 & 1.033 & \textbf{1.000} & 1.003 & 1.001 & 1.002 & 1.021\\
+D best & \multicolumn{5}{c}{10/11} & \multicolumn{5}{c}{8/11}\\
+\hline
+\multicolumn{11}{l}{Mesh RMSE vs disjoint effective FC2 (THz)}\\
+Al & \textbf{0.16} & 0.39 & 0.28 & 0.30 & 0.34 & \textbf{0.09} & 0.19 & 0.12 & 0.13 & 0.22\\
+Ag & \textbf{0.16} & 0.39 & 0.29 & 0.47 & 1.26 & \textbf{0.10} & 0.21 & 0.17 & 0.20 & 0.27\\
+Au & \textbf{0.24} & 0.49 & 0.44 & 0.59 & 0.65 & \textbf{0.13} & 0.22 & 0.16 & 0.21 & 0.35\\
+Cu & 2.88 & \textbf{2.40} & 3.52 & $>$10 & 4.43 & \textbf{0.33} & 0.48 & 0.34 & 0.54 & 0.64\\
+Mo & \textbf{0.13} & 0.26 & 0.16 & 0.36 & 0.20 & \textbf{0.05} & 0.13 & 0.07 & 0.08 & 0.12\\
+W & \textbf{0.08} & 0.19 & 0.13 & 0.23 & 0.15 & \textbf{0.04} & 0.09 & 0.05 & 0.05 & 0.06\\
+NaCl & \textbf{0.20} & 0.38 & 0.31 & 1.58 & 0.97 & \textbf{0.15} & 0.23 & 0.17 & 0.32 & 0.89\\
+MgO & \textbf{0.51} & 0.77 & 0.63 & 0.83 & 1.95 & \textbf{0.29} & 0.44 & 0.39 & 0.34 & 0.81\\
+PbTe & \textbf{0.18} & 0.21 & 0.18 & 0.25 & 0.23 & 0.11 & \textbf{0.10} & 0.10 & 0.12 & 0.36\\
+Si & \textbf{0.07} & 0.16 & 0.10 & 0.23 & 0.55 & \textbf{0.05} & 0.09 & 0.05 & 0.29 & 0.64\\
+Mg & \textbf{0.07} & 0.14 & 0.08 & 0.09 & 0.23 & \textbf{0.04} & 0.07 & 0.04 & 0.05 & 0.20\\
+D best & \multicolumn{5}{c}{10/11} & \multicolumn{5}{c}{10/11}\\
+\end{tabular}
+\end{ruledtabular}
+\end{table*}

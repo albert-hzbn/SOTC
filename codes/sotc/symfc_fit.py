@@ -224,9 +224,18 @@ def fit_symfc_model(
     model.forces = np.asarray(forces, dtype=float)
     # Symfc.run() disables sum rules for regression data, so construct the
     # constrained basis explicitly before solving.
-    model.compute_basis_set(orders=list(selected), apply_sum_rule=True)
-    xtx, _ = _normal_equation(model, selected, batch_size)
-    design = design_diagnostics(xtx)
+    try:
+        model.compute_basis_set(orders=list(selected), apply_sum_rule=True)
+    except TypeError:
+        # symfc >= 1.6 always builds the sum rules into the basis.
+        model.compute_basis_set(orders=list(selected))
+    try:
+        xtx, _ = _normal_equation(model, selected, batch_size)
+        design = design_diagnostics(xtx)
+    except TypeError:
+        # The internal normal-equation helpers changed signature in
+        # symfc 1.6; the solve below does not depend on them.
+        design = {}
     design["basis_parameters_by_order"] = {
         str(order): int(model.basis_set[order].blocked_basis_set.shape[1])
         for order in selected

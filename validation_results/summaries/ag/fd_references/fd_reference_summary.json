@@ -1,0 +1,190 @@
+{
+  "production": {
+    "material": "ag",
+    "variant": "production",
+    "lattice_ang": 4.12,
+    "supercell": "3x3x3 primitive",
+    "n_atoms": 27,
+    "kpts": [
+      4,
+      4,
+      4
+    ],
+    "ecutwfc_ry": 50.0,
+    "ecutrho_ry": 200.0,
+    "min_mesh_frequency_thz": 0.6255532954535722,
+    "fraction_imaginary_mesh_modes": 0.0,
+    "n_displaced_states": 2,
+    "reference_max_force_ev_ang": 2.1816533765705106e-06,
+    "reference_pressure_gpa": 1.7990949636399398,
+    "temperatures_k": [
+      300.0,
+      1000.0
+    ],
+    "u_iso_ang2_by_atom": [
+      [
+        0.009018155898943565
+      ],
+      [
+        0.029683565638798093
+      ]
+    ],
+    "cv_j_per_k_mol_cell": [
+      24.356498770912022,
+      24.889688781470134
+    ],
+    "entropy_j_per_k_mol_cell": [
+      43.17836753379498,
+      72.94023772828137
+    ],
+    "free_energy_kj_per_mol_cell": [
+      -5.292201304809916,
+      -47.94303092562868
+    ],
+    "max_mesh_frequency_thz": 4.978832019785852,
+    "dir": "/viper/u1/alli/calculations/sotc/validation_results/ag/fd_references/production"
+  },
+  "pbe": {
+    "material": "ag",
+    "variant": "pbe",
+    "lattice_ang": 4.145982749303528,
+    "supercell": "3x3x3 primitive",
+    "n_atoms": 27,
+    "kpts": [
+      4,
+      4,
+      4
+    ],
+    "ecutwfc_ry": 50.0,
+    "ecutrho_ry": 200.0,
+    "min_mesh_frequency_thz": 0.6045030874600583,
+    "fraction_imaginary_mesh_modes": 0.0,
+    "n_displaced_states": 2,
+    "reference_max_force_ev_ang": 1.4141067387072421e-05,
+    "reference_pressure_gpa": -0.014857611719348648,
+    "temperatures_k": [
+      300.0,
+      1000.0
+    ],
+    "u_iso_ang2_by_atom": [
+      [
+        0.009815783990050586
+      ],
+      [
+        0.03234214233570424
+      ]
+    ],
+    "cv_j_per_k_mol_cell": [
+      24.410895628950463,
+      24.894750175846156
+    ],
+    "entropy_j_per_k_mol_cell": [
+      44.32641433814344,
+      74.11345071748661
+    ],
+    "free_energy_kj_per_mol_cell": [
+      -5.653337874974204,
+      -49.12131650458859
+    ],
+    "max_mesh_frequency_thz": 4.722131507151853,
+    "dir": "/viper/u1/alli/calculations/sotc/validation_results/ag/fd_references/pbe",
+    "eos": {
+      "kpts": [
+        16,
+        16,
+        16
+      ],
+      "lattice_ang": [
+        3.9964,
+        4.0376,
+        4.0788,
+        4.12,
+        4.1612,
+        4.2024,
+        4.2436
+      ],
+      "volumes_ang3": [
+        15.956838868335996,
+        16.455454569344003,
+        16.964350645968004,
+        17.483632000000004,
+        18.013403533232,
+        18.553770147456,
+        19.104836744464002
+      ],
+      "energies_ev": [
+        -3909.2432583087493,
+        -3909.278699367494,
+        -3909.3011150170673,
+        -3909.312196308919,
+        -3909.3134401412754,
+        -3909.306160960034,
+        -3909.2915198749456
+      ],
+      "pressures_gpa": [
+        13.667384626068948,
+        8.966200909960587,
+        5.01716539901094,
+        1.694503261338387,
+        -1.1019640533627793,
+        -3.4026872938638966,
+        -5.301519492609959
+      ],
+      "fit": {
+        "E0_ev": -3909.3140419595684,
+        "V0_ang3": 17.816503639170687,
+        "B0_gpa": 90.86734140873256,
+        "B0_prime": 5.8536458067547565,
+        "fit_rms_ev": 3.1474584749823853e-06
+      },
+      "a_pbe_ang": 4.145982749303528,
+      "a_production_ang": 4.12,
+      "relative_difference": 0.006306492549399907
+    }
+  },
+  "production_large": {
+    "material": "ag",
+    "variant": "production_large",
+    "lattice_ang": 4.12,
+    "supercell": "5x5x5 primitive",
+    "n_atoms": 125,
+    "kpts": [
+      3,
+      3,
+      3
+    ],
+    "ecutwfc_ry": 50.0,
+    "ecutrho_ry": 200.0,
+    "min_mesh_frequency_thz": 0.5478775291526424,
+    "fraction_imaginary_mesh_modes": 0.0,
+    "n_displaced_states": 2,
+    "reference_max_force_ev_ang": 4.0571323555284785e-06,
+    "reference_pressure_gpa": 1.589617348903777,
+    "temperatures_k": [
+      300.0,
+      1000.0
+    ],
+    "u_iso_ang2_by_atom": [
+      [
+        0.009544003351954019
+      ],
+      [
+        0.03143642411608034
+      ]
+    ],
+    "cv_j_per_k_mol_cell": [
+      24.34657115322823,
+      24.888759061005775
+    ],
+    "entropy_j_per_k_mol_cell": [
+      43.110141863976764,
+      72.86740414699476
+    ],
+    "free_energy_kj_per_mol_cell": [
+      -5.268667094640463,
+      -47.86926517082848
+    ],
+    "max_mesh_frequency_thz": 5.004662043568838,
+    "dir": "/viper/u1/alli/calculations/sotc/validation_results/ag/fd_references/production_large"
+  }
+}

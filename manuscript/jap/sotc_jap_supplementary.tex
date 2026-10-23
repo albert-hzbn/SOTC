@@ -1,0 +1,208 @@
+\documentclass[aip,jap,reprint,amsmath,amssymb,floatfix]{revtex4-2}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage[hidelinks]{hyperref}
+\usepackage{url}
+
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\theequation}{S\arabic{equation}}
+\renewcommand{\thesection}{S\arabic{section}}
+
+\begin{document}
+
+\title{Supplementary Material for ``Special optimal thermal cells:
+correlator-designed displacements for finite-temperature effective-harmonic
+phonons''}
+
+\author{Albert Linda}
+\affiliation{Department of Materials Science and Engineering, Indian Institute
+of Technology Kanpur, Kanpur 208016, India}
+
+\maketitle
+
+\section{Surrogate design study}
+
+Table~\ref{tab:surrogate} lists the median phonon-mesh errors of six
+displacement designs on the DFT-fitted FC2+FC3+FC4 surrogates of Al, W, and
+NaCl. The surrogate effective FC2 was fitted to 6000 paired canonical
+samples; fitting half of them changes the mesh frequencies by 0.002 (Al),
+0.001 (W), and 0.006~THz (NaCl). All designs were drawn from the harmonic FD
+model of the same $3\times3\times3$ cell and fitted in the space-group adapted
+FC2 basis with the cutoffs of the main text. Held-out forces on 200 canonical
+configurations follow the same ordering.
+
+\input{tables/tab_surrogate}
+
+\section{Designs in the crystal-symmetry basis}
+
+Table~\ref{tab:selfconsistent_crystal} repeats Table~V of the main text with
+all fits in the FC2 basis of the full crystal space group (hiPhive cluster
+space, 3--12 parameters, cutoff limited to half the shortest image distance).
+For Si and Mg the two bases coincide.
+
+\input{tables/tab_selfconsistent_crystal}
+
+Table~\ref{tab:stdep_crystal} repeats the DFT sTDEP comparison of the main
+text in the crystal-symmetry basis.
+
+\input{tables/tab_stdep_crystal}
+
+\section{Regression frameworks}
+
+Table~\ref{tab:fitters} compares nine regression methods of the trainstation
+package, as used in hiPhive workflows, on the same DFT data and the same
+crystal-symmetry cluster space. Hyperparameters were selected by the
+package's internal cross-validation. All methods agree to within 0.03~THz.
+
+\input{tables/tab_fitters}
+
+\section{Derivations for the estimator theory}
+
+\textit{Effective FC2 as averaged Hessian.} For $\mathbf u\sim
+N(\mathbf 0,\mathbf C)$ and smooth $V$, Stein's lemma states
+$\langle\mathbf u\,g(\mathbf u)\rangle=\mathbf C\langle\nabla g\rangle$.
+With $g=\mathbf F^{\rm T}=-\nabla V^{\rm T}$ this gives
+$\langle\mathbf u\mathbf F^{\rm T}\rangle=-\mathbf C\langle\nabla\nabla V\rangle$,
+so the population least-squares coefficient of $\mathbf F$ on $\mathbf u$ is
+$-\langle\mathbf F\mathbf u^{\rm T}\rangle\mathbf C^{-1}=\langle\nabla\nabla V\rangle$.
+The SCHA free-energy gradient with respect to the auxiliary FC2 vanishes
+when $\langle\nabla\nabla V\rangle_{\mathbf C(\boldsymbol\Phi)}=\boldsymbol\Phi$
+for a fixed centroid, which is the self-consistent fixed point of the main
+text.
+
+\textit{Fixed-amplitude bias.} In mass-weighted normal coordinates with
+forces $f_a=-\omega_a^2Q_a-\tfrac12V_{abc}Q_bQ_c-\tfrac16V_{abcd}Q_bQ_cQ_d$,
+the regression coefficient for a design with independent symmetric
+coordinates is $\Phi_{ae}=-\langle f_aQ_e\rangle/\langle Q_e^2\rangle$. The
+cubic term vanishes by symmetry. The quartic term needs
+$\langle Q_bQ_cQ_dQ_e\rangle$, which for distinct indices paired as
+$(bb)(ee)$ equals $\sigma_b^2\sigma_e^2$ for both Gaussian and $\pm\sigma$
+coordinates, and for $b=c=d=e$ equals $3\sigma_e^4$ (Gaussian) or
+$\sigma_e^4$ (fixed amplitude). Collecting the three pairings,
+\begin{equation}
+\Phi_{ae}=\omega_a^2\delta_{ae}+\tfrac12\sum_{b}V_{abbe}\sigma_b^2
+-\tfrac{1}{6}\,(3-\kappa_e)\,V_{aeee}\sigma_e^2,
+\end{equation}
+with $\kappa_e=\langle Q_e^4\rangle/\sigma_e^4$. The last term vanishes for
+Gaussian coordinates ($\kappa_e=3$) and equals $-\tfrac13V_{aeee}\sigma_e^2$ for
+the fixed-amplitude design ($\kappa_e=1$). The
+statement is verified numerically by exact enumeration of all $2^6$ sign
+patterns of a random six-mode quartic model in the test suite
+(\texttt{test\_optimal\_design.py}), as are the exact cancellation of
+arbitrary cubic forces by $\pm$ pairs and the thermal mean-square
+displacements of the ZG and rattle designs.
+
+\section{Higher-order force-constant validation}
+
+Figure~\ref{fig:ifc34} documents the joint FC2+FC3+FC4 fits used as
+surrogates: held-out errors of the nested models, convergence with the number
+of training snapshots, sensitivity to the interaction cutoffs, and comparison
+with the force changes produced by higher plane-wave cutoffs and denser $k$
+meshes. For Al the denser-$k$-mesh force change exceeds the final fit error,
+so the Al tensors are used here only as model potentials for the
+sampling study, not as converged inputs for transport calculations.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/fig_ifc34_diagnostics.pdf}
+\caption{Validation of the FC2+FC3+FC4 fits to 80 canonical QE snapshots
+(Al 300~K, W 1500~K, NaCl 700~K; $3\times3\times3$ cells). (a) Held-out force
+RMSE of harmonic FD FC2 and of temperature-fitted FC2, FC2+FC3, and
+FC2+FC3+FC4 models. (b) Convergence with training snapshots. (c) Cutoff
+sensitivity ($\pm0.5$~\AA). (d) Fit error compared with electronic-setting
+force differences.}
+\label{fig:ifc34}
+\end{figure*}
+
+\section{Individual iterations of the SOTC-C runs}
+
+\input{tables/tab_iterations}
+
+\noindent An asterisk marks the iteration selected by the workflow.
+The two Au iterations each contain a single configuration; their
+axial-prior fits are unstable, whereas the pooled fit is stable.
+
+\section{Lattice-parameter sensitivity}
+
+\input{tables/tab_volume}
+
+\section{Accuracy overview}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig_reference_accuracy.pdf}
+\caption{(a) Mesh RMSE against the converged large-cell harmonic FD reference
+for harmonic FD in $3\times3\times3$ cells and in the SOTC cells, and for the
+selected and pooled SOTC-C models. (b) Mesh RMSE against the same-cell
+effective FC2 for the selected and pooled SOTC-C models and for random
+canonical subsets of the same size fitted with the same prior (median and
+10--90\% range over 20 draws).}
+\label{fig:accuracy}
+\end{figure*}
+
+\section{NaCl optic modes and neutron data}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.95\textwidth]{figures/fig_nacl_loto.pdf}
+\caption{NaCl harmonic FD FC2 ($3\times3\times3$ cell) without (gray dashed)
+and with (blue) the non-analytic correction from QE-DFPT Born charges and
+dielectric tensor. Red crosses: 39 neutron points at 80~K along $\Gamma$--X
+and $\Gamma$--L \cite{ref35}; purple diamonds: infrared TO and LO limits
+\cite{ref48}. The neutron data are temperature-mismatched to the
+fixed-volume calculation and are shown without a global error metric.}
+\label{fig:nacl}
+\end{figure*}
+
+\section{Thermal displacement correlator}
+
+In second quantization, the displacement of basis atom $a$ in cell
+$\mathbf R$ is
+\begin{equation}
+\hat u_a^\alpha(\mathbf R)=\frac{1}{\sqrt{N_c}}\sum_{\mathbf qs}
+\sqrt{\frac{\hbar}{2M_a\omega_{\mathbf qs}}}\,e_a^\alpha(\mathbf qs)
+\left(\hat a_{\mathbf qs}+\hat a^\dagger_{-\mathbf qs}\right)
+e^{i\mathbf q\cdot\mathbf R}.
+\end{equation}
+With $\langle\hat a^\dagger_{\mathbf qs}\hat a_{\mathbf q's'}\rangle=n_B\delta\delta$,
+$\langle\hat a_{\mathbf qs}\hat a^\dagger_{\mathbf q's'}\rangle=(n_B+1)\delta\delta$,
+vanishing anomalous averages, and $2n_B+1=\coth(\hbar\omega/2k_BT)$,
+the canonical average $\langle\hat u_a^\alpha(\mathbf 0)\hat u_b^\beta(\mathbf R)\rangle$
+reduces to Eq.~(4) of the main text: only $\mathbf q'=-\mathbf q$ contributes,
+and $e^{\beta}_b(-\mathbf qs)=e^{\beta*}_b(\mathbf qs)$ gives the factor
+$e^\alpha_a(\mathbf qs)e^{\beta*}_b(\mathbf qs)e^{-i\mathbf q\cdot\mathbf R}$. Its trace with the
+completeness relation of the polarization vectors gives
+$U_{\rm iso}=(\hbar/6N_cM)\sum_{\mathbf qs}\omega_{\mathbf qs}^{-1}
+\coth(\hbar\omega_{\mathbf qs}/2k_BT)$ for a monatomic crystal.
+
+In the commensurate supercell the same covariance is diagonal in the
+normal-mode coordinates $Q_m$ with variances $\sigma_m^2$ given in Sec.~II~D
+of the main text. A configuration of the form of Eq.~(7) has
+$Q_m^2=\sigma_m^2$ for every mode, so that its single-configuration
+second moment equals the canonical one mode by mode; cross terms
+$Q_mQ_{m'}=s_ms_{m'}\sigma_m\sigma_{m'}$ average to zero only over the
+sign patterns, and their effect on the force fit is what the D-optimal sign
+choice controls.
+
+\section{SOTC objective gradient}
+
+For the shell objective of Eq.~(6) of the main text, write the cell
+correlator as a sum over ordered atom pairs,
+$\bar C_{2,ab}^{\rm cell}(R;\mathbf u)=\sum_{i,j}P^{abR}_{ij}\,\mathbf u_i\cdot\mathbf u_j$,
+where the symmetric weight matrix $P^{abR}_{ij}$ equals $1/(3N_R^{ab}N_a)$ (or half
+of it for each order when $a\neq b$) if the pair belongs to shell $R$ of the
+species channel and zero otherwise; the on-site term is the shell $R=0$. Then
+\begin{equation}
+\frac{\partial\mathcal Q}{\partial\mathbf u_i}=
+\sum_{a,b,R}4\,w_{ab}(R)\,\Delta_{ab}(R)\sum_jP^{abR}_{ij}\,\mathbf u_j ,
+\end{equation}
+with $\Delta_{ab}(R)=\bar C_{2,ab}^{\rm cell}-\bar C_{2,ab}$, and the
+mode-amplitude gradient follows by the chain rule through
+$\mathbf u_i=\sum_m A_m\mathbf e_{im}/\sqrt{M_i}$. The optimization is
+carried out in mode amplitudes and phases with random restarts.
+
+\bibliography{refs_jap}
+
+\end{document}

@@ -1,0 +1,24 @@
+\begin{table*}[t]
+\caption{Updated trial (iteration 1, crystal basis). Mesh RMSE (THz) against the iteration-1 effective FC2. Matched trial: SOTC-D designed from the iteration-1 trial (D$_1$) versus the better of random canonical subsets and pairs drawn from the same trial (C$_1$), scored against the disjoint effective FC2. Equal cost: bootstrapped SOTC-D (B; first pair from the harmonic trial, later pairs from the model refitted to the first pair, no extra force calls) and one-shot SOTC-D (D$_0$) versus canonical pairs from the harmonic trial (C$_0$; a single sTDEP iteration), scored against the 40-snapshot iteration-1 effective FC2, which shares no configuration with them. B and D$_0$ coincide at 2 calls by construction. The best entry of each group is bold.}
+\label{tab:selfconsistent_crystal}
+\begin{ruledtabular}
+\begin{tabular}{lcccccccccc}
+ & \multicolumn{2}{c}{matched, 2} & \multicolumn{3}{c}{equal cost, 2} & \multicolumn{2}{c}{matched, 8} & \multicolumn{3}{c}{equal cost, 8}\\
+ & D$_1$ & C$_1$ & B & D$_0$ & C$_0$ & D$_1$ & C$_1$ & B & D$_0$ & C$_0$\\
+\hline
+Al & \textbf{0.06} & 0.08 & \textbf{0.07} & 0.07 & 0.10 & \textbf{0.03} & 0.05 & \textbf{0.03} & 0.05 & 0.04\\
+Ag & \textbf{0.04} & 0.11 & \textbf{0.02} & 0.02 & 0.13 & 0.06 & \textbf{0.05} & \textbf{0.06} & 0.09 & 0.10\\
+Au & 0.08 & \textbf{0.08} & \textbf{0.15} & 0.15 & 0.24 & \textbf{0.05} & 0.05 & \textbf{0.02} & 0.17 & 0.22\\
+Cu & \textbf{0.08} & 0.15 & 0.20 & 0.20 & \textbf{0.07} & \textbf{0.04} & 0.08 & 0.17 & \textbf{0.10} & 0.14\\
+Mo & 0.06 & \textbf{0.06} & \textbf{0.05} & 0.05 & 0.07 & \textbf{0.02} & 0.03 & \textbf{0.02} & 0.03 & 0.06\\
+W & 0.05 & \textbf{0.04} & 0.05 & 0.05 & \textbf{0.04} & \textbf{0.02} & 0.02 & 0.02 & \textbf{0.02} & 0.02\\
+NaCl & \textbf{0.05} & 0.11 & \textbf{0.11} & 0.11 & 0.14 & 0.09 & \textbf{0.07} & \textbf{0.05} & 0.15 & 0.12\\
+MgO & \textbf{0.22} & 0.32 & 0.42 & 0.42 & \textbf{0.34} & \textbf{0.09} & 0.15 & \textbf{0.11} & 0.32 & 0.26\\
+PbTe & \textbf{0.02} & 0.07 & 0.19 & 0.19 & \textbf{0.13} & \textbf{0.02} & 0.03 & \textbf{0.03} & 0.12 & 0.09\\
+Si & \textbf{0.07} & 0.10 & \textbf{0.10} & 0.10 & 0.11 & \textbf{0.05} & 0.05 & \textbf{0.05} & 0.09 & 0.07\\
+Mg & \textbf{0.05} & 0.06 & \textbf{0.06} & 0.06 & 0.07 & \textbf{0.03} & 0.05 & \textbf{0.02} & 0.06 & 0.04\\
+\hline
+D$_1<$C$_1$ / B$<$C$_0$ & \multicolumn{2}{c}{8/11} & \multicolumn{3}{c}{7/11} & \multicolumn{2}{c}{9/11} & \multicolumn{3}{c}{9/11}\\
+\end{tabular}
+\end{ruledtabular}
+\end{table*}

@@ -1,0 +1,2114 @@
+{
+ "material": "ag",
+ "n_parameters": 3,
+ "cutoff_ang": 3.84390710837716,
+ "counts": [
+  2,
+  4,
+  8,
+  16
+ ],
+ "fit_methods": [
+  "least-squares",
+  "ridge",
+  "bayesian-ridge",
+  "ardr",
+  "rfe",
+  "omp",
+  "lasso",
+  "adaptive-lasso",
+  "elasticnet"
+ ],
+ "canonical": {
+  "least-squares": {
+   "2": [
+    {
+     "held_out_force_rmse": 0.433197928598144,
+     "mesh_vs_disjoint": 0.130571716929437,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43241008122511365,
+     "mesh_vs_disjoint": 0.13300972023896893,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4344233175613359,
+     "mesh_vs_disjoint": 0.17503106838185306,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4395061911851136,
+     "mesh_vs_disjoint": 0.2438344129905475,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4310787095702576,
+     "mesh_vs_disjoint": 0.10504569625997943,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4447962630668726,
+     "mesh_vs_disjoint": 0.25615964480371006,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4301982927184101,
+     "mesh_vs_disjoint": 0.10338032459389855,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43517037024636707,
+     "mesh_vs_disjoint": 0.18189104993854532,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4333134531340061,
+     "mesh_vs_disjoint": 0.15477730381422444,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4336186130381961,
+     "mesh_vs_disjoint": 0.12343021281664517,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "4": [
+    {
+     "held_out_force_rmse": 0.4329882883546054,
+     "mesh_vs_disjoint": 0.14524704673319802,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4332015317138616,
+     "mesh_vs_disjoint": 0.16642092430814723,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4304618666675985,
+     "mesh_vs_disjoint": 0.11557292024655422,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4465066450901888,
+     "mesh_vs_disjoint": 0.34393469335436877,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43319558035170563,
+     "mesh_vs_disjoint": 0.14739429062555365,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4418677917475083,
+     "mesh_vs_disjoint": 0.28636465487136475,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43507101510490215,
+     "mesh_vs_disjoint": 0.20265268924166524,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43456044780313435,
+     "mesh_vs_disjoint": 0.20969695731093216,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42982798728505145,
+     "mesh_vs_disjoint": 0.09479345104307203,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43437578656872244,
+     "mesh_vs_disjoint": 0.16755401888745058,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "8": [
+    {
+     "held_out_force_rmse": 0.4302528973917631,
+     "mesh_vs_disjoint": 0.11117879849834662,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42982468575613114,
+     "mesh_vs_disjoint": 0.10010044993354428,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.434622818268688,
+     "mesh_vs_disjoint": 0.19722112867376387,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4299976492777866,
+     "mesh_vs_disjoint": 0.09251092076227366,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4345375866971974,
+     "mesh_vs_disjoint": 0.2019644390504508,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43005465577297114,
+     "mesh_vs_disjoint": 0.10999471448750801,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43244404170717554,
+     "mesh_vs_disjoint": 0.17780881778297844,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43373752472060095,
+     "mesh_vs_disjoint": 0.1753690517799951,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4308288850047124,
+     "mesh_vs_disjoint": 0.1107570765639319,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4298867261203717,
+     "mesh_vs_disjoint": 0.09845872388954412,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "16": [
+    {
+     "held_out_force_rmse": 0.43053186509110525,
+     "mesh_vs_disjoint": 0.12506141320824066,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42958240370402484,
+     "mesh_vs_disjoint": 0.08732313204590081,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42979974397999404,
+     "mesh_vs_disjoint": 0.1324693236820879,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42959894905655566,
+     "mesh_vs_disjoint": 0.1323158000744032,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4308052937466395,
+     "mesh_vs_disjoint": 0.1739275118441393,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4296140509602037,
+     "mesh_vs_disjoint": 0.11608620407846929,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42961542597676383,
+     "mesh_vs_disjoint": 0.1288249415558316,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4302665990166139,
+     "mesh_vs_disjoint": 0.14499429798284294,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4299777755115458,
+     "mesh_vs_disjoint": 0.1601335669067141,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4303952921604589,
+     "mesh_vs_disjoint": 0.13269711439606205,
+     "unstable_fraction": 0.0
+    }
+   ]
+  },
+  "ridge": {
+   "2": [
+    {
+     "held_out_force_rmse": 0.4339353957425396,
+     "mesh_vs_disjoint": 0.13892004544614342,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4319565117785477,
+     "mesh_vs_disjoint": 0.1240212005649056,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4342352991874674,
+     "mesh_vs_disjoint": 0.17257477511996325,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4395046148228598,
+     "mesh_vs_disjoint": 0.2450149056393925,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4312906168215216,
+     "mesh_vs_disjoint": 0.10738084253189593,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.44445827322776127,
+     "mesh_vs_disjoint": 0.24986671157728138,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43018422771786,
+     "mesh_vs_disjoint": 0.10295641761554446,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4350233955542243,
+     "mesh_vs_disjoint": 0.18015197433998936,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4331369103659652,
+     "mesh_vs_disjoint": 0.1513104984596308,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43422243540619004,
+     "mesh_vs_disjoint": 0.12979018990656163,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "4": [
+    {
+     "held_out_force_rmse": 0.4326973169198944,
+     "mesh_vs_disjoint": 0.14094992835545772,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4333647418920761,
+     "mesh_vs_disjoint": 0.16860514058844422,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4305635890293295,
+     "mesh_vs_disjoint": 0.11759803401801429,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.44695112597517245,
+     "mesh_vs_disjoint": 0.3479502754012838,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4327512582674573,
+     "mesh_vs_disjoint": 0.1416157587556,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.44192369358482486,
+     "mesh_vs_disjoint": 0.28716513784169784,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4351816349107772,
+     "mesh_vs_disjoint": 0.20407548384326146,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43484514953418735,
+     "mesh_vs_disjoint": 0.21382805092160134,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42981726635191053,
+     "mesh_vs_disjoint": 0.095272948360566,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4340286269930525,
+     "mesh_vs_disjoint": 0.16240498941506729,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "8": [
+    {
+     "held_out_force_rmse": 0.43028745759478354,
+     "mesh_vs_disjoint": 0.11202150788392977,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.429840305403243,
+     "mesh_vs_disjoint": 0.1003378360033549,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43450468177499785,
+     "mesh_vs_disjoint": 0.19550507335558748,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4300473066735465,
+     "mesh_vs_disjoint": 0.09350902273765149,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4344285777545813,
+     "mesh_vs_disjoint": 0.20027326825950897,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4300327785893719,
+     "mesh_vs_disjoint": 0.10981193057539011,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4325399013309459,
+     "mesh_vs_disjoint": 0.17955306705665097,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4336449551183951,
+     "mesh_vs_disjoint": 0.17347923713271365,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43091424309337545,
+     "mesh_vs_disjoint": 0.11219192574361436,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42989389093879765,
+     "mesh_vs_disjoint": 0.09876590010840067,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "16": [
+    {
+     "held_out_force_rmse": 0.43049354544077134,
+     "mesh_vs_disjoint": 0.12405333574820403,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4295635509137271,
+     "mesh_vs_disjoint": 0.08690652932286932,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42979506350134833,
+     "mesh_vs_disjoint": 0.13217755307086732,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4295971303358892,
+     "mesh_vs_disjoint": 0.13232876689441486,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4308425266865471,
+     "mesh_vs_disjoint": 0.17474196042722642,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42961876008064476,
+     "mesh_vs_disjoint": 0.11632311256308042,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42962288246485675,
+     "mesh_vs_disjoint": 0.12882549166614857,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43025710770939524,
+     "mesh_vs_disjoint": 0.14461198066350883,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4300051496097792,
+     "mesh_vs_disjoint": 0.16072623177762627,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43037515583887903,
+     "mesh_vs_disjoint": 0.1322081341733669,
+     "unstable_fraction": 0.0
+    }
+   ]
+  },
+  "bayesian-ridge": {
+   "2": [
+    {
+     "held_out_force_rmse": 0.43372791300223723,
+     "mesh_vs_disjoint": 0.13659660700026954,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4318003255849381,
+     "mesh_vs_disjoint": 0.12023362806111833,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4338512136794536,
+     "mesh_vs_disjoint": 0.1673610227366247,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43952659967335905,
+     "mesh_vs_disjoint": 0.2469237649117125,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4313861235988248,
+     "mesh_vs_disjoint": 0.1084855229359113,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.44438775494979904,
+     "mesh_vs_disjoint": 0.24827362388125906,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4301814047693691,
+     "mesh_vs_disjoint": 0.10276250530825927,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43452081623525063,
+     "mesh_vs_disjoint": 0.17400604779202875,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4330759417256463,
+     "mesh_vs_disjoint": 0.15004594697782364,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4341431379711113,
+     "mesh_vs_disjoint": 0.1289600966347625,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "4": [
+    {
+     "held_out_force_rmse": 0.43248215756151603,
+     "mesh_vs_disjoint": 0.13759870967694832,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43344710038870543,
+     "mesh_vs_disjoint": 0.16969253157595995,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4306079379369991,
+     "mesh_vs_disjoint": 0.11845776792766281,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.44684308923035415,
+     "mesh_vs_disjoint": 0.3469822223311107,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4325906395999131,
+     "mesh_vs_disjoint": 0.139426655523778,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4419786902675333,
+     "mesh_vs_disjoint": 0.28793258318399284,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43525926359915984,
+     "mesh_vs_disjoint": 0.2050596789857985,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43478905175862537,
+     "mesh_vs_disjoint": 0.21303029494669076,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42981315400559567,
+     "mesh_vs_disjoint": 0.095718068659824,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4339411237223111,
+     "mesh_vs_disjoint": 0.16103123698033076,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "8": [
+    {
+     "held_out_force_rmse": 0.43029405981301505,
+     "mesh_vs_disjoint": 0.11217702616847489,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42984941742454447,
+     "mesh_vs_disjoint": 0.10047738020819011,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43446257422868756,
+     "mesh_vs_disjoint": 0.19488031286621357,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43006146390424277,
+     "mesh_vs_disjoint": 0.09379056208580523,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43436511954172585,
+     "mesh_vs_disjoint": 0.199264221488398,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4300245108336993,
+     "mesh_vs_disjoint": 0.10974825089501739,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43256052123362443,
+     "mesh_vs_disjoint": 0.17992137087055743,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43361004114922996,
+     "mesh_vs_disjoint": 0.1727332381442823,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43094837381891565,
+     "mesh_vs_disjoint": 0.11276025837914676,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4298986817688901,
+     "mesh_vs_disjoint": 0.09893660280215553,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "16": [
+    {
+     "held_out_force_rmse": 0.4304760187747003,
+     "mesh_vs_disjoint": 0.12358308587310936,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4295553801961953,
+     "mesh_vs_disjoint": 0.08672346152049633,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42979379816806196,
+     "mesh_vs_disjoint": 0.1320827568628295,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42959626203198714,
+     "mesh_vs_disjoint": 0.13233965707962853,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4308511039367618,
+     "mesh_vs_disjoint": 0.17492740976681473,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42961928615483347,
+     "mesh_vs_disjoint": 0.11634631084475111,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42962489311546415,
+     "mesh_vs_disjoint": 0.1288274365949276,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43025535566984346,
+     "mesh_vs_disjoint": 0.14453710434611047,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43001115327135986,
+     "mesh_vs_disjoint": 0.16085437972078312,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4303654973384105,
+     "mesh_vs_disjoint": 0.13196834022203158,
+     "unstable_fraction": 0.0
+    }
+   ]
+  },
+  "ardr": {
+   "2": [
+    {
+     "held_out_force_rmse": 0.43408913118828224,
+     "mesh_vs_disjoint": 0.13959141578691245,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43183212155235046,
+     "mesh_vs_disjoint": 0.11976386465109438,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4337600932940881,
+     "mesh_vs_disjoint": 0.16600781013048793,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43945166018635673,
+     "mesh_vs_disjoint": 0.24648412849491683,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4316442478825574,
+     "mesh_vs_disjoint": 0.11154669716252785,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.44472542927515,
+     "mesh_vs_disjoint": 0.24900865532345998,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4301408308138177,
+     "mesh_vs_disjoint": 0.10134113270597267,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.434426046447081,
+     "mesh_vs_disjoint": 0.17282362314898747,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43313430148799553,
+     "mesh_vs_disjoint": 0.1500957445974036,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43481906043847346,
+     "mesh_vs_disjoint": 0.13476088828117969,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "4": [
+    {
+     "held_out_force_rmse": 0.43246590060148843,
+     "mesh_vs_disjoint": 0.13711091634848419,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43347678601727624,
+     "mesh_vs_disjoint": 0.16975946760424485,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.430616590243891,
+     "mesh_vs_disjoint": 0.1184224410645408,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4468179158870149,
+     "mesh_vs_disjoint": 0.3467886974516266,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4325670813112312,
+     "mesh_vs_disjoint": 0.13892622757814613,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4419121453826381,
+     "mesh_vs_disjoint": 0.2873803852000256,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43523028077450965,
+     "mesh_vs_disjoint": 0.20460890504659413,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43478870833589617,
+     "mesh_vs_disjoint": 0.21308591542969132,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42981987724194726,
+     "mesh_vs_disjoint": 0.09594325989368185,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4340126156346052,
+     "mesh_vs_disjoint": 0.16155310419615035,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "8": [
+    {
+     "held_out_force_rmse": 0.4303235751097291,
+     "mesh_vs_disjoint": 0.11279428210728702,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4298545611211552,
+     "mesh_vs_disjoint": 0.10041456914802756,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43448213014205844,
+     "mesh_vs_disjoint": 0.1949934710384539,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43008623814267316,
+     "mesh_vs_disjoint": 0.09412777368046216,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43437293668219307,
+     "mesh_vs_disjoint": 0.1991858800037879,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4300036723394401,
+     "mesh_vs_disjoint": 0.10920897145804712,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4325619757445576,
+     "mesh_vs_disjoint": 0.17998455890377305,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43364427381656423,
+     "mesh_vs_disjoint": 0.17292676051495312,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43098291649198,
+     "mesh_vs_disjoint": 0.1131946571092483,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4299205245469063,
+     "mesh_vs_disjoint": 0.09946865519848776,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "16": [
+    {
+     "held_out_force_rmse": 0.4304750741673431,
+     "mesh_vs_disjoint": 0.12344263346809306,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42955302590059974,
+     "mesh_vs_disjoint": 0.08663051181501046,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42980191042358046,
+     "mesh_vs_disjoint": 0.13222807984100973,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4295918754893648,
+     "mesh_vs_disjoint": 0.1321956592268729,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43085278876953487,
+     "mesh_vs_disjoint": 0.17492388366952,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42961441627542457,
+     "mesh_vs_disjoint": 0.11614006585025971,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4296326481649816,
+     "mesh_vs_disjoint": 0.1289114835203279,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43026514225378687,
+     "mesh_vs_disjoint": 0.14465633124991406,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4300179019536147,
+     "mesh_vs_disjoint": 0.1609441833616921,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4303720043906501,
+     "mesh_vs_disjoint": 0.13206874122654097,
+     "unstable_fraction": 0.0
+    }
+   ]
+  },
+  "rfe": {
+   "2": [
+    {
+     "held_out_force_rmse": 0.43319792859814404,
+     "mesh_vs_disjoint": 0.1305717169294368,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4324100812251136,
+     "mesh_vs_disjoint": 0.13300972023896862,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4344233175613359,
+     "mesh_vs_disjoint": 0.17503106838185334,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4395061911851136,
+     "mesh_vs_disjoint": 0.2438344129905475,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43107870957025757,
+     "mesh_vs_disjoint": 0.1050456962599792,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.44479626306687264,
+     "mesh_vs_disjoint": 0.2561596448037107,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4301982927184101,
+     "mesh_vs_disjoint": 0.10338032459389845,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.435170370246367,
+     "mesh_vs_disjoint": 0.18189104993854457,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4333134531340061,
+     "mesh_vs_disjoint": 0.15477730381422444,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43361861303819615,
+     "mesh_vs_disjoint": 0.12343021281664542,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "4": [
+    {
+     "held_out_force_rmse": 0.43298828835460546,
+     "mesh_vs_disjoint": 0.14524704673319938,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43320153171386155,
+     "mesh_vs_disjoint": 0.16642092430814678,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4304618666675985,
+     "mesh_vs_disjoint": 0.11557292024655406,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4465066450901888,
+     "mesh_vs_disjoint": 0.34393469335436877,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4331955803517057,
+     "mesh_vs_disjoint": 0.14739429062555454,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.44186779174750834,
+     "mesh_vs_disjoint": 0.2863646548713652,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43507101510490215,
+     "mesh_vs_disjoint": 0.2026526892416646,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43456044780313446,
+     "mesh_vs_disjoint": 0.20969695731093366,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4298279872850514,
+     "mesh_vs_disjoint": 0.09479345104307192,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43437578656872256,
+     "mesh_vs_disjoint": 0.1675540188874513,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "8": [
+    {
+     "held_out_force_rmse": 0.43025289739176303,
+     "mesh_vs_disjoint": 0.11117879849834593,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42982468575613114,
+     "mesh_vs_disjoint": 0.10010044993354456,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43462281826868787,
+     "mesh_vs_disjoint": 0.1972211286737631,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4299976492777866,
+     "mesh_vs_disjoint": 0.09251092076227391,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4345375866971973,
+     "mesh_vs_disjoint": 0.20196443905045008,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4300546557729712,
+     "mesh_vs_disjoint": 0.109994714487508,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43244404170717554,
+     "mesh_vs_disjoint": 0.1778088177829786,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43373752472060084,
+     "mesh_vs_disjoint": 0.1753690517799939,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4308288850047124,
+     "mesh_vs_disjoint": 0.1107570765639316,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4298867261203717,
+     "mesh_vs_disjoint": 0.09845872388954409,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "16": [
+    {
+     "held_out_force_rmse": 0.43053186509110525,
+     "mesh_vs_disjoint": 0.1250614132082403,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4295824037040248,
+     "mesh_vs_disjoint": 0.08732313204590053,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42979974397999415,
+     "mesh_vs_disjoint": 0.13246932368208855,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42959894905655566,
+     "mesh_vs_disjoint": 0.132315800074403,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4308052937466395,
+     "mesh_vs_disjoint": 0.1739275118441396,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4296140509602037,
+     "mesh_vs_disjoint": 0.11608620407846915,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42961542597676383,
+     "mesh_vs_disjoint": 0.12882494155583166,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43026659901661396,
+     "mesh_vs_disjoint": 0.14499429798284316,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4299777755115458,
+     "mesh_vs_disjoint": 0.16013356690671376,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4303952921604589,
+     "mesh_vs_disjoint": 0.13269711439606216,
+     "unstable_fraction": 0.0
+    }
+   ]
+  },
+  "omp": {
+   "2": [
+    {
+     "held_out_force_rmse": 0.4331979285981441,
+     "mesh_vs_disjoint": 0.13057171692943817,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43241008122511354,
+     "mesh_vs_disjoint": 0.1330097202389676,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4344233175613359,
+     "mesh_vs_disjoint": 0.175031068381853,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43950619118511347,
+     "mesh_vs_disjoint": 0.2438344129905468,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43107870957025757,
+     "mesh_vs_disjoint": 0.10504569625997918,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4447962630668723,
+     "mesh_vs_disjoint": 0.2561596448037068,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4301982927184101,
+     "mesh_vs_disjoint": 0.10338032459389905,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4816048044394389,
+     "mesh_vs_disjoint": 0.35819596876877585,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4333134531340061,
+     "mesh_vs_disjoint": 0.15477730381422583,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.433618613038196,
+     "mesh_vs_disjoint": 0.12343021281664461,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "4": [
+    {
+     "held_out_force_rmse": 0.4329882883546054,
+     "mesh_vs_disjoint": 0.14524704673319833,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4332015317138614,
+     "mesh_vs_disjoint": 0.16642092430814462,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43046186666759856,
+     "mesh_vs_disjoint": 0.11557292024655591,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.44650664509018867,
+     "mesh_vs_disjoint": 0.34393469335436794,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4331955803517058,
+     "mesh_vs_disjoint": 0.14739429062555556,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.44186779174750834,
+     "mesh_vs_disjoint": 0.2863646548713645,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4350710151049023,
+     "mesh_vs_disjoint": 0.20265268924166688,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43456044780313435,
+     "mesh_vs_disjoint": 0.20969695731093255,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4298279872850514,
+     "mesh_vs_disjoint": 0.09479345104307264,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43437578656872256,
+     "mesh_vs_disjoint": 0.16755401888745156,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "8": [
+    {
+     "held_out_force_rmse": 0.4302528973917631,
+     "mesh_vs_disjoint": 0.11117879849834668,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42982468575613114,
+     "mesh_vs_disjoint": 0.10010044993354517,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43462281826868776,
+     "mesh_vs_disjoint": 0.197221128673761,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42999764927778666,
+     "mesh_vs_disjoint": 0.09251092076227449,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4345375866971974,
+     "mesh_vs_disjoint": 0.20196443905045147,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43005465577297114,
+     "mesh_vs_disjoint": 0.10999471448750656,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43244404170717543,
+     "mesh_vs_disjoint": 0.1778088177829774,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43373752472060084,
+     "mesh_vs_disjoint": 0.17536905177999296,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4308288850047122,
+     "mesh_vs_disjoint": 0.11075707656392818,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42988672612037165,
+     "mesh_vs_disjoint": 0.09845872388954394,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "16": [
+    {
+     "held_out_force_rmse": 0.43053186509110525,
+     "mesh_vs_disjoint": 0.12506141320823994,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4295824037040248,
+     "mesh_vs_disjoint": 0.08732313204590086,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42979974397999415,
+     "mesh_vs_disjoint": 0.13246932368208914,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4295989490565557,
+     "mesh_vs_disjoint": 0.13231580007440324,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43080529374663956,
+     "mesh_vs_disjoint": 0.17392751184413988,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4296140509602037,
+     "mesh_vs_disjoint": 0.11608620407846902,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4296154259767639,
+     "mesh_vs_disjoint": 0.1288249415558314,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4302665990166139,
+     "mesh_vs_disjoint": 0.144994297982842,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42997777551154587,
+     "mesh_vs_disjoint": 0.16013356690671487,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43039529216045896,
+     "mesh_vs_disjoint": 0.13269711439606263,
+     "unstable_fraction": 0.0
+    }
+   ]
+  },
+  "lasso": {
+   "2": [
+    {
+     "held_out_force_rmse": 0.4338059750692625,
+     "mesh_vs_disjoint": 0.13709825984833787,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4324100786910676,
+     "mesh_vs_disjoint": 0.13300967385684223,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4344233134534391,
+     "mesh_vs_disjoint": 0.1750310152061351,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4395061908934806,
+     "mesh_vs_disjoint": 0.24383442598043678,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4310787110422146,
+     "mesh_vs_disjoint": 0.10504571305791102,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4447914511175187,
+     "mesh_vs_disjoint": 0.2560602243846893,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43017632571349035,
+     "mesh_vs_disjoint": 0.10274097095738226,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4351703654607989,
+     "mesh_vs_disjoint": 0.1818909937807139,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4331957957413806,
+     "mesh_vs_disjoint": 0.1522853173943834,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43362406711454005,
+     "mesh_vs_disjoint": 0.12348566189499716,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "4": [
+    {
+     "held_out_force_rmse": 0.432988284581935,
+     "mesh_vs_disjoint": 0.14524699187627188,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4332015346742262,
+     "mesh_vs_disjoint": 0.16642096277283222,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43049423596070985,
+     "mesh_vs_disjoint": 0.11620901897597559,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.44672378317133177,
+     "mesh_vs_disjoint": 0.34592148466023565,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4331955758867977,
+     "mesh_vs_disjoint": 0.1473942336777127,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.44186779270838816,
+     "mesh_vs_disjoint": 0.28636467150494416,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4350710171442553,
+     "mesh_vs_disjoint": 0.20265271534822482,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4346435527564408,
+     "mesh_vs_disjoint": 0.2109420658882593,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42982048269761086,
+     "mesh_vs_disjoint": 0.0952342429790682,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43437578368819907,
+     "mesh_vs_disjoint": 0.16755397668142086,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "8": [
+    {
+     "held_out_force_rmse": 0.43025289840058967,
+     "mesh_vs_disjoint": 0.11117882323249091,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4298246862964227,
+     "mesh_vs_disjoint": 0.10010045653040509,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43461084556865515,
+     "mesh_vs_disjoint": 0.19704382961096134,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4299976508507514,
+     "mesh_vs_disjoint": 0.09251095129720022,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43453758357676453,
+     "mesh_vs_disjoint": 0.20196438985984644,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4300546549030612,
+     "mesh_vs_disjoint": 0.1099947032982561,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.432515550127361,
+     "mesh_vs_disjoint": 0.17913090600381057,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4337375230225779,
+     "mesh_vs_disjoint": 0.17536901539554148,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.430828888197116,
+     "mesh_vs_disjoint": 0.11075712921352426,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42988672646779236,
+     "mesh_vs_disjoint": 0.09845873683003716,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "16": [
+    {
+     "held_out_force_rmse": 0.43051150638404173,
+     "mesh_vs_disjoint": 0.12450874529802985,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42958240275916815,
+     "mesh_vs_disjoint": 0.08732311068766985,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42979974386243,
+     "mesh_vs_disjoint": 0.13246931246012977,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.429598948813566,
+     "mesh_vs_disjoint": 0.13231579757787368,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43080529548584884,
+     "mesh_vs_disjoint": 0.17392754980195854,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4296140510134502,
+     "mesh_vs_disjoint": 0.11608620892717983,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4296154264277222,
+     "mesh_vs_disjoint": 0.12882494277815187,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4302596754427771,
+     "mesh_vs_disjoint": 0.1445770769663111,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42998672584881514,
+     "mesh_vs_disjoint": 0.1603241463803736,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4303952911239521,
+     "mesh_vs_disjoint": 0.13269708866959531,
+     "unstable_fraction": 0.0
+    }
+   ]
+  },
+  "adaptive-lasso": {
+   "2": [
+    {
+     "held_out_force_rmse": 0.4388425303014021,
+     "mesh_vs_disjoint": 0.18303722998232333,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43199244719696434,
+     "mesh_vs_disjoint": 0.1085568951861221,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43442329032139665,
+     "mesh_vs_disjoint": 0.1750307155489322,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.44000835814911826,
+     "mesh_vs_disjoint": 0.2609623978117675,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43107872095267147,
+     "mesh_vs_disjoint": 0.10504582813708363,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.48261070973553427,
+     "mesh_vs_disjoint": 0.3713331130240913,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43019828948808003,
+     "mesh_vs_disjoint": 0.1033802372331885,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4351703385513757,
+     "mesh_vs_disjoint": 0.18189067860980804,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43331344329896865,
+     "mesh_vs_disjoint": 0.15477709325812644,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4336186435432285,
+     "mesh_vs_disjoint": 0.12343051670237846,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "4": [
+    {
+     "held_out_force_rmse": 0.4312631205362865,
+     "mesh_vs_disjoint": 0.10430883101880493,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43761402506997515,
+     "mesh_vs_disjoint": 0.2128661747973463,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43069810888092425,
+     "mesh_vs_disjoint": 0.11994399448489351,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.44789088608479033,
+     "mesh_vs_disjoint": 0.3561727408814145,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43319555102649704,
+     "mesh_vs_disjoint": 0.14739391490249204,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4422164773751329,
+     "mesh_vs_disjoint": 0.2918976314162165,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4350710273475426,
+     "mesh_vs_disjoint": 0.20265284440544915,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43818760343919644,
+     "mesh_vs_disjoint": 0.2522524600621791,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42982798572113295,
+     "mesh_vs_disjoint": 0.09479352025645767,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43359546546338906,
+     "mesh_vs_disjoint": 0.13935362600471993,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "8": [
+    {
+     "held_out_force_rmse": 0.4308155485963871,
+     "mesh_vs_disjoint": 0.12233389937715286,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4301968971573243,
+     "mesh_vs_disjoint": 0.10500955184167071,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43432687432104244,
+     "mesh_vs_disjoint": 0.19248143020729747,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.429997660421465,
+     "mesh_vs_disjoint": 0.09251113176870857,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43379875173466775,
+     "mesh_vs_disjoint": 0.1677717873349844,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43047015001627853,
+     "mesh_vs_disjoint": 0.11554416841743195,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4359258907299106,
+     "mesh_vs_disjoint": 0.22433725846397418,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4341793569351916,
+     "mesh_vs_disjoint": 0.15503023917312675,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4312901161202744,
+     "mesh_vs_disjoint": 0.11798572320830472,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43180700015949375,
+     "mesh_vs_disjoint": 0.1307453114155398,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "16": [
+    {
+     "held_out_force_rmse": 0.43053185286257445,
+     "mesh_vs_disjoint": 0.12506107833243713,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4294607782383467,
+     "mesh_vs_disjoint": 0.08337639639163515,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4298014941216639,
+     "mesh_vs_disjoint": 0.13204447961802848,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4306534418025465,
+     "mesh_vs_disjoint": 0.1439725691642379,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4310522118946662,
+     "mesh_vs_disjoint": 0.17889181090096518,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42964047513374964,
+     "mesh_vs_disjoint": 0.11681260620309762,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4299833312556259,
+     "mesh_vs_disjoint": 0.13153788618592013,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4303983971708905,
+     "mesh_vs_disjoint": 0.14195046605826991,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4299777849504623,
+     "mesh_vs_disjoint": 0.1601337649620601,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4302761430629409,
+     "mesh_vs_disjoint": 0.12646073372629718,
+     "unstable_fraction": 0.0
+    }
+   ]
+  },
+  "elasticnet": {
+   "2": [
+    {
+     "held_out_force_rmse": 0.43413527468966834,
+     "mesh_vs_disjoint": 0.1410238997535114,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4324100795266672,
+     "mesh_vs_disjoint": 0.133009689852699,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43425416504572106,
+     "mesh_vs_disjoint": 0.17282283809647211,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4395061910932982,
+     "mesh_vs_disjoint": 0.24383442282776055,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4310787102911428,
+     "mesh_vs_disjoint": 0.10504570388846002,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.44468401799683044,
+     "mesh_vs_disjoint": 0.2541778010478238,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4301781625008214,
+     "mesh_vs_disjoint": 0.10259249551764549,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43515390208247023,
+     "mesh_vs_disjoint": 0.1816974509515957,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43299738107543745,
+     "mesh_vs_disjoint": 0.148238023283389,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43388271011996277,
+     "mesh_vs_disjoint": 0.12619437701385103,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "4": [
+    {
+     "held_out_force_rmse": 0.4323952761503465,
+     "mesh_vs_disjoint": 0.13617291004352,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43332793632040545,
+     "mesh_vs_disjoint": 0.16810541202139614,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4305393773100816,
+     "mesh_vs_disjoint": 0.11711682520942526,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.44703935034669073,
+     "mesh_vs_disjoint": 0.3487409897809777,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43314084155124305,
+     "mesh_vs_disjoint": 0.14670112701702262,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4419197312162885,
+     "mesh_vs_disjoint": 0.2871229784657641,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43514258313502274,
+     "mesh_vs_disjoint": 0.20357412733179028,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4349054069786474,
+     "mesh_vs_disjoint": 0.21468402900691358,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4298142829623876,
+     "mesh_vs_disjoint": 0.09563346396904701,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4339038799722058,
+     "mesh_vs_disjoint": 0.16038254112489472,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "8": [
+    {
+     "held_out_force_rmse": 0.4302649816926108,
+     "mesh_vs_disjoint": 0.11147816086356371,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42984170807508026,
+     "mesh_vs_disjoint": 0.10035195801555627,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4345392018957775,
+     "mesh_vs_disjoint": 0.19600574544756408,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43000487011212707,
+     "mesh_vs_disjoint": 0.09265609688559444,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43440256423098345,
+     "mesh_vs_disjoint": 0.19985087043115096,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.430054655309961,
+     "mesh_vs_disjoint": 0.10999471008737345,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4326896037598067,
+     "mesh_vs_disjoint": 0.18218297576241818,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.43373752353218264,
+     "mesh_vs_disjoint": 0.17536902797745665,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4308288869814591,
+     "mesh_vs_disjoint": 0.11075710988466819,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4298867262420985,
+     "mesh_vs_disjoint": 0.09845872967170949,
+     "unstable_fraction": 0.0
+    }
+   ],
+   "16": [
+    {
+     "held_out_force_rmse": 0.43047776118102693,
+     "mesh_vs_disjoint": 0.12362133117102823,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42957916919815203,
+     "mesh_vs_disjoint": 0.08725183037907988,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4297955409850108,
+     "mesh_vs_disjoint": 0.13218890103910205,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4295978445683755,
+     "mesh_vs_disjoint": 0.13231818186857378,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4308052948730486,
+     "mesh_vs_disjoint": 0.17392753667935146,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42961445004296916,
+     "mesh_vs_disjoint": 0.11610992640550359,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.42961987552302566,
+     "mesh_vs_disjoint": 0.1288266834770112,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4302522109122702,
+     "mesh_vs_disjoint": 0.14436606370069546,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4300108569176027,
+     "mesh_vs_disjoint": 0.16084512126396638,
+     "unstable_fraction": 0.0
+    },
+    {
+     "held_out_force_rmse": 0.4303952913978641,
+     "mesh_vs_disjoint": 0.13269709604922691,
+     "unstable_fraction": 0.0
+    }
+   ]
+  }
+ },
+ "sotcd": {
+  "least-squares": {
+   "2": {
+    "held_out_force_rmse": 0.4311747861530856,
+    "mesh_vs_disjoint": 0.13429246293290786,
+    "unstable_fraction": 0.0
+   },
+   "4": {
+    "held_out_force_rmse": 0.42994176601706074,
+    "mesh_vs_disjoint": 0.10393641472581437,
+    "unstable_fraction": 0.0
+   },
+   "8": {
+    "held_out_force_rmse": 0.42955456773852707,
+    "mesh_vs_disjoint": 0.08581089725013534,
+    "unstable_fraction": 0.0
+   },
+   "16": {
+    "held_out_force_rmse": 0.4298728246269104,
+    "mesh_vs_disjoint": 0.12832280459648004,
+    "unstable_fraction": 0.0
+   }
+  },
+  "ridge": {
+   "2": {
+    "held_out_force_rmse": 0.4312853002794225,
+    "mesh_vs_disjoint": 0.13686511310094412,
+    "unstable_fraction": 0.0
+   },
+   "4": {
+    "held_out_force_rmse": 0.43001374310801666,
+    "mesh_vs_disjoint": 0.10535471553220459,
+    "unstable_fraction": 0.0
+   },
+   "8": {
+    "held_out_force_rmse": 0.42956872846297495,
+    "mesh_vs_disjoint": 0.08621947442317207,
+    "unstable_fraction": 0.0
+   },
+   "16": {
+    "held_out_force_rmse": 0.4298854070020663,
+    "mesh_vs_disjoint": 0.12860356157518243,
+    "unstable_fraction": 0.0
+   }
+  },
+  "bayesian-ridge": {
+   "2": {
+    "held_out_force_rmse": 0.4313939316433215,
+    "mesh_vs_disjoint": 0.13918746563925494,
+    "unstable_fraction": 0.0
+   },
+   "4": {
+    "held_out_force_rmse": 0.43006346162546816,
+    "mesh_vs_disjoint": 0.10631162276661113,
+    "unstable_fraction": 0.0
+   },
+   "8": {
+    "held_out_force_rmse": 0.42957759239668836,
+    "mesh_vs_disjoint": 0.0864661748224126,
+    "unstable_fraction": 0.0
+   },
+   "16": {
+    "held_out_force_rmse": 0.4298967102338724,
+    "mesh_vs_disjoint": 0.12885295831664592,
+    "unstable_fraction": 0.0
+   }
+  },
+  "ardr": {
+   "2": {
+    "held_out_force_rmse": 0.4314008995303598,
+    "mesh_vs_disjoint": 0.1393531058278907,
+    "unstable_fraction": 0.0
+   },
+   "4": {
+    "held_out_force_rmse": 0.4300755885323572,
+    "mesh_vs_disjoint": 0.10630654002069627,
+    "unstable_fraction": 0.0
+   },
+   "8": {
+    "held_out_force_rmse": 0.4295773788876445,
+    "mesh_vs_disjoint": 0.08637071668491193,
+    "unstable_fraction": 0.0
+   },
+   "16": {
+    "held_out_force_rmse": 0.4298977450519771,
+    "mesh_vs_disjoint": 0.12881285065343834,
+    "unstable_fraction": 0.0
+   }
+  },
+  "rfe": {
+   "2": {
+    "held_out_force_rmse": 0.4311747861530856,
+    "mesh_vs_disjoint": 0.13429246293290853,
+    "unstable_fraction": 0.0
+   },
+   "4": {
+    "held_out_force_rmse": 0.42994176601706074,
+    "mesh_vs_disjoint": 0.10393641472581577,
+    "unstable_fraction": 0.0
+   },
+   "8": {
+    "held_out_force_rmse": 0.42955456773852707,
+    "mesh_vs_disjoint": 0.08581089725013474,
+    "unstable_fraction": 0.0
+   },
+   "16": {
+    "held_out_force_rmse": 0.4298728246269104,
+    "mesh_vs_disjoint": 0.12832280459648024,
+    "unstable_fraction": 0.0
+   }
+  },
+  "omp": {
+   "2": {
+    "held_out_force_rmse": 0.4311747861530856,
+    "mesh_vs_disjoint": 0.1342924629329082,
+    "unstable_fraction": 0.0
+   },
+   "4": {
+    "held_out_force_rmse": 0.4299417660170608,
+    "mesh_vs_disjoint": 0.10393641472581597,
+    "unstable_fraction": 0.0
+   },
+   "8": {
+    "held_out_force_rmse": 0.42955456773852707,
+    "mesh_vs_disjoint": 0.08581089725013462,
+    "unstable_fraction": 0.0
+   },
+   "16": {
+    "held_out_force_rmse": 0.4298728246269103,
+    "mesh_vs_disjoint": 0.12832280459647843,
+    "unstable_fraction": 0.0
+   }
+  },
+  "lasso": {
+   "2": {
+    "held_out_force_rmse": 0.43142836741454077,
+    "mesh_vs_disjoint": 0.139915888951276,
+    "unstable_fraction": 0.0
+   },
+   "4": {
+    "held_out_force_rmse": 0.4299417672486767,
+    "mesh_vs_disjoint": 0.10393643853934308,
+    "unstable_fraction": 0.0
+   },
+   "8": {
+    "held_out_force_rmse": 0.4295545681769385,
+    "mesh_vs_disjoint": 0.08581090972024233,
+    "unstable_fraction": 0.0
+   },
+   "16": {
+    "held_out_force_rmse": 0.42987282570206914,
+    "mesh_vs_disjoint": 0.12832282745990253,
+    "unstable_fraction": 0.0
+   }
+  },
+  "adaptive-lasso": {
+   "2": {
+    "held_out_force_rmse": 0.4316810064819212,
+    "mesh_vs_disjoint": 0.1446456806766781,
+    "unstable_fraction": 0.0
+   },
+   "4": {
+    "held_out_force_rmse": 0.4325037606747125,
+    "mesh_vs_disjoint": 0.1408225707905253,
+    "unstable_fraction": 0.0
+   },
+   "8": {
+    "held_out_force_rmse": 0.4313814115717182,
+    "mesh_vs_disjoint": 0.11711369319779841,
+    "unstable_fraction": 0.0
+   },
+   "16": {
+    "held_out_force_rmse": 0.42987283163925794,
+    "mesh_vs_disjoint": 0.12832294896530624,
+    "unstable_fraction": 0.0
+   }
+  },
+  "elasticnet": {
+   "2": {
+    "held_out_force_rmse": 0.4315359328579396,
+    "mesh_vs_disjoint": 0.14201905582707886,
+    "unstable_fraction": 0.0
+   },
+   "4": {
+    "held_out_force_rmse": 0.42994799208357803,
+    "mesh_vs_disjoint": 0.10406017022586463,
+    "unstable_fraction": 0.0
+   },
+   "8": {
+    "held_out_force_rmse": 0.4295545680426397,
+    "mesh_vs_disjoint": 0.08581090620914936,
+    "unstable_fraction": 0.0
+   },
+   "16": {
+    "held_out_force_rmse": 0.4298807632126772,
+    "mesh_vs_disjoint": 0.12849891403170408,
+    "unstable_fraction": 0.0
+   }
+  }
+ }
+}

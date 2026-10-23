@@ -1,0 +1,1347 @@
+{
+  "material": "mgo",
+  "settings": {
+    "a": 4.26,
+    "bravais": "fcc",
+    "elements": [
+      "Mg",
+      "O"
+    ],
+    "masses": [
+      24.305,
+      15.999
+    ],
+    "T": 1500.0,
+    "cutoff": 3.2,
+    "n_iter": 4,
+    "n_ens": 3
+  },
+  "n_atoms": 64,
+  "selected_iteration": 4,
+  "fd_reference": "validation_results/mgo/fd_references/production_large/phonopy_harmonic.yaml",
+  "snapshot_files": [
+    "examples/sotc_mgo_qe_run/qe_scratch/snap_0000/espresso.pwo",
+    "examples/sotc_mgo_qe_run/qe_scratch/snap_0001/espresso.pwo",
+    "examples/sotc_mgo_qe_run/qe_scratch/snap_0002/espresso.pwo",
+    "examples/sotc_mgo_qe_run/qe_scratch/snap_0003/espresso.pwo",
+    "examples/sotc_mgo_qe_run/qe_scratch/snap_0004/espresso.pwo",
+    "examples/sotc_mgo_qe_run/qe_scratch/snap_0005/espresso.pwo",
+    "examples/sotc_mgo_qe_run/qe_scratch/snap_0006/espresso.pwo",
+    "examples/sotc_mgo_qe_run/qe_scratch/snap_0007/espresso.pwo",
+    "examples/sotc_mgo_qe_run/qe_scratch/snap_0008/espresso.pwo",
+    "examples/sotc_mgo_qe_run/qe_scratch/snap_0009/espresso.pwo",
+    "examples/sotc_mgo_qe_run/qe_scratch/snap_0010/espresso.pwo",
+    "examples/sotc_mgo_qe_run/qe_scratch/snap_0011/espresso.pwo",
+    "examples/sotc_mgo_qe_run/qe_scratch/snap_0012/espresso.pwo",
+    "examples/sotc_mgo_qe_run/qe_scratch/snap_0013/espresso.pwo",
+    "examples/sotc_mgo_qe_run/qe_scratch/snap_0014/espresso.pwo",
+    "examples/sotc_mgo_qe_run/qe_scratch/snap_0015/espresso.pwo"
+  ],
+  "reference_rms_force_by_iteration": [
+    1.9635371367230743e-06,
+    1.9635371367230743e-06,
+    1.9635371367230743e-06,
+    1.9635371367230743e-06
+  ],
+  "fd_reference_metrics": {
+    "path": {
+      "min_frequency_thz": 0.03320294081964209,
+      "unstable_fraction": 0.0
+    },
+    "mesh": {
+      "min_frequency_thz": 0.8942422824097411,
+      "unstable_fraction": 0.0
+    },
+    "thermo": {
+      "cv_j_mol_atom_k": 24.653939522090386,
+      "zpe_ev_atom": 0.06975963386113314,
+      "t_debye_spectral_k": 725.9711145485032
+    }
+  },
+  "iterations": [
+    {
+      "iteration": 1,
+      "n_displaced": 3,
+      "rms_displacement_ang": 0.14120850689365444,
+      "variants": {
+        "published_prior": {
+          "path": {
+            "min_frequency_thz": 2.3601252038268847e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 0.9595026159615806,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.615593384565308,
+            "zpe_ev_atom": 0.07499545766544918,
+            "t_debye_spectral_k": 772.6901428918208
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.2339358563963976,
+            "rmse_thz": 1.4563924632704344,
+            "max_abs_thz": 3.448056054420956
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.1345824654692511,
+            "rmse_thz": 1.2857564381331847,
+            "max_abs_thz": 3.3897728030084195
+          },
+          "diagnostics": {
+            "n_snapshots": 3,
+            "n_force_observations": 576,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 8.205389574128512e-10,
+            "condition_number": 15.352487436005866,
+            "condition_number_nonzero_subspace": 15.352487436005866,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        "central_ridge_0": {
+          "path": {
+            "min_frequency_thz": 2.8905512392290054e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 0.9591661511391183,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.61555349169646,
+            "zpe_ev_atom": 0.07499867013012551,
+            "t_debye_spectral_k": 772.737962015818
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.234329092669246,
+            "rmse_thz": 1.4572296827595137,
+            "max_abs_thz": 3.4443655291292785
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.1346714845728803,
+            "rmse_thz": 1.285994700715287,
+            "max_abs_thz": 3.386073806622157
+          }
+        },
+        "central_ridge_0.0001": {
+          "path": {
+            "min_frequency_thz": 2.8905512392290054e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 0.9591998338353067,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.615557486113783,
+            "zpe_ev_atom": 0.07499834848848974,
+            "t_debye_spectral_k": 772.7331740775164
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.2342897175984628,
+            "rmse_thz": 1.4571457360185431,
+            "max_abs_thz": 3.4447350034994493
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.1346622917103928,
+            "rmse_thz": 1.28597074780591,
+            "max_abs_thz": 3.3864441327439856
+          }
+        },
+        "central_ridge_0.01": {
+          "path": {
+            "min_frequency_thz": 2.8905512392290054e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 0.9624950033088465,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.615947384485406,
+            "zpe_ev_atom": 0.07496693313002199,
+            "t_debye_spectral_k": 772.2656867662108
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.2305099181886157,
+            "rmse_thz": 1.4490757147650635,
+            "max_abs_thz": 3.480855501879475
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.133831201539873,
+            "rmse_thz": 1.2837357310609945,
+            "max_abs_thz": 3.4226439506762887
+          }
+        },
+        "central_ridge_0.1": {
+          "path": {
+            "min_frequency_thz": 2.8905512392290054e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 0.9892625721796628,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.61906722615928,
+            "zpe_ev_atom": 0.07471386351971647,
+            "t_debye_spectral_k": 768.5155418795824
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.2025614577741663,
+            "rmse_thz": 1.3936539295269768,
+            "max_abs_thz": 3.779189850896053
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.1294715106084652,
+            "rmse_thz": 1.273322892250655,
+            "max_abs_thz": 3.715485879819374
+          }
+        },
+        "no_projection_ridge_0.001": {
+          "path": {
+            "min_frequency_thz": -2.8987515303952565,
+            "unstable_fraction": 0.035856573705179286
+          },
+          "mesh": {
+            "min_frequency_thz": -3.043429089170576,
+            "unstable_fraction": 0.005015432098765432
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.490749862095207,
+            "zpe_ev_atom": 0.07352446568094982,
+            "t_debye_spectral_k": 772.7293096754884
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.593431694030796,
+            "rmse_thz": 1.9438003320540806,
+            "max_abs_thz": 5.995921522881007
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.28067790278452,
+            "rmse_thz": 1.5792527462081378,
+            "max_abs_thz": 6.168780959031598
+          }
+        },
+        "central_cutoff_2.7": {
+          "path": {
+            "min_frequency_thz": 4.087856765252016e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 1.1649352438367104,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.594467220406294,
+            "zpe_ev_atom": 0.0770805275746116,
+            "t_debye_spectral_k": 797.5337706762359
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.8253408365699624,
+            "rmse_thz": 2.7761530261530862,
+            "max_abs_thz": 7.290587825162769
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.6158742200588183,
+            "rmse_thz": 2.193398585336043,
+            "max_abs_thz": 7.245818886331467
+          }
+        },
+        "central_cutoff_3.7": {
+          "path": {
+            "min_frequency_thz": 1.758437978332199e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 1.111792257239223,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.617371346146058,
+            "zpe_ev_atom": 0.07425588626664026,
+            "t_debye_spectral_k": 770.7599411794238
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.1234008995726674,
+            "rmse_thz": 1.337755736702631,
+            "max_abs_thz": 3.015126988992904
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 0.9619291901805986,
+            "rmse_thz": 1.1394950514970523,
+            "max_abs_thz": 2.8021293011318402
+          }
+        },
+        "space_group_symfc": {
+          "path": {
+            "min_frequency_thz": -2.7543652901170514e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 1.083022998306659,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.6052460938893,
+            "zpe_ev_atom": 0.07584304892710221,
+            "t_debye_spectral_k": 785.0140945347936
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.4562674415343524,
+            "rmse_thz": 1.7079600596045548,
+            "max_abs_thz": 4.638096777738218
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.3023931510346882,
+            "rmse_thz": 1.5169188857927207,
+            "max_abs_thz": 4.6051870252328975
+          },
+          "design": {
+            "n_parameters": 53,
+            "n_force_observations": 576,
+            "normalized_design_rank": 53,
+            "normalized_design_condition_number": 2.9161418196014326,
+            "full_rank": true,
+            "train_rmse_ev_ang": 0.7077645653447582
+          }
+        }
+      }
+    },
+    {
+      "iteration": 2,
+      "n_displaced": 3,
+      "rms_displacement_ang": 0.14113843197465187,
+      "variants": {
+        "published_prior": {
+          "path": {
+            "min_frequency_thz": 3.3377210721505454e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 0.7256882372213531,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.589579143747766,
+            "zpe_ev_atom": 0.0768775961409597,
+            "t_debye_spectral_k": 803.323605527868
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.6565687766729307,
+            "rmse_thz": 2.3148421529555367,
+            "max_abs_thz": 6.254063863017036
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.3497722471440434,
+            "rmse_thz": 1.7697549619273818,
+            "max_abs_thz": 6.193544067036058
+          },
+          "diagnostics": {
+            "n_snapshots": 3,
+            "n_force_observations": 576,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 9.4323056848081e-10,
+            "condition_number": 12.630663067560544,
+            "condition_number_nonzero_subspace": 12.630663067560544,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        "central_ridge_0": {
+          "path": {
+            "min_frequency_thz": 3.3377210721505454e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 0.7251878571489995,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.589562640743665,
+            "zpe_ev_atom": 0.0768774864508137,
+            "t_debye_spectral_k": 803.3430179627572
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.657392454709427,
+            "rmse_thz": 2.3158795319746552,
+            "max_abs_thz": 6.2574701929443375
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.3502922815129437,
+            "rmse_thz": 1.7703411912457765,
+            "max_abs_thz": 6.196910815729282
+          }
+        },
+        "central_ridge_0.0001": {
+          "path": {
+            "min_frequency_thz": 2.3601252038268847e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 0.7252379399120016,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.589564292280993,
+            "zpe_ev_atom": 0.07687749745265784,
+            "t_debye_spectral_k": 803.3410752801806
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.6573097191087913,
+            "rmse_thz": 2.3157757005289015,
+            "max_abs_thz": 6.25712935236445
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.3502402405062501,
+            "rmse_thz": 1.7702824928599064,
+            "max_abs_thz": 6.196573935106546
+          }
+        },
+        "central_ridge_0.01": {
+          "path": {
+            "min_frequency_thz": 3.3377210721505454e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 0.730147431486024,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.589726450574435,
+            "zpe_ev_atom": 0.07687855043863548,
+            "t_debye_spectral_k": 803.1503134664042
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.6492296717324917,
+            "rmse_thz": 2.3055983734802417,
+            "max_abs_thz": 6.223612649300877
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.3451659003287697,
+            "rmse_thz": 1.764553521057412,
+            "max_abs_thz": 6.163447264164471
+          }
+        },
+        "central_ridge_0.1": {
+          "path": {
+            "min_frequency_thz": 2.3601252038268847e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 0.7708262558827385,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.591093273280343,
+            "zpe_ev_atom": 0.07688480460890776,
+            "t_debye_spectral_k": 801.541179018629
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.5837676181413138,
+            "rmse_thz": 2.2215044162698088,
+            "max_abs_thz": 5.937815692719566
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.3092784412876757,
+            "rmse_thz": 1.7191779623910681,
+            "max_abs_thz": 5.881026492728722
+          }
+        },
+        "no_projection_ridge_0.001": {
+          "path": {
+            "min_frequency_thz": -2.2197740936920964,
+            "unstable_fraction": 0.03054448871181939
+          },
+          "mesh": {
+            "min_frequency_thz": -5.835923543904545,
+            "unstable_fraction": 0.030285493827160493
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 23.833813657862994,
+            "zpe_ev_atom": 0.07478104593615555,
+            "t_debye_spectral_k": 804.1269823108038
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 2.0122987596900277,
+            "rmse_thz": 2.608345531704579,
+            "max_abs_thz": 7.949040129745336
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.936101966133228,
+            "rmse_thz": 2.654468033050913,
+            "max_abs_thz": 12.964619157470148
+          }
+        },
+        "central_cutoff_2.7": {
+          "path": {
+            "min_frequency_thz": 3.3377210721505454e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 1.14807199850192,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.604352578157368,
+            "zpe_ev_atom": 0.07615468071615193,
+            "t_debye_spectral_k": 785.9889163945512
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.7585852247862441,
+            "rmse_thz": 2.66500273131102,
+            "max_abs_thz": 7.027072224201399
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.6504464372011585,
+            "rmse_thz": 2.1567277829128986,
+            "max_abs_thz": 6.9828434066631
+          }
+        },
+        "central_cutoff_3.7": {
+          "path": {
+            "min_frequency_thz": 2.1649826716659338e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 1.040150372741332,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.582783004883144,
+            "zpe_ev_atom": 0.07744531720374184,
+            "t_debye_spectral_k": 811.2086062823251
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.7708064783284045,
+            "rmse_thz": 2.4621213812303093,
+            "max_abs_thz": 6.838764722282024
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.4133319041509012,
+            "rmse_thz": 1.8055350688167877,
+            "max_abs_thz": 6.749310824369736
+          }
+        },
+        "space_group_symfc": {
+          "path": {
+            "min_frequency_thz": -4.046149732419231e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": -1.9768965430340946,
+            "unstable_fraction": 0.0015432098765432098
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.55012446299395,
+            "zpe_ev_atom": 0.07650816127176986,
+            "t_debye_spectral_k": 804.5275214574574
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.7196848429965128,
+            "rmse_thz": 2.306095979203327,
+            "max_abs_thz": 8.023186123614396
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.5387755327196146,
+            "rmse_thz": 1.873830814971322,
+            "max_abs_thz": 7.9248974073845755
+          },
+          "design": {
+            "n_parameters": 53,
+            "n_force_observations": 576,
+            "normalized_design_rank": 53,
+            "normalized_design_condition_number": 2.133157967876611,
+            "full_rank": true,
+            "train_rmse_ev_ang": 0.8935089591358181
+          }
+        }
+      }
+    },
+    {
+      "iteration": 3,
+      "n_displaced": 3,
+      "rms_displacement_ang": 0.1411987299058531,
+      "variants": {
+        "published_prior": {
+          "path": {
+            "min_frequency_thz": 2.8905512392290054e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 0.9586211581206113,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.57222992044605,
+            "zpe_ev_atom": 0.07934272037933399,
+            "t_debye_spectral_k": 822.8301492901809
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.8348754746405835,
+            "rmse_thz": 2.2525920407345494,
+            "max_abs_thz": 4.56032849787046
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.7041442217213234,
+            "rmse_thz": 2.0061747350874333,
+            "max_abs_thz": 4.523692888736431
+          },
+          "diagnostics": {
+            "n_snapshots": 3,
+            "n_force_observations": 576,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 9.355930799636418e-10,
+            "condition_number": 11.878294199606655,
+            "condition_number_nonzero_subspace": 11.878294199606655,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          }
+        },
+        "central_ridge_0": {
+          "path": {
+            "min_frequency_thz": 3.3377210721505454e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 0.9583004502467789,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.572221692380747,
+            "zpe_ev_atom": 0.07934207876732154,
+            "t_debye_spectral_k": 822.8397559650457
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.834912823654497,
+            "rmse_thz": 2.2530678312413936,
+            "max_abs_thz": 4.562565918299068
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.703967903686733,
+            "rmse_thz": 2.0063834428032172,
+            "max_abs_thz": 4.525896327940782
+          }
+        },
+        "central_ridge_0.0001": {
+          "path": {
+            "min_frequency_thz": 2.8905512392290054e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 0.9583325446704064,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.5722225150172,
+            "zpe_ev_atom": 0.07934214307796215,
+            "t_debye_spectral_k": 822.8387954626985
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.8349090986019774,
+            "rmse_thz": 2.2530202046540206,
+            "max_abs_thz": 4.562342055122839
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.7039855587415365,
+            "rmse_thz": 2.006362539252607,
+            "max_abs_thz": 4.525675864471742
+          }
+        },
+        "central_ridge_0.01": {
+          "path": {
+            "min_frequency_thz": 3.3377210721505454e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 0.961484106791539,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.57230414018762,
+            "zpe_ev_atom": 0.07934834707503051,
+            "t_debye_spectral_k": 822.7435270724349
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.8345698490340787,
+            "rmse_thz": 2.2483569539289614,
+            "max_abs_thz": 4.540311859732043
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.705708061065252,
+            "rmse_thz": 2.00432872970893,
+            "max_abs_thz": 4.503980507790816
+          }
+        },
+        "central_ridge_0.1": {
+          "path": {
+            "min_frequency_thz": 2.3601252038268847e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 0.9879887661707956,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.57306025813796,
+            "zpe_ev_atom": 0.07939144389328158,
+            "t_debye_spectral_k": 821.8639374326841
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.833598841792784,
+            "rmse_thz": 2.2101838374240366,
+            "max_abs_thz": 4.3511431656500825
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.7214250894689729,
+            "rmse_thz": 1.9887022933855483,
+            "max_abs_thz": 4.317708628805056
+          }
+        },
+        "no_projection_ridge_0.001": {
+          "path": {
+            "min_frequency_thz": -3.966745190444325,
+            "unstable_fraction": 0.05245683930942895
+          },
+          "mesh": {
+            "min_frequency_thz": -7.492259842157727,
+            "unstable_fraction": 0.03279320987654321
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 23.753773078698647,
+            "zpe_ev_atom": 0.07633845016062915,
+            "t_debye_spectral_k": 824.0530535802268
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 2.2352484436129134,
+            "rmse_thz": 2.7551463438603108,
+            "max_abs_thz": 8.005252249938424
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 2.2788460930854098,
+            "rmse_thz": 3.001741357415225,
+            "max_abs_thz": 15.19796247617411
+          }
+        },
+        "central_cutoff_2.7": {
+          "path": {
+            "min_frequency_thz": 3.3377210721505454e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 1.1787224083612085,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.586219182631528,
+            "zpe_ev_atom": 0.07810978226984251,
+            "t_debye_spectral_k": 806.9726895932652
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.928504716757751,
+            "rmse_thz": 2.876573995500601,
+            "max_abs_thz": 7.506034666686999
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.7423747431379284,
+            "rmse_thz": 2.3170842886921044,
+            "max_abs_thz": 7.460824131888739
+          }
+        },
+        "central_cutoff_3.7": {
+          "path": {
+            "min_frequency_thz": 2.8905512392290054e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 1.2134753411350827,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.567735602815244,
+            "zpe_ev_atom": 0.07987655145485588,
+            "t_debye_spectral_k": 827.8570886202384
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.8872903393810156,
+            "rmse_thz": 2.268856789975514,
+            "max_abs_thz": 4.005879521207429
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.759852578221116,
+            "rmse_thz": 2.0711984282720652,
+            "max_abs_thz": 3.9658394346915777
+          }
+        },
+        "space_group_symfc": {
+          "path": {
+            "min_frequency_thz": -4.4035410657368294e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 0.4039113341201534,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.568880625994318,
+            "zpe_ev_atom": 0.07872993749598216,
+            "t_debye_spectral_k": 826.8989646246383
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.9009789032816962,
+            "rmse_thz": 2.4306865175135726,
+            "max_abs_thz": 8.26590089868286
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.7016426742298971,
+            "rmse_thz": 2.1102401080426163,
+            "max_abs_thz": 7.606840367306688
+          },
+          "design": {
+            "n_parameters": 53,
+            "n_force_observations": 576,
+            "normalized_design_rank": 53,
+            "normalized_design_condition_number": 2.6473159685583703,
+            "full_rank": true,
+            "train_rmse_ev_ang": 1.0758730739581415
+          }
+        }
+      }
+    },
+    {
+      "iteration": 4,
+      "n_displaced": 3,
+      "rms_displacement_ang": 0.1411190078292337,
+      "variants": {
+        "published_prior": {
+          "path": {
+            "min_frequency_thz": 2.3601252038268847e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 0.8783599513087648,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.61436335210657,
+            "zpe_ev_atom": 0.07471746609766203,
+            "t_debye_spectral_k": 774.2145100397889
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.238235974790106,
+            "rmse_thz": 1.567052923754195,
+            "max_abs_thz": 3.4253060799768207
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.1190401140448307,
+            "rmse_thz": 1.381616634142987,
+            "max_abs_thz": 3.379176551745939
+          },
+          "diagnostics": {
+            "n_snapshots": 3,
+            "n_force_observations": 576,
+            "raw_parameter_count": 162,
+            "projected_parameter_count": 6,
+            "data_rank": 162,
+            "rank": 162,
+            "rank_deficiency": 0,
+            "rank_tolerance": 9.37927041444091e-10,
+            "condition_number": 12.130642924917217,
+            "condition_number_nonzero_subspace": 12.130642924917217,
+            "ridge_alpha": 0.001,
+            "ridge_solver_rank": 162,
+            "symmetrize_bonds": true,
+            "acoustic_sum_rule": "post-fit on-site construction",
+            "ridge_creates_information": false
+          },
+          "reproduces_archive_rms_thz": 0.3700644180542581
+        },
+        "central_ridge_0": {
+          "path": {
+            "min_frequency_thz": 2.3601252038268847e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 0.8780408384253627,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.614346665256697,
+            "zpe_ev_atom": 0.0747179593125256,
+            "t_debye_spectral_k": 774.2346672161053
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.238772901099178,
+            "rmse_thz": 1.5675018724111325,
+            "max_abs_thz": 3.4232683546936826
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.1192001058754844,
+            "rmse_thz": 1.3817950799476124,
+            "max_abs_thz": 3.377151128940355
+          }
+        },
+        "central_ridge_0.0001": {
+          "path": {
+            "min_frequency_thz": 2.3601252038268847e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 0.878072779823616,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.614348334673696,
+            "zpe_ev_atom": 0.0747179100487937,
+            "t_debye_spectral_k": 774.2326506185161
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.238719173199338,
+            "rmse_thz": 1.5674569367851627,
+            "max_abs_thz": 3.4234722597706835
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.1191839240846775,
+            "rmse_thz": 1.3817771911638705,
+            "max_abs_thz": 3.3773538027767067
+          }
+        },
+        "central_ridge_0.01": {
+          "path": {
+            "min_frequency_thz": 3.73168560363105e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 0.8812022446710986,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.614512807353986,
+            "zpe_ev_atom": 0.07471297053806189,
+            "t_debye_spectral_k": 774.0339685629122
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.2335113112503173,
+            "rmse_thz": 1.5630704673470943,
+            "max_abs_thz": 3.4435144645231546
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.1177871115117362,
+            "rmse_thz": 1.380054199881048,
+            "max_abs_thz": 3.3972751913618495
+          }
+        },
+        "central_ridge_0.1": {
+          "path": {
+            "min_frequency_thz": 2.8905512392290054e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 0.9070199951452543,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.61594068194241,
+            "zpe_ev_atom": 0.07466336027156065,
+            "t_debye_spectral_k": 772.3086144886685
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.2117632441358515,
+            "rmse_thz": 1.528297056759513,
+            "max_abs_thz": 3.6138610480138915
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.1208161133563272,
+            "rmse_thz": 1.3681728053296442,
+            "max_abs_thz": 3.5666083215773554
+          }
+        },
+        "no_projection_ridge_0.001": {
+          "path": {
+            "min_frequency_thz": -2.6295898280608565,
+            "unstable_fraction": 0.043824701195219126
+          },
+          "mesh": {
+            "min_frequency_thz": -3.147605198340758,
+            "unstable_fraction": 0.008680555555555556
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.397975431377304,
+            "zpe_ev_atom": 0.07362772566543453,
+            "t_debye_spectral_k": 774.2980042827039
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.5064158653414594,
+            "rmse_thz": 1.9320064441830773,
+            "max_abs_thz": 6.902120401049355
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.3074409162052418,
+            "rmse_thz": 1.6164281028022318,
+            "max_abs_thz": 8.863519941821746
+          }
+        },
+        "central_cutoff_2.7": {
+          "path": {
+            "min_frequency_thz": 3.3377210721505454e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 1.0933746090796483,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.635588927273,
+            "zpe_ev_atom": 0.07260320104302732,
+            "t_debye_spectral_k": 748.5421866618266
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.6408673188956688,
+            "rmse_thz": 2.369576310842997,
+            "max_abs_thz": 6.1723366642029145
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.565276418086904,
+            "rmse_thz": 1.9780590089923689,
+            "max_abs_thz": 6.129859776623039
+          }
+        },
+        "central_cutoff_3.7": {
+          "path": {
+            "min_frequency_thz": -1.8122243185775877e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 1.1300690957314217,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.617129124776223,
+            "zpe_ev_atom": 0.07444091761496668,
+            "t_debye_spectral_k": 770.9520644967181
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.1737342333307679,
+            "rmse_thz": 1.4290676428169584,
+            "max_abs_thz": 2.9778095128700546
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.0261778069443244,
+            "rmse_thz": 1.2209259263233236,
+            "max_abs_thz": 2.7996084354891586
+          }
+        },
+        "space_group_symfc": {
+          "path": {
+            "min_frequency_thz": -2.7678653992353593e-07,
+            "unstable_fraction": 0.0
+          },
+          "mesh": {
+            "min_frequency_thz": 0.5166762502036681,
+            "unstable_fraction": 0.0
+          },
+          "thermo": {
+            "cv_j_mol_atom_k": 24.62521110492329,
+            "zpe_ev_atom": 0.07326571253079645,
+            "t_debye_spectral_k": 761.2711861856616
+          },
+          "dispersion_vs_fd": {
+            "mae_thz": 1.1962967397510236,
+            "rmse_thz": 1.4713840232013669,
+            "max_abs_thz": 3.632983366041728
+          },
+          "mesh_vs_fd": {
+            "mae_thz": 1.059389057298749,
+            "rmse_thz": 1.288660210630675,
+            "max_abs_thz": 3.796117597754213
+          },
+          "design": {
+            "n_parameters": 53,
+            "n_force_observations": 576,
+            "normalized_design_rank": 53,
+            "normalized_design_condition_number": 2.235132374957552,
+            "full_rank": true,
+            "train_rmse_ev_ang": 0.6620087812015897
+          }
+        }
+      }
+    }
+  ],
+  "pooled": {
+    "n_displaced": 12,
+    "variants": {
+      "published_prior": {
+        "path": {
+          "min_frequency_thz": 2.8905512392290054e-07,
+          "unstable_fraction": 0.0
+        },
+        "mesh": {
+          "min_frequency_thz": 0.8624972447559746,
+          "unstable_fraction": 0.0
+        },
+        "thermo": {
+          "cv_j_mol_atom_k": 24.599837547986,
+          "zpe_ev_atom": 0.076236542717804,
+          "t_debye_spectral_k": 791.3413789616288
+        },
+        "dispersion_vs_fd": {
+          "mae_thz": 1.4336756816029244,
+          "rmse_thz": 1.834228613494603,
+          "max_abs_thz": 4.253964841132685
+        },
+        "mesh_vs_fd": {
+          "mae_thz": 1.26082077713984,
+          "rmse_thz": 1.5299963023962189,
+          "max_abs_thz": 4.2114213962048535
+        },
+        "diagnostics": {
+          "n_snapshots": 12,
+          "n_force_observations": 2304,
+          "raw_parameter_count": 162,
+          "projected_parameter_count": 6,
+          "data_rank": 162,
+          "rank": 162,
+          "rank_deficiency": 0,
+          "rank_tolerance": 1.6721425500479332e-09,
+          "condition_number": 7.336325091497798,
+          "condition_number_nonzero_subspace": 7.336325091497798,
+          "ridge_alpha": 0.001,
+          "ridge_solver_rank": 162,
+          "symmetrize_bonds": true,
+          "acoustic_sum_rule": "post-fit on-site construction",
+          "ridge_creates_information": false
+        }
+      },
+      "central_ridge_0": {
+        "path": {
+          "min_frequency_thz": 2.8905512392290054e-07,
+          "unstable_fraction": 0.0
+        },
+        "mesh": {
+          "min_frequency_thz": 0.8624222235142451,
+          "unstable_fraction": 0.0
+        },
+        "thermo": {
+          "cv_j_mol_atom_k": 24.59983488911606,
+          "zpe_ev_atom": 0.07623652414089001,
+          "t_debye_spectral_k": 791.3445506763154
+        },
+        "dispersion_vs_fd": {
+          "mae_thz": 1.4337555064124274,
+          "rmse_thz": 1.834355342954106,
+          "max_abs_thz": 4.25450326016167
+        },
+        "mesh_vs_fd": {
+          "mae_thz": 1.260831428416612,
+          "rmse_thz": 1.530048741007529,
+          "max_abs_thz": 4.211952072628826
+        }
+      },
+      "central_ridge_0.0001": {
+        "path": {
+          "min_frequency_thz": 2.8905512392290054e-07,
+          "unstable_fraction": 0.0
+        },
+        "mesh": {
+          "min_frequency_thz": 0.8624297267571772,
+          "unstable_fraction": 0.0
+        },
+        "thermo": {
+          "cv_j_mol_atom_k": 24.599835155019022,
+          "zpe_ev_atom": 0.0762365260018161,
+          "t_debye_spectral_k": 791.3442334856408
+        },
+        "dispersion_vs_fd": {
+          "mae_thz": 1.4337475230944547,
+          "rmse_thz": 1.8343426673968175,
+          "max_abs_thz": 4.254449412605409
+        },
+        "mesh_vs_fd": {
+          "mae_thz": 1.2608303633977838,
+          "rmse_thz": 1.5300434951904767,
+          "max_abs_thz": 4.211898999399246
+        }
+      },
+      "central_ridge_0.01": {
+        "path": {
+          "min_frequency_thz": 1.6688605360752727e-07,
+          "unstable_fraction": 0.0
+        },
+        "mesh": {
+          "min_frequency_thz": 0.8631713190001685,
+          "unstable_fraction": 0.0
+        },
+        "thermo": {
+          "cv_j_mol_atom_k": 24.599861461872266,
+          "zpe_ev_atom": 0.07623670668135828,
+          "t_debye_spectral_k": 791.3128527072186
+        },
+        "dispersion_vs_fd": {
+          "mae_thz": 1.4329649824264867,
+          "rmse_thz": 1.8330906534919258,
+          "max_abs_thz": 4.249124715491449
+        },
+        "mesh_vs_fd": {
+          "mae_thz": 1.2607277163316055,
+          "rmse_thz": 1.5295263067913645,
+          "max_abs_thz": 4.206650887905656
+        }
+      },
+      "central_ridge_0.1": {
+        "path": {
+          "min_frequency_thz": 2.8905512392290054e-07,
+          "unstable_fraction": 0.0
+        },
+        "mesh": {
+          "min_frequency_thz": 0.8698034694714528,
+          "unstable_fraction": 0.0
+        },
+        "thermo": {
+          "cv_j_mol_atom_k": 24.60009904522549,
+          "zpe_ev_atom": 0.07623803259006222,
+          "t_debye_spectral_k": 791.0294610643818
+        },
+        "dispersion_vs_fd": {
+          "mae_thz": 1.4260878628996565,
+          "rmse_thz": 1.8219646207660216,
+          "max_abs_thz": 4.201274754930381
+        },
+        "mesh_vs_fd": {
+          "mae_thz": 1.260128438028344,
+          "rmse_thz": 1.5250141124047776,
+          "max_abs_thz": 4.1594906313745845
+        }
+      },
+      "no_projection_ridge_0.001": {
+        "path": {
+          "min_frequency_thz": -1.314063884118107,
+          "unstable_fraction": 0.016600265604249667
+        },
+        "mesh": {
+          "min_frequency_thz": -1.5483346375976377,
+          "unstable_fraction": 0.0007716049382716049
+        },
+        "thermo": {
+          "cv_j_mol_atom_k": 24.58067115952603,
+          "zpe_ev_atom": 0.0758797144995205,
+          "t_debye_spectral_k": 791.3432307914447
+        },
+        "dispersion_vs_fd": {
+          "mae_thz": 1.4234970445368924,
+          "rmse_thz": 1.809302914969069,
+          "max_abs_thz": 5.152472617062491
+        },
+        "mesh_vs_fd": {
+          "mae_thz": 1.2861052976962948,
+          "rmse_thz": 1.5629172737356403,
+          "max_abs_thz": 4.771953393372494
+        }
+      },
+      "central_cutoff_2.7": {
+        "path": {
+          "min_frequency_thz": 4.087856765252016e-07,
+          "unstable_fraction": 0.0
+        },
+        "mesh": {
+          "min_frequency_thz": 1.1401070209655875,
+          "unstable_fraction": 0.0
+        },
+        "thermo": {
+          "cv_j_mol_atom_k": 24.609005292799274,
+          "zpe_ev_atom": 0.07557754059764345,
+          "t_debye_spectral_k": 780.5359621625305
+        },
+        "dispersion_vs_fd": {
+          "mae_thz": 1.6988759878175046,
+          "rmse_thz": 2.606509793763931,
+          "max_abs_thz": 6.902606511910397
+        },
+        "mesh_vs_fd": {
+          "mae_thz": 1.579849275445872,
+          "rmse_thz": 2.088229269805298,
+          "max_abs_thz": 6.858632808609016
+        }
+      },
+      "central_cutoff_3.7": {
+        "path": {
+          "min_frequency_thz": 3.3377210721505454e-07,
+          "unstable_fraction": 0.0
+        },
+        "mesh": {
+          "min_frequency_thz": 1.0841524814476577,
+          "unstable_fraction": 0.0
+        },
+        "thermo": {
+          "cv_j_mol_atom_k": 24.601739774593096,
+          "zpe_ev_atom": 0.07589785635303174,
+          "t_debye_spectral_k": 789.1980773238649
+        },
+        "dispersion_vs_fd": {
+          "mae_thz": 1.409786031995436,
+          "rmse_thz": 1.7775824087143015,
+          "max_abs_thz": 4.281619953917222
+        },
+        "mesh_vs_fd": {
+          "mae_thz": 1.175098749773257,
+          "rmse_thz": 1.4170041024385867,
+          "max_abs_thz": 4.219541673515378
+        }
+      },
+      "space_group_symfc": {
+        "path": {
+          "min_frequency_thz": -3.4645110469179004e-07,
+          "unstable_fraction": 0.0
+        },
+        "mesh": {
+          "min_frequency_thz": 0.8186452813415754,
+          "unstable_fraction": 0.0
+        },
+        "thermo": {
+          "cv_j_mol_atom_k": 24.597449454704268,
+          "zpe_ev_atom": 0.07640641773974678,
+          "t_debye_spectral_k": 794.1437290336446
+        },
+        "dispersion_vs_fd": {
+          "mae_thz": 1.4735466580705154,
+          "rmse_thz": 1.8976303091156634,
+          "max_abs_thz": 5.168933422451806
+        },
+        "mesh_vs_fd": {
+          "mae_thz": 1.2940220748941091,
+          "rmse_thz": 1.5706055028864339,
+          "max_abs_thz": 4.552028550994432
+        },
+        "design": {
+          "n_parameters": 53,
+          "n_force_observations": 2304,
+          "normalized_design_rank": 53,
+          "normalized_design_condition_number": 1.7612725137972718,
+          "full_rank": true,
+          "train_rmse_ev_ang": 0.8978634776984314
+        }
+      }
+    }
+  }
+}

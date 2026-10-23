@@ -135,3 +135,31 @@ core.*
 !validation_results/nacl/production_sotc_nac/production_sotc_nac_bands.npz
 !validation_results/mgo/production_sotc_nac/production_sotc_nac_bands.npz
 !validation_results/pbte/production_sotc_nac/production_sotc_nac_bands.npz
+
+# JAP manuscript: sources, tables, figures and compiled PDFs
+!manuscript/jap/
+manuscript/jap/*
+!manuscript/jap/sotc_jap.tex
+!manuscript/jap/sotc_jap.pdf
+!manuscript/jap/sotc_jap_supplementary.tex
+!manuscript/jap/sotc_jap_supplementary.pdf
+!manuscript/jap/cover_letter_jap.tex
+!manuscript/jap/cover_letter_jap.pdf
+!manuscript/jap/refs_jap.bib
+!manuscript/jap/tables/
+!manuscript/jap/figures/
+manuscript/jap/figures/*
+!manuscript/jap/figures/*.pdf
+
+# SSCHA scratch dynamical matrices written to the working directory
+dyn_pop*
+
+# Per-material run directories live on scratch (symlinked); compact copies
+# of every result used in the paper are in validation_results/summaries/
+validation_results/*.log
+validation_results/*/fd_references
+validation_results/*/primary_audit
+validation_results/*/primary_cell
+validation_results/*/robustness
+validation_results/si/real_ifc34
+validation_results/mg/real_ifc34

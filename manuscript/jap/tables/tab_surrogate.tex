@@ -1,0 +1,18 @@
+\begin{table*}[t]
+\caption{Surrogate design study (Al 300~K, W 1500~K, NaCl 700~K; DFT-fitted FC2+FC3+FC4 surrogates in $3\times3\times3$ cells). Median mesh RMSE (THz) against the surrogate effective FC2 over 30 repetitions, at 2/4/8/16 force calls.}
+\label{tab:surrogate}
+\begin{ruledtabular}
+\begin{tabular}{lccc}
+Design & Al & W & NaCl\\
+\hline
+Canonical & 0.199/0.123/0.088/0.064 & 0.091/0.068/0.048/0.033 & 0.224/0.185/0.116/0.089\\
+Canonical $\pm$ & 0.066/0.054/0.038/0.032 & 0.035/0.027/0.021/0.018 & 0.176/0.127/0.078/0.078\\
+Exact ampl., random signs & 0.066/0.050/0.038/0.025 & 0.035/0.028/0.017/0.016 & 0.166/0.131/0.093/0.063\\
+SOTC-D & 0.063/0.056/0.040/0.025 & 0.039/0.024/0.021/0.015 & 0.150/0.131/0.090/0.062\\
+Stratified ampl. + D-opt. & 0.073/0.046/0.038/0.028 & 0.035/0.031/0.020/0.015 & 0.151/0.134/0.088/0.089\\
+Gaussian ampl. + D-opt. & 0.074/0.053/0.046/0.030 & 0.048/0.032/0.024/0.019 & 0.184/0.124/0.114/0.077\\
+\hline
+Harmonic vs effective & 0.229 & 0.149 & 0.765\\
+\end{tabular}
+\end{ruledtabular}
+\end{table*}

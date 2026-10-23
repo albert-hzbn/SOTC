@@ -1,0 +1,76 @@
+{
+ "material": "mg",
+ "temperature_k": 600.0,
+ "supercell_atoms": 64,
+ "large_supercell_atoms": 150,
+ "min_frequency_thz": {
+  "fd_large": 0.5417450274458072,
+  "fd_same_cell": 0.5480209200045241,
+  "effective_iter0": 0.5338280170652232,
+  "effective_iter1": 0.5274089351395989,
+  "sotcd_8": 0.5304080937101545,
+  "sotcd1_8": 0.5188586806508778,
+  "boot_8": 0.5275644609598626
+ },
+ "mesh_rmse_thz": {
+  "fd_same_cell_vs_fd_large": 0.05204390093183469,
+  "effective_iter0_vs_fd_same_cell": 0.25820955821553865,
+  "effective_iter0_vs_fd_large": 0.2781886353058952,
+  "effective_iter1_vs_effective_iter0": 0.0292124751975277,
+  "effective_iter1_vs_fd_large": 0.2534111888307592,
+  "sotcd_8_vs_effective_iter0": 0.034848237915287905,
+  "sotcd1_8_vs_effective_iter1": 0.02744805374333177,
+  "boot_8_vs_effective_iter1": 0.020767964836926625
+ },
+ "thermo": {
+  "fd_large": {
+   "cv_j_mol_atom_k": 24.598842042999383,
+   "s_j_mol_atom_k": 49.392925183844895,
+   "fvib_kj_mol_atom": -14.461561770464485,
+   "zpe_mev_atom": 30.63062496194279,
+   "t_debye_spectral_k": 317.00243630237804
+  },
+  "fd_same_cell": {
+   "cv_j_mol_atom_k": 24.59722382079438,
+   "s_j_mol_atom_k": 49.39947851726454,
+   "fvib_kj_mol_atom": -14.46449694510034,
+   "zpe_mev_atom": 30.666497952094787,
+   "t_debye_spectral_k": 317.7678513651537
+  },
+  "effective_iter0": {
+   "cv_j_mol_atom_k": 24.564189769586125,
+   "s_j_mol_atom_k": 48.41512720288225,
+   "fvib_kj_mol_atom": -13.853747551508592,
+   "zpe_mev_atom": 32.032211261915876,
+   "t_debye_spectral_k": 332.77941232051364
+  },
+  "effective_iter1": {
+   "cv_j_mol_atom_k": 24.568025206450702,
+   "s_j_mol_atom_k": 48.55191565303113,
+   "fvib_kj_mol_atom": -13.93815687097158,
+   "zpe_mev_atom": 31.863012679689223,
+   "t_debye_spectral_k": 331.07355151195384
+  },
+  "sotcd_8": {
+   "cv_j_mol_atom_k": 24.56136333412648,
+   "s_j_mol_atom_k": 48.37113802931486,
+   "fvib_kj_mol_atom": -13.82562384868646,
+   "zpe_mev_atom": 32.12711865145208,
+   "t_debye_spectral_k": 334.040216590832
+  },
+  "sotcd1_8": {
+   "cv_j_mol_atom_k": 24.569131895795614,
+   "s_j_mol_atom_k": 48.59712787021147,
+   "fvib_kj_mol_atom": -13.965956093367305,
+   "zpe_mev_atom": 31.80982687840709,
+   "t_debye_spectral_k": 330.582134541643
+  },
+  "boot_8": {
+   "cv_j_mol_atom_k": 24.56745958537408,
+   "s_j_mol_atom_k": 48.52087088638515,
+   "fvib_kj_mol_atom": -13.919187618547529,
+   "zpe_mev_atom": 31.894190492247226,
+   "t_debye_spectral_k": 331.32332849984266
+  }
+ }
+}

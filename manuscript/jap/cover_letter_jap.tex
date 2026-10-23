@@ -1,0 +1,60 @@
+\documentclass[11pt]{letter}
+\usepackage[margin=1in]{geometry}
+\signature{Albert Linda\\Department of Materials Science and Engineering\\
+Indian Institute of Technology Kanpur, Kanpur 208016, India\\
+albert.hzbn@gmail.com}
+\address{}
+\begin{document}
+\begin{letter}{Editor\\Journal of Applied Physics}
+\opening{Dear Editor,}
+
+I submit the manuscript ``Special optimal thermal cells: D-optimal thermal
+displacements for finite-temperature effective-harmonic phonons'' for
+consideration as a regular article in the Journal of Applied Physics.
+
+Finite-temperature phonons underlie applied predictions of phase stability,
+vibrational thermodynamics, and thermal transport, and the number of
+first-principles force calculations is the main cost of obtaining them. The
+manuscript asks whether designed, rather than randomly sampled, supercell
+displacements can reduce that cost, and answers it with fully matched
+controls. For eleven crystals of five structure classes (fcc Al, Ag, Au, Cu;
+bcc Mo, W; rocksalt NaCl, MgO, PbTe; diamond Si; hcp Mg) the designs are
+compared with converged large-cell references, with effective force
+constants fitted to canonical ensembles in the same cell, and, at identical
+numbers of force calls, cells, electronic settings, and fits, with the
+established alternatives (SSCHA on DFT-fitted anharmonic model potentials): canonical sampling with TDEP-type least-squares
+fitting, its iterated form sTDEP, SSCHA,
+special displacements, and thermal rattle with hiPhive regression.
+
+The principal results are:
+\begin{itemize}
+\item a D-optimal antithetic design (SOTC-D) with an estimator theory: the
+effective force constants are the Gaussian-averaged Hessian, SOTC-D estimates
+them with an $O(1/M)$ bias at fourth order, and inversion pairs cancel cubic
+forces exactly;
+\item with the same trial, SOTC-D has the lowest dispersion error of five
+designs in 10 of 11 crystals at two and at eight force calls; its
+bootstrapped form beats one-shot canonical sampling in all
+eleven crystals at every budget from 4 to 16 calls and two-iteration sTDEP
+with DFT forces in all eleven at eight calls, and on anharmonic
+model potentials of five crystals its fully self-consistent form reaches a
+given accuracy with a factor of 2--16 fewer force calls than SSCHA in 13 of
+14 cases;
+\item regression method (nine least-squares, sparse, and Bayesian fits)
+matters little, whereas a crystal-symmetry basis reduces the parameter count
+of the cubic crystals by up to a factor of 30 at no loss of accuracy;
+\item a quantitative separation of sampling error from finite-temperature
+renormalization (up to 1.4~THz) and supercell truncation (up to 0.5~THz),
+room-temperature Debye--Waller factors of Al, Cu, and Au within 6\% of
+tabulated values,
+and non-analytic LO--TO corrections for the polar crystals.
+\end{itemize}
+All inputs, outputs, and analysis scripts are openly available.
+
+The manuscript is not under consideration elsewhere. Suitable reviewers
+include experts in first-principles anharmonic lattice dynamics and
+force-constant fitting methods.
+
+\closing{Sincerely,}
+\end{letter}
+\end{document}
