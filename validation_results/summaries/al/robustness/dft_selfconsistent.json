@@ -1,0 +1,488 @@
+{
+ "material": "al",
+ "reference": "N256_s1",
+ "reference_force_calls": 256,
+ "projection_effect_thz": 0.22624359651625914,
+ "harmonic_vs_reference_thz": 0.24243345104190708,
+ "sscha": {
+  "N16_s0": [
+   {
+    "force_calls": 16,
+    "converged": true,
+    "mesh_rmse_thz": 0.1862417018933276
+   }
+  ],
+  "N256_s1": [
+   {
+    "force_calls": 256,
+    "converged": true,
+    "mesh_rmse_thz": 0.0
+   }
+  ],
+  "N32_s0": [
+   {
+    "force_calls": 32,
+    "converged": true,
+    "mesh_rmse_thz": 0.1611937376395223
+   }
+  ],
+  "N64_s0": [
+   {
+    "force_calls": 64,
+    "converged": true,
+    "mesh_rmse_thz": 0.09140145083071044
+   }
+  ]
+ },
+ "sotcd_sc": {
+  "s0": [
+   {
+    "force_calls": 2,
+    "mesh_rmse_thz": 0.17882401525198766
+   },
+   {
+    "force_calls": 4,
+    "mesh_rmse_thz": 0.13693815460695463
+   },
+   {
+    "force_calls": 6,
+    "mesh_rmse_thz": 0.13044896428136732
+   },
+   {
+    "force_calls": 8,
+    "mesh_rmse_thz": 0.1259383846293168
+   },
+   {
+    "force_calls": 10,
+    "mesh_rmse_thz": 0.1231313853760328
+   },
+   {
+    "force_calls": 12,
+    "mesh_rmse_thz": 0.11889122527617638
+   },
+   {
+    "force_calls": 14,
+    "mesh_rmse_thz": 0.12060890678206812
+   },
+   {
+    "force_calls": 16,
+    "mesh_rmse_thz": 0.1176568529042137
+   },
+   {
+    "force_calls": 18,
+    "mesh_rmse_thz": 0.11243048349419858
+   },
+   {
+    "force_calls": 20,
+    "mesh_rmse_thz": 0.1263482675915807
+   },
+   {
+    "force_calls": 22,
+    "mesh_rmse_thz": 0.11841179364018063
+   },
+   {
+    "force_calls": 24,
+    "mesh_rmse_thz": 0.11714969611496469
+   },
+   {
+    "force_calls": 26,
+    "mesh_rmse_thz": 0.1166129827254297
+   },
+   {
+    "force_calls": 28,
+    "mesh_rmse_thz": 0.11374659166141017
+   },
+   {
+    "force_calls": 30,
+    "mesh_rmse_thz": 0.1161795630288847
+   },
+   {
+    "force_calls": 32,
+    "mesh_rmse_thz": 0.1129503553308577
+   }
+  ],
+  "s1": [
+   {
+    "force_calls": 2,
+    "mesh_rmse_thz": 0.14467596746575753
+   },
+   {
+    "force_calls": 4,
+    "mesh_rmse_thz": 0.10421606530014887
+   },
+   {
+    "force_calls": 6,
+    "mesh_rmse_thz": 0.09078326552619947
+   },
+   {
+    "force_calls": 8,
+    "mesh_rmse_thz": 0.1058081089470206
+   },
+   {
+    "force_calls": 10,
+    "mesh_rmse_thz": 0.10506534402501733
+   },
+   {
+    "force_calls": 12,
+    "mesh_rmse_thz": 0.09873586739587896
+   },
+   {
+    "force_calls": 14,
+    "mesh_rmse_thz": 0.10141775354262111
+   },
+   {
+    "force_calls": 16,
+    "mesh_rmse_thz": 0.10117633804311112
+   },
+   {
+    "force_calls": 18,
+    "mesh_rmse_thz": 0.1014008923330468
+   },
+   {
+    "force_calls": 20,
+    "mesh_rmse_thz": 0.09803938240805825
+   },
+   {
+    "force_calls": 22,
+    "mesh_rmse_thz": 0.09912593538385024
+   },
+   {
+    "force_calls": 24,
+    "mesh_rmse_thz": 0.10161530606747711
+   },
+   {
+    "force_calls": 26,
+    "mesh_rmse_thz": 0.0982805276860623
+   },
+   {
+    "force_calls": 28,
+    "mesh_rmse_thz": 0.10011187677535963
+   },
+   {
+    "force_calls": 30,
+    "mesh_rmse_thz": 0.09870417481224375
+   },
+   {
+    "force_calls": 32,
+    "mesh_rmse_thz": 0.100719064092474
+   }
+  ],
+  "s2": [
+   {
+    "force_calls": 2,
+    "mesh_rmse_thz": 0.16416510037195728
+   },
+   {
+    "force_calls": 4,
+    "mesh_rmse_thz": 0.12243318020712869
+   },
+   {
+    "force_calls": 6,
+    "mesh_rmse_thz": 0.12282860162507846
+   },
+   {
+    "force_calls": 8,
+    "mesh_rmse_thz": 0.11614722272158637
+   },
+   {
+    "force_calls": 10,
+    "mesh_rmse_thz": 0.11211471977546018
+   },
+   {
+    "force_calls": 12,
+    "mesh_rmse_thz": 0.10740222882017054
+   },
+   {
+    "force_calls": 14,
+    "mesh_rmse_thz": 0.11248583350420693
+   },
+   {
+    "force_calls": 16,
+    "mesh_rmse_thz": 0.10858696473943744
+   },
+   {
+    "force_calls": 18,
+    "mesh_rmse_thz": 0.11105286418124319
+   },
+   {
+    "force_calls": 20,
+    "mesh_rmse_thz": 0.10997589296890307
+   },
+   {
+    "force_calls": 22,
+    "mesh_rmse_thz": 0.10886077156990974
+   },
+   {
+    "force_calls": 24,
+    "mesh_rmse_thz": 0.10641742781079296
+   },
+   {
+    "force_calls": 26,
+    "mesh_rmse_thz": 0.10717692693033343
+   },
+   {
+    "force_calls": 28,
+    "mesh_rmse_thz": 0.10488874447287129
+   },
+   {
+    "force_calls": 30,
+    "mesh_rmse_thz": 0.10621345186812117
+   },
+   {
+    "force_calls": 32,
+    "mesh_rmse_thz": 0.10366253845773504
+   }
+  ]
+ },
+ "designs": {
+  "iter1_effective_40": 0.09188242854509329,
+  "boot": {
+   "2": 0.16220948537393554,
+   "4": 0.09002474497022481,
+   "8": 0.11421877016266012,
+   "16": 0.11036088255581078
+  },
+  "canonical_oneshot_median": {
+   "4": 0.19053853903247212,
+   "8": 0.16229367491214713,
+   "16": 0.14390636634728035
+  },
+  "stdep_last_median": {
+   "8": 0.16601416390528553,
+   "16": 0.12937042457774453
+  },
+  "stdep_pool_median": {
+   "8": 0.15724871531135903,
+   "16": 0.12460519007001696
+  }
+ },
+ "vs_iter1": {
+  "harmonic": 0.27031369377609243,
+  "sscha": {
+   "N16_s0": [
+    {
+     "force_calls": 16,
+     "mesh_rmse_thz": 0.216824578960902
+    }
+   ],
+   "N256_s1": [
+    {
+     "force_calls": 256,
+     "mesh_rmse_thz": 0.09188242854509329
+    }
+   ],
+   "N32_s0": [
+    {
+     "force_calls": 32,
+     "mesh_rmse_thz": 0.1931160532171965
+    }
+   ],
+   "N64_s0": [
+    {
+     "force_calls": 64,
+     "mesh_rmse_thz": 0.1310665569162879
+    }
+   ]
+  },
+  "sotcd_sc": {
+   "s0": [
+    {
+     "force_calls": 2,
+     "mesh_rmse_thz": 0.1539968787923692
+    },
+    {
+     "force_calls": 4,
+     "mesh_rmse_thz": 0.09678179764991353
+    },
+    {
+     "force_calls": 6,
+     "mesh_rmse_thz": 0.08652778369117438
+    },
+    {
+     "force_calls": 8,
+     "mesh_rmse_thz": 0.07480570707679106
+    },
+    {
+     "force_calls": 10,
+     "mesh_rmse_thz": 0.0732686569845899
+    },
+    {
+     "force_calls": 12,
+     "mesh_rmse_thz": 0.0617251433636829
+    },
+    {
+     "force_calls": 14,
+     "mesh_rmse_thz": 0.07021333786772892
+    },
+    {
+     "force_calls": 16,
+     "mesh_rmse_thz": 0.07020994399047376
+    },
+    {
+     "force_calls": 18,
+     "mesh_rmse_thz": 0.06351314103531185
+    },
+    {
+     "force_calls": 20,
+     "mesh_rmse_thz": 0.08078146249980571
+    },
+    {
+     "force_calls": 22,
+     "mesh_rmse_thz": 0.0730557006119435
+    },
+    {
+     "force_calls": 24,
+     "mesh_rmse_thz": 0.07314089234413924
+    },
+    {
+     "force_calls": 26,
+     "mesh_rmse_thz": 0.0719282676129855
+    },
+    {
+     "force_calls": 28,
+     "mesh_rmse_thz": 0.06736661795042596
+    },
+    {
+     "force_calls": 30,
+     "mesh_rmse_thz": 0.07016218462586227
+    },
+    {
+     "force_calls": 32,
+     "mesh_rmse_thz": 0.06521559837829652
+    }
+   ],
+   "s1": [
+    {
+     "force_calls": 2,
+     "mesh_rmse_thz": 0.14063239633455984
+    },
+    {
+     "force_calls": 4,
+     "mesh_rmse_thz": 0.09844549807847133
+    },
+    {
+     "force_calls": 6,
+     "mesh_rmse_thz": 0.06025688914492681
+    },
+    {
+     "force_calls": 8,
+     "mesh_rmse_thz": 0.06283556569812697
+    },
+    {
+     "force_calls": 10,
+     "mesh_rmse_thz": 0.0696796750786214
+    },
+    {
+     "force_calls": 12,
+     "mesh_rmse_thz": 0.05405432219069214
+    },
+    {
+     "force_calls": 14,
+     "mesh_rmse_thz": 0.05892233839061126
+    },
+    {
+     "force_calls": 16,
+     "mesh_rmse_thz": 0.05526189848549093
+    },
+    {
+     "force_calls": 18,
+     "mesh_rmse_thz": 0.05613804327524936
+    },
+    {
+     "force_calls": 20,
+     "mesh_rmse_thz": 0.05478002204179575
+    },
+    {
+     "force_calls": 22,
+     "mesh_rmse_thz": 0.053243348200507176
+    },
+    {
+     "force_calls": 24,
+     "mesh_rmse_thz": 0.050570483775303154
+    },
+    {
+     "force_calls": 26,
+     "mesh_rmse_thz": 0.04959370803267783
+    },
+    {
+     "force_calls": 28,
+     "mesh_rmse_thz": 0.04944108618408116
+    },
+    {
+     "force_calls": 30,
+     "mesh_rmse_thz": 0.049145537588709994
+    },
+    {
+     "force_calls": 32,
+     "mesh_rmse_thz": 0.04926698195986745
+    }
+   ],
+   "s2": [
+    {
+     "force_calls": 2,
+     "mesh_rmse_thz": 0.1495994121926763
+    },
+    {
+     "force_calls": 4,
+     "mesh_rmse_thz": 0.09363739503961548
+    },
+    {
+     "force_calls": 6,
+     "mesh_rmse_thz": 0.08176497029853393
+    },
+    {
+     "force_calls": 8,
+     "mesh_rmse_thz": 0.07483237631825303
+    },
+    {
+     "force_calls": 10,
+     "mesh_rmse_thz": 0.06269958333479775
+    },
+    {
+     "force_calls": 12,
+     "mesh_rmse_thz": 0.06171395088082032
+    },
+    {
+     "force_calls": 14,
+     "mesh_rmse_thz": 0.06117675354834968
+    },
+    {
+     "force_calls": 16,
+     "mesh_rmse_thz": 0.053889428009454794
+    },
+    {
+     "force_calls": 18,
+     "mesh_rmse_thz": 0.05640418561259211
+    },
+    {
+     "force_calls": 20,
+     "mesh_rmse_thz": 0.0536238991213856
+    },
+    {
+     "force_calls": 22,
+     "mesh_rmse_thz": 0.05110592420123928
+    },
+    {
+     "force_calls": 24,
+     "mesh_rmse_thz": 0.04998576056896393
+    },
+    {
+     "force_calls": 26,
+     "mesh_rmse_thz": 0.05230237316346199
+    },
+    {
+     "force_calls": 28,
+     "mesh_rmse_thz": 0.05080240151087969
+    },
+    {
+     "force_calls": 30,
+     "mesh_rmse_thz": 0.04987103764665535
+    },
+    {
+     "force_calls": 32,
+     "mesh_rmse_thz": 0.049950113426502483
+    }
+   ]
+  }
+ }
+}

@@ -126,7 +126,7 @@ finite-displacement (FD) references and with an effective FC2 fitted to a
 temperature and electronic settings; and (iii)~compare SOTC with canonical
 samples of exactly the same size, fitted by the same regression, on
 held-out canonical forces, and also with special displacements, thermal
-rattle, sTDEP, SSCHA (on anharmonic model potentials), and sparse and Bayesian regression. Diamond Si and hcp
+rattle, sTDEP, SSCHA (with DFT forces for Al and on anharmonic model potentials), and sparse and Bayesian regression. Diamond Si and hcp
 Mg are added to test other structure classes. We further report the
 non-analytic LO--TO correction for the polar crystals, Debye--Waller factors
 against a tabulated reference, and an independent test of constrained third-
@@ -531,7 +531,14 @@ regression of Sec.~\ref{sec:fit} rather than the TDEP code, for budgets of 8 and
 seeds each): half of the budget as canonical $\pm$ pairs from the harmonic
 trial (taken from the iteration-0 pool), and half as new canonical $\pm$
 pairs drawn from the model refitted to them (36 additional force calls per
-crystal). Iteration-1 results are scored against the iteration-1 effective
+crystal). For Al, SSCHA and SOTC-D-SC (Sec.~\ref{sec:sotcdsc}) were also run
+with DFT forces in the same 32-atom cell. SSCHA used python-sscha
+\cite{ref50} with the whole cell as the unit cell ($\Gamma$ point only), the
+same harmonic trial, and the minimizer settings of
+Sec.~\ref{sec:sc_surrogate}, with populations of $N=16$, 32, 64, and 256
+configurations; SOTC-D-SC was run with three seeds up to 32 force calls. For
+comparison, the SSCHA force constants are projected onto the same supercell
+basis. Iteration-1 results are scored against the iteration-1 effective
 FC2.
 
 The same protocol was applied to two further classes of crystal: covalent
@@ -758,6 +765,21 @@ the self-consistent FC2, of which the iteration-1 FC2 used for scoring is
 only the first approximation; the model potentials of
 Sec.~\ref{sec:sc_surrogate}, for which the self-consistent target is known
 exactly, remove this limitation.
+
+For Al, SSCHA and SOTC-D-SC were also compared with DFT forces. Measured
+against the iteration-1 effective FC2, which lies 0.27~THz from the harmonic
+trial, SOTC-D-SC reaches median errors of 0.097, 0.075, 0.055, and
+0.050~THz with 4, 8, 16, and 32 force calls (three seeds). SSCHA stops after
+its first population for every population size, because the statistical
+error of its free-energy gradient exceeds the gradient itself; its result
+approaches the effective FC2 only as the population grows, with errors of
+0.217, 0.193, 0.131, and 0.092~THz for populations of 16, 32, 64, and 256
+force calls. With DFT forces, SOTC-D-SC with four force calls is thus as
+close to the effective FC2 as SSCHA with 256. The resolution of this test is
+limited by the reference: measured instead against the 256-configuration
+SSCHA result, which is 0.24~THz from the harmonic trial, all protocols,
+including the iteration-1 FC2 (0.09~THz), lie at 0.09--0.14~THz, the
+statistical uncertainty of that reference.
 
 Figure~\ref{fig:dispersions} shows the resulting dispersions for six
 representative crystals. The difference between the effective FC2 and the
@@ -1069,7 +1091,8 @@ self-consistent target, SOTC-D-SC is at least as accurate as sTDEP and SSCHA
 in 50 of 56 comparisons at equal budget; in the other six, pooled sTDEP (W
 and NaCl at 64 and 16 calls, respectively, Si at 16, Mg at 32 and 64) or SSCHA (Al at 64)
 is better by at most 0.006~THz. It needs a factor of 2--16 fewer force calls
-than SSCHA for a given accuracy in 13 of 14 cases. Third, the regression method, including sparsity-promoting
+than SSCHA for a given accuracy in 13 of 14 cases, and with DFT forces for
+Al it reaches with four calls the accuracy SSCHA reaches with 256. Third, the regression method, including sparsity-promoting
 and Bayesian fits, changes the result by at most 0.03~THz, whereas the
 design changes it by factors of two or more; the crystal-symmetry basis
 reduces the number of parameters by an order of magnitude at no loss in

@@ -97,6 +97,9 @@ python codes/validation/analyze_new_classes.py si mg              # diamond Si, 
 python codes/validation/fit_primary_surrogates.py si mg             # FC2+FC3+FC4 surrogates of Si, Mg from all same-cell data
 python codes/validation/surrogate_self_consistent.py <mat>        # sTDEP, SOTC-D-SC (and SSCHA) vs SC target
 python codes/validation/surrogate_amplitude_bias.py <mat>         # fixed vs moment-matched SOTC-D-SC amplitudes
+python codes/validation/dft_sscha.py al <N> <seed>              # SSCHA with QE forces in the SOTC cell (venv313)
+python codes/validation/dft_sotcd_sc.py al <seed>                # SOTC-D-SC with QE forces
+python codes/validation/dft_selfconsistent_compare.py al         # DFT-level SSCHA vs SOTC-D-SC comparison
 python codes/validation/make_jap_tables.py && python codes/validation/plot_robustness.py \
     && python codes/validation/plot_designs.py
 ```
