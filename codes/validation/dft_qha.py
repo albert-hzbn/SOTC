@@ -9,7 +9,8 @@ production cell, with the same electronic settings:
   temperatures run concurrently (as in ``dft_sotcd_sc.py``), keeping the
   displacements, force differences, and energies of every call.
 
-Writes validation_results/<m>/primary_cell/qha/a<a>/{fd.npz,T<T>.npz}.
+Writes validation_results/<m>/primary_cell/qha[_common]/a<a>/{fd.npz,T<T>.npz}
+(``--common-seed``: the same design seeds at every volume).
 
 Usage: dft_qha.py <material> <a_ang> [--temperatures 100 300 500 700] [--budget 8]
 """
@@ -61,10 +62,13 @@ def main():
     parser.add_argument("a", type=float)
     parser.add_argument("--temperatures", type=float, nargs="+", default=[100, 300, 500, 700])
     parser.add_argument("--budget", type=int, default=8)
+    parser.add_argument("--common-seed", action="store_true",
+                        help="same design seed at every volume (correlated sampling)")
     args = parser.parse_args()
 
     material = args.material
-    out = ROOT / "validation_results" / material / "primary_cell" / "qha" / f"a{args.a:.4f}"
+    grid_dir = "qha_common" if args.common_seed else "qha"
+    out = ROOT / "validation_results" / material / "primary_cell" / grid_dir / f"a{args.a:.4f}"
     out.mkdir(parents=True, exist_ok=True)
     spec = primary_spec(material)
     run_args = SimpleNamespace(material=material, n_parallel=2, tasks_per_qe=16,
@@ -79,9 +83,10 @@ def main():
     # Undisplaced cell and harmonic FD trial.
     phonon.generate_displacements(distance=0.01, is_plusminus=True)
     fd_pos = [eq] + [np.asarray(c.positions) for c in phonon.supercells_with_displacements]
+    fd_stage = out.parent.parent / "qha" / out.name / "fd_qe"  # FD trial shared by both grids
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
         res = list(pool.map(lambda i: run_one_state(i, fd_pos[i], cell, symbols, spec, run_args,
-                                                    out / "fd_qe", overrides(spec)),
+                                                    fd_stage, overrides(spec)),
                             range(len(fd_pos))))
     f0 = np.asarray(res[0]["forces_ev_ang"])
     e0 = float(res[0]["energy_ev"])
@@ -97,7 +102,10 @@ def main():
     c_harm, *_ = np.linalg.lstsq(basis.reshape(len(basis), -1).T, harmonic.ravel(), rcond=None)
 
     def run_temperature(it, temperature):
-        rng = np.random.default_rng(SEED0 + 1000 * it + int(round(1000 * args.a)))
+        # Common seeds correlate the sampling errors of neighbouring volumes,
+        # which cancel in the volume derivatives of F and S.
+        seed = int(round(temperature)) if args.common_seed else 1000 * it + int(round(1000 * args.a))
+        rng = np.random.default_rng(SEED0 + seed)
         stage = out / f"T{temperature:.0f}_qe"
         coef, fc = c_harm, to_fc(basis, c_harm)
         us, fs, es, coefs = [], [], [], []

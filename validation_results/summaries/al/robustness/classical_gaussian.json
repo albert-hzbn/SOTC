@@ -1,0 +1,22 @@
+{
+ "material": "al",
+ "u_rms_ang": {
+  "quantum_gaussian": 0.15837604409834508,
+  "classical_gaussian": 0.15314776375336536,
+  "aimd": 0.15380660897445703
+ },
+ "mean_frequency_thz": {
+  "harmonic": 5.841101902023634,
+  "quantum_gaussian": 6.1140061694317644,
+  "classical_gaussian": 6.054622992852271,
+  "aimd": 5.837026823145428
+ },
+ "rmse_thz": {
+  "harmonic|quantum_gaussian": 0.38895832404594993,
+  "harmonic|classical_gaussian": 0.3377442899546076,
+  "harmonic|aimd": 0.26939537784736983,
+  "quantum_gaussian|classical_gaussian": 0.0814101996936146,
+  "quantum_gaussian|aimd": 0.28861930486129383,
+  "classical_gaussian|aimd": 0.22778963329396693
+ }
+}

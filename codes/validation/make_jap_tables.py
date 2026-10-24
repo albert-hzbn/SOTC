@@ -243,7 +243,7 @@ def selfconsistent_table(counts=(2, 8), basis="supercell", label=None):
         " & " + " & ".join(["D$_1$ & C$_1$ & B & D$_0$ & C$_0$"] * len(counts)) + r"\\",
         r"\hline",
     ]
-    wins = {(g, c): 0 for g in ("m", "e") for c in counts}
+    wins = {(g, c): 0 for g in ("m", "e", "f") for c in counts}
     n = 0
     for m in ALL_MATERIALS:
         rep = design_report(m)
@@ -261,6 +261,10 @@ def selfconsistent_table(counts=(2, 8), basis="supercell", label=None):
                      e["designs"]["sotcd"][c]["mesh_vs_full_reference"],
                      median_of(e["other_iteration_canonical"][c], "mesh_vs_full_reference")]
             wins[("m", int(c))] += int(np.argmin(matched) == 0)
+            force = [e["designs"]["sotcd1"][c]["held_out_force_rmse"],
+                     min(median_of(e["canonical_paired"][c], "held_out_force_rmse"),
+                         median_of(e["canonical_unpaired"][c], "held_out_force_rmse"))]
+            wins[("f", int(c))] += int(force[0] < force[1])
             wins[("e", int(c))] += int(equal[0] < equal[2])
             cells += bold_min(matched, 2) + bold_min(equal, 2)
         lines.append(LABELS[m] + " & " + " & ".join(cells) + r"\\")
@@ -268,6 +272,9 @@ def selfconsistent_table(counts=(2, 8), basis="supercell", label=None):
     lines.append(r"D$_1<$C$_1$ / B$<$C$_0$ & " + " & ".join(
         r"\multicolumn{2}{c}{" + f"{wins[('m', c)]}/{n}" + r"} & \multicolumn{3}{c}{"
         + f"{wins[('e', c)]}/{n}" + "}" for c in counts) + r"\\")
+    lines.append(r"held-out force D$_1<$C$_1$ & " + " & ".join(
+        r"\multicolumn{2}{c}{" + f"{wins[('f', c)]}/{n}" + r"} & \multicolumn{3}{c}{}"
+        for c in counts) + r"\\")
     lines += [r"\end{tabular}", r"\end{ruledtabular}", r"\end{table*}"]
     return "\n".join(lines)
 
@@ -747,45 +754,47 @@ def calls_to_accuracy_table(thresholds=(0.05, 0.03, 0.02)):
 
 
 def qha_table():
-    path = ROOT / "validation_results" / "al" / "robustness" / "qha_thermal_expansion.json"
-    if not path.exists():
+    rob = ROOT / "validation_results" / "al" / "robustness"
+    paths = [rob / "qha_thermal_expansion.json", rob / "qha_thermal_expansion_common.json"]
+    if not all(p.exists() for p in paths):
         return ""
-    r = json.loads(path.read_text())
-    expt = r["experiment_alpha_1e6"]
+    ind, com = (json.loads(p.read_text()) for p in paths)
+    c = ind["primary_calls"]
+    expt = ind["experiment_alpha_1e6"]
     near = {"300": "298", "400": "400", "900": "923"}
     lines = [
         r"\begin{table}[t]",
-        r"\caption{Thermal expansion of Al in the 32-atom SOTC cell (PBE). $a$:"
-        r" equilibrium lattice parameter (\AA); $B_T$: isothermal bulk modulus (GPa);"
-        r" $\alpha$: linear expansion coefficient ($10^{-6}$~K$^{-1}$) from"
-        r" $(\partial S/\partial V)_T/3B_T$. SC: self-consistent SOTC-D (8 calls per"
-        r" volume and temperature); the range in parentheses is the spread over the"
-        r" treatment of the anharmonic energy term (linear fit, raw, omitted). QHA:"
-        r" harmonic FD FC2 of the same cell. Experiment: averages of measured"
-        r" values at 298, 400, and 923~K (in the 300, 400, and 900~K rows) compiled"
-        r" in Ref.~\onlinecite{nakashima2020}.}",
+        r"\caption{Linear thermal expansion coefficient $\alpha$ ($10^{-6}$~K$^{-1}$) of"
+        r" Al (PBE), from $(\partial S/\partial V)_T/3B_T$ on seven volumes. SC:"
+        r" self-consistent SOTC-D in the 32-atom cell with " + str(c) + r" force calls per"
+        r" volume and temperature, from two independent grids (design seeds"
+        r" independent across volumes, and common to all volumes). QHA: harmonic FD"
+        r" FC2 in the same cell and in the converged 125-atom cell. Experiment:"
+        r" averages of measured values at 298, 400, and 923~K (300, 400, and 900~K"
+        r" rows) compiled in Ref.~\onlinecite{nakashima2020}. $a$: lattice parameter"
+        r" (\AA) of the converged QHA.}",
         r"\label{tab:qha}",
         r"\footnotesize",
         r"\begin{ruledtabular}",
-        r"\begin{tabular}{lccccc}",
-        r"$T$ (K) & $a$ (SC) & $B_T$ (SC) & $\alpha$ (SC) & $\alpha$ (QHA) & $\alpha$ (expt.)\\",
+        r"\begin{tabular}{lcccccc}",
+        r" & \multicolumn{2}{c}{SC} & \multicolumn{2}{c}{QHA} & & \\",
+        r"$T$ (K) & indep. & common & 32 at. & 125 at. & expt. & $a$\\",
         r"\hline",
     ]
-    for t, e in r["temperatures"].items():
-        sc = e["sotcd_sc"]
-        spread = [e[k]["alpha_1e6"] for k in ("sotcd_sc", "sotcd_sc_raw_du", "sotcd_sc_no_du")]
-        q = e["harmonic_qha"]
+    for t, e in ind["temperatures"].items():
+        q = e["harmonic_qha_cell"]
         qa = f"{q['alpha_1e6']:.1f}" + ("" if q["inside_grid"] else r"$^a$")
         ex = expt.get(near.get(t, ""), None)
+        conv = e["harmonic_qha_converged"]
         lines.append(" & ".join([
-            t, f"{sc['a_ang']:.3f}", f"{sc['B_gpa']:.0f}",
-            f"{sc['alpha_1e6']:.1f} ({min(spread):.1f}--{max(spread):.1f})", qa,
-            f"{ex[0]:.1f}" if ex else "--"]) + r"\\")
+            t, f"{e[f'sotcd_sc_{c}']['alpha_1e6']:.1f}",
+            f"{com['temperatures'][t][f'sotcd_sc_{c}']['alpha_1e6']:.1f}", qa,
+            f"{conv['alpha_1e6']:.1f}", f"{ex[0]:.1f}" if ex else "--",
+            f"{conv['a_ang']:.3f}"]) + r"\\")
     lines += [r"\end{tabular}", r"\end{ruledtabular}",
-              r"\footnotesize{$^a$Minimum outside the volume grid.}",
+              r"$^a$Minimum outside the volume grid.",
               r"\end{table}"]
     return "\n".join(lines)
-
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
@@ -802,6 +811,8 @@ def main():
         selfconsistent_table(basis="crystal") + "\n")
     (OUT / "tab_matched_4_16.tex").write_text(
         matched_table(counts=(4, 16), label="tab:matched_4_16") + "\n")
+    (OUT / "tab_selfconsistent_4_16.tex").write_text(
+        selfconsistent_table(counts=(4, 16), label="tab:selfconsistent_4_16") + "\n")
     (OUT / "tab_selfconsistent_crystal_4_16.tex").write_text(
         selfconsistent_table(counts=(4, 16), basis="crystal",
                              label="tab:selfconsistent_crystal_4_16") + "\n")

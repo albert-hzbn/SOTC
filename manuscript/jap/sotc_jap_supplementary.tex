@@ -203,8 +203,6 @@ mode-amplitude gradient follows by the chain rule through
 $\mathbf u_i=\sum_m A_m\mathbf e_{im}/\sqrt{M_i}$. The optimization is
 carried out in mode amplitudes and phases with random restarts.
 
-\bibliography{refs_jap}
-
 \section{Branch-resolved convergence and neutron model for Al}
 
 Figure~\ref{fig:dispconv} shows the dispersions of SOTC-D from the updated
@@ -216,8 +214,7 @@ the SOTC-D dispersions are stable at every budget and approach the effective
 FC2 branch by branch; with two calls the largest deviations are in the
 transverse branches along X--W--K and $\Gamma$--L. For Al the Born--von
 K\'arm\'an models fitted to the inelastic neutron spectrum at 10 and 300~K
-(Kresch \textit{et al.}, Phys.\ Rev.\ B \textbf{77}, 024301 (2008), eight
-shells) are also shown. The converged harmonic reference agrees with the 10~K
+\cite{kresch2008} (eight shells) are also shown. The converged harmonic reference agrees with the 10~K
 model within 1.1\% at X and L. The 300~K model is softer in the transverse
 branches (TA(X) 5.39~THz) than both the converged harmonic reference
 (5.72~THz) and the effective FC2 of the 32-atom cell (6.01 and 6.29~THz, the
@@ -243,12 +240,15 @@ and 300~K (green). Same-cell models are Fourier interpolated from the
 
 \section{Designs at four and sixteen force calls}
 
-Tables~\ref{tab:matched_4_16} and \ref{tab:selfconsistent_crystal_4_16}
-extend Table~IV of the main text (supercell basis) and Table~\ref{tab:selfconsistent_crystal}
-(crystal-symmetry basis) to four and sixteen force calls, with the same
-definitions.
+Tables~\ref{tab:matched_4_16}, \ref{tab:selfconsistent_crystal_4_16}, and
+\ref{tab:selfconsistent_4_16} extend Tables~IV and V of the main text and
+Table~\ref{tab:selfconsistent_crystal} to four and sixteen force calls, with
+the same definitions.
 
 \input{tables/tab_matched_4_16}
 \input{tables/tab_selfconsistent_crystal_4_16}
+\input{tables/tab_selfconsistent_4_16}
+
+\bibliography{refs_jap}
 
 \end{document}

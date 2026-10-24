@@ -21,30 +21,30 @@ of Technology Kanpur, Kanpur 208016, India}
 \date{\today}
 
 \begin{abstract}
-Finite-temperature effective-harmonic phonons are obtained by
-fitting force constants to first-principles forces on canonical samples. We introduce special optimal thermal cells (SOTCs),
-supercell displacements designed from a harmonic trial model in analogy to
-special quasirandom structures, and compare two design objectives. Cells matching shell-averaged displacement
-correlators reproduce effective thermodynamics but not more accurate
-dispersions than canonical sampling. In the D-optimal design
-SOTC-D, every configuration excites each commensurate mode at its exact
+Finite-temperature effective-harmonic phonons are obtained by fitting force
+constants to first-principles forces on canonical samples. We introduce
+special optimal thermal cells (SOTCs), supercell displacements designed from
+a harmonic trial model in analogy to special quasirandom structures. Cells
+matching displacement correlators reproduce thermodynamics but do
+not improve dispersions over canonical sampling. In the D-optimal design
+SOTC-D, every configuration excites each commensurate mode at its
 quantum-thermal amplitude, the mode signs maximize the determinant of the
 force-constant information matrix, and inversion pairs cancel the cubic
 force. Using the identity of the effective force constants with the
 Gaussian-averaged Hessian, we show that SOTC-D estimates them with a bias of
-order $1/M$ in the number of modes $M$, and that updating the trial
-converges to the self-consistent harmonic fixed point. For eleven crystals
-of five structure classes, SOTC-D with eight force calls reproduces the
+order $1/M$ in the number of modes $M$, and that the fixed point of the
+trial update is the self-consistent harmonic one. For eleven crystals of
+five structure classes, SOTC-D with eight force calls reproduces the
 effective dispersions within 0.03--0.31~THz and, with the same trial, has the
 lowest error of five designs, including canonical sampling, special
 displacements, and thermal rattle, in 10 of 11 crystals at two and eight
-calls (two ties). A bootstrapped form
-updating the trial once outperforms, in the supercell basis, one-shot
-canonical sampling in all crystals at every budget from 4 to 16 calls and
-two-iteration canonical sampling (sTDEP) in all crystals at eight calls. On
-anharmonic model potentials, the self-consistent form reaches a given
-accuracy with 2--16 times fewer force calls than the stochastic
-self-consistent harmonic approximation in 13 of 14 cases.
+calls (two ties). A bootstrapped form updating the trial once outperforms,
+in the supercell basis, one-shot canonical sampling in all crystals from 4
+to 16 calls and two-iteration sTDEP in all crystals at eight calls. On
+anharmonic model potentials, the self-consistent form needs 2--16 times
+fewer force calls than the stochastic self-consistent harmonic approximation
+in 13 of 14 cases. On a volume grid, it gives the thermal expansion of
+Al within 17\% of experiment at 300--400~K.
 \end{abstract}
 
 \maketitle
@@ -98,7 +98,7 @@ from the Hessian of the free energy and adds the cubic (bubble) correction
 \cite{ref8}; we use ``effective dispersion'' for the spectrum of the auxiliary
 FC2 throughout. The SCHA does not require sampling: the self-consistent
 equations can also be solved with anharmonic force constants computed
-beforehand, as in self-consistent phonon theory. When the forces are instead
+beforehand, as in self-consistent phonon theory \cite{tadano2015}. When the forces are instead
 taken from first-principles calculations on configurations, from a
 molecular-dynamics trajectory or from Gaussian draws, these are statistical
 samples of a canonical distribution, and the statistical error of the fitted
@@ -133,11 +133,14 @@ finite-displacement (FD) references and with an effective FC2 fitted to a
 temperature and electronic settings; and (iii)~compare SOTC with canonical
 samples of exactly the same size, fitted by the same regression, on
 held-out canonical forces, and also with special displacements, thermal
-rattle, sTDEP, SSCHA (with DFT forces for Al and on anharmonic model potentials), TDEP fitted to ab initio molecular dynamics (Al), and sparse and Bayesian regression. Diamond Si and hcp
+rattle, sTDEP, SSCHA (with density-functional theory (DFT) forces for Al and on anharmonic model
+potentials), TDEP fitted to \textit{ab initio}
+molecular dynamics (Al), and sparse and Bayesian regression. Diamond Si and hcp
 Mg are added to test other structure classes. We further report the
 non-analytic LO--TO correction for the polar crystals, Debye--Waller factors
-against a tabulated reference, and an independent test of constrained third-
-and fourth-order fits.
+against a tabulated reference, an independent test of constrained third-
+and fourth-order fits, and the thermal expansion of Al from self-consistent
+SOTC-D on a volume grid.
 
 This analysis identifies two weaknesses of correlator matching: its scalar
 objective leaves the amplitude of individual modes, and hence the
@@ -341,8 +344,8 @@ configurations with the Gaussian moments $\langle Q_e^2\rangle=\sigma_e^2$
 and $\langle Q_e^4\rangle=3\sigma_e^4$ (moment-matched SOTC-D,
 Sec.~\ref{sec:sc_surrogate}), at the price of a larger variance at small
 budgets. Eq.~(\ref{eq:bias}) is derived
-here (Supplementary Material, Sec.~S4) and verified by exact enumeration in the
-test suite; the averaged-Hessian identity follows from Stein's lemma
+here (Supplementary Material, Sec.~S4) and was checked by exact enumeration
+over sign patterns; the averaged-Hessian identity follows from Stein's lemma
 \cite{ref61}, and its equivalence with the SCHA stationarity condition is
 standard \cite{ref50}.
 
@@ -451,18 +454,18 @@ $F_{\rm vib}$, and zero-point energy follow from the harmonic partition
 function of the fitted frequencies, omitting modes below 0.05~THz (including
 imaginary ones); the spectral Debye temperature is the standard second-moment
 value $T_D=(\hbar/k_B)\sqrt{5\langle\omega^2\rangle/3}$. These are quantities of the
-effective harmonic model at the cell volume used; thermal expansion,
-electronic heat capacity, and explicit anharmonic free-energy corrections are
-not computed in this work, and no volume-dependent (quasiharmonic) quantity is
-reported.
+effective harmonic model at the cell volume used. The electronic heat
+capacity is not included. Thermal expansion, with the anharmonic correction
+to the free energy, is computed for Al only (Sec.~\ref{sec:qha}).
 
 \section{Computational details}\label{sec:comp}
 
 \subsection{Electronic structure}
 
-Forces were computed with Quantum ESPRESSO 7.5 \cite{ref46}, the PBE functional
-\cite{ref17}, and SSSP-efficiency pseudopotentials \cite{ref47} (ONCV for Ag,
-Au, Mo; PAW for Al, Cu, Mg, O, Pb; ultrasoft for Na, Cl, Te, W). Wave-function
+Forces were computed with Quantum ESPRESSO (QE) 7.5 \cite{ref46}, the PBE functional
+\cite{ref17}, and pseudopotentials of the standard solid-state pseudopotential (SSSP)
+efficiency library \cite{ref47} (optimized norm-conserving Vanderbilt (ONCV) for Ag,
+Au, Mo; projector augmented-wave (PAW) for Al, Cu, Mg, O, Pb; ultrasoft for Na, Cl, Te, W). Wave-function
 cutoffs were 40 (Al), 50 (Ag), 45 (Au, Cu), 40 (Mo), 30 (W), 60 (NaCl), 80
 (MgO), and 44~Ry (PbTe); charge-density cutoffs were four (ONCV) or eight
 (PAW, ultrasoft) times larger. Metals used 0.02~Ry Marzari--Vanderbilt
@@ -557,8 +560,10 @@ call. Iteration-1 results are scored against the iteration-1 effective
 FC2. For the thermal expansion of Al, the 32-atom cell was scaled to seven
 lattice parameters from 4.000 to 4.150~\AA\ in steps of 0.025~\AA. At each,
 the harmonic FD trial (four displacements and the undisplaced cell) was
-computed, and SOTC-D-SC was run with eight force calls at 100, 300, 400, 500,
-700, and 900~K (371 force calls in total).
+computed, and SOTC-D-SC was run with 16 force calls at 100, 300, 400, 500,
+700, and 900~K, twice: once with design seeds that differ between volumes and
+once with the same seeds at all volumes. The harmonic FD FC2 was also computed
+on the same volumes in the 125-atom cell with the large-cell settings above.
 
 The same protocol was applied to two further classes of crystal: covalent
 diamond Si (600~K, 64-atom conventional $2\times2\times2$ cell, $r_{\rm
@@ -570,7 +575,7 @@ converged references in 128-atom ($4\times4\times4$ primitive) and 150-atom
 only the same-cell protocol above is used.
 
 Non-analytic corrections for NaCl, MgO, and PbTe used Born effective charges and
-electronic dielectric tensors from QE density-functional perturbation theory in
+electronic dielectric tensors from QE density-functional perturbation theory (DFPT) in
 the primitive cell at the production lattice parameters (60/480~Ry,
 $8\times8\times8$ $k$ mesh), applied through the mixed-space formulation in
 phonopy \cite{ref53}. Phonon densities of states and thermodynamic quantities
@@ -642,9 +647,12 @@ scattering spectrum of Al at 10~K (eight shells) \cite{kresch2008,kresch2009thes
 gives 5.75 and 9.45~THz at X and 4.21 and 9.72~THz at L; the converged reference agrees with all four within 1.1\%
 (see also the dispersion of Ref.~\onlinecite{ref34}). The 300~K model of the same
 work, which includes thermal expansion, gives 5.39, 9.37, 4.16, and
-9.43~THz; its transverse branches are softer than both the converged
-reference and the 300~K effective FC2 of the 32-atom cell, whose stiffening
-is largely a truncation effect (Supplementary Fig.~S4). By contrast,
+9.43~THz. Its transverse branches are softer than both the converged
+reference and the 300~K effective FC2 of the 32-atom cell (TA(X) 5.39 against
+5.72 and 6.01--6.29~THz, the degeneracy being lifted by the cell). Most of the
+stiffening of the effective FC2 is already present in the harmonic FD model of
+the same cell (5.87--6.09~THz) and is therefore a truncation effect
+(Supplementary Fig.~S4). By contrast,
 the $3\times3\times3$ FD model places TA(L) at 4.91~THz, 15\% higher: in
 small cells the truncation error is of the same size as the thermal effects
 studied here. The effective FC2 at
@@ -684,7 +692,7 @@ no two-call design determines, and PbTe in force, whose trial is defective
 (see below). The ranking in dispersion holds in 8 of 11 crystals at four
 calls (Supplementary Table~S7): paired canonical sampling is better for NaCl
 and PbTe (0.24 versus 0.25 and 0.13 versus 0.16~THz), and special
-displacements are better for MgO (0.40 versus 0.41~THz). At eight calls it holds in 10 of 11
+displacements are better for MgO (0.395 versus 0.405~THz). At eight calls it holds in 10 of 11
 crystals, where the Si and Mg results are ties within 0.005~THz; in held-out force SOTC-D is best in 8 of
 11 crystals at eight calls and within 2.1\% of the best design in the
 others. At 16 calls SOTC-D is best in only 4 of 11 crystals: the sampling
@@ -746,7 +754,8 @@ With a trial close to the effective FC2, the advantage of the design becomes
 uniform: SOTC-D has the lower dispersion error at four and eight calls in
 every crystal, and at two calls in all except Cu, for the reason given
 above; its held-out force error is the lower one in 11, 10, and 10 of the 11
-crystals at two, four, and eight calls. PbTe changes from the only crystal without a gain to the one with the
+crystals at two, four, and eight calls (Table~\ref{tab:selfconsistent} and
+Supplementary Table~S9). PbTe changes from the only crystal without a gain to the one with the
 largest gain (0.08 versus 0.16~THz with two calls, 0.04 versus 0.08~THz with
 eight). The updated trial is dynamically stable, so the soft transverse
 optical branch, which the harmonic trial could not excite, is now sampled at
@@ -759,9 +768,9 @@ the budget: its first pair is the iteration-0 SOTC-D pair, and the model
 refitted to this pair defines the modes and amplitudes of the remaining
 pairs. Measured against
 the iteration-1 effective FC2, it is more accurate than one-shot canonical
-pairs from the harmonic trial (a single sTDEP iteration) in all 11 crystals at every
-budget of 2, 4, 8, and 16 calls (at two calls neither design identifies
-the Cu model). At eight calls its error is 0.02--0.31~THz
+pairs from the harmonic trial (a single sTDEP iteration) in all 11 crystals at
+4, 8, and 16 calls, and at two calls in the ten crystals whose model a single
+pair identifies (not Cu). At eight calls its error is 0.02--0.31~THz
 against 0.04--0.39~THz, and the largest gains are for the crystals with the
 largest trial update: Au (0.07 versus 0.25~THz), MgO (0.19 versus 0.36),
 NaCl (0.10 versus 0.18), and PbTe (0.06 versus 0.12). It is also better than
@@ -801,12 +810,16 @@ its first population for every population size, because the statistical
 error of its free-energy gradient exceeds the gradient itself; its result
 approaches the effective FC2 only as the population grows, with errors of
 0.217, 0.193, 0.131, and 0.092~THz for populations of 16, 32, 64, and 256
-force calls. With DFT forces, SOTC-D-SC with four force calls is thus as
-close to the effective FC2 as SSCHA with 256. The resolution of this test is
-limited by the reference: measured instead against the 256-configuration
-SSCHA result, which is 0.24~THz from the harmonic trial, all protocols,
-including the iteration-1 FC2 (0.09~THz), lie at 0.09--0.14~THz, the
-statistical uncertainty of that reference.
+force calls. Against this reference, SOTC-D-SC with four force calls is
+as close to the effective FC2 as SSCHA with 256. The test is limited by the
+reference, however. Measured instead against the 256-configuration SSCHA
+result (projected onto the same basis, which changes it by 0.23~THz; it is
+0.24~THz from the harmonic trial), SSCHA with 64 configurations and the
+iteration-1 FC2 lie at 0.09~THz, SOTC-D-SC at 0.12, 0.12, 0.11, and
+0.10~THz with 4, 8, 16, and 32 calls, and the smaller SSCHA populations,
+one-shot canonical pairs, and two-iteration sTDEP at 0.12--0.19~THz. With
+DFT forces in this cell, differences below about 0.1~THz between these
+protocols are therefore not resolved.
 
 AIMD-TDEP converges more slowly in force calls and to a different
 limit. Measured against the fit to all 4370 production steps, the median
@@ -819,12 +832,20 @@ to its own target with four force calls, although that target, the
 0.28~THz from the iteration-1 effective FC2 and 0.27~THz from the harmonic
 trial. The mean mesh frequency is 5.84~THz for both the harmonic trial and
 the AIMD-TDEP limit, but 6.11~THz for the effective FC2. The two targets
-differ in two ways that are not separated here: classical
-nuclei rather than quantum mode amplitudes (rms displacements of 0.154~\AA\
-in the MD and 0.159~\AA\ in the quantum canonical ensemble), and the actual anharmonic displacement distribution rather
-than a Gaussian one. AIMD-TDEP and the self-consistent protocols
-therefore converge to different quantities, and the force-call comparison
-applies to each method's own target.
+differ in two ways: classical nuclei rather than quantum mode amplitudes, and
+the actual anharmonic displacement distribution rather than a Gaussian one.
+To separate them, 40 configurations (20 $\pm$ pairs) were drawn from the
+same harmonic trial with classical amplitudes $\sigma_e^2=k_BT/\omega_e^2$
+and computed with DFT. Their effective FC2 lies 0.08~THz from the quantum
+one (iteration-0 pool, mean frequency 6.05 against 6.11~THz; rms
+displacements 0.153 and 0.158~\AA) but 0.23~THz from the AIMD-TDEP limit
+(rms displacement 0.154~\AA). At 300~K in Al the difference is therefore
+mostly not quantum. It comes from sampling the actual, non-Gaussian
+distribution instead of a Gaussian centered on the trial, and the least-squares
+fit to that distribution gives an FC2 close to the harmonic one. AIMD-TDEP
+and the self-consistent protocols therefore converge to different
+quantities, and the force-call comparison applies to each method's own
+target.
 
 Supplementary Fig.~S4 shows, branch by branch, how the SOTC-D dispersions of Al and Au
 converge with 2--16 force calls; for Au, whose single-configuration SOTC-C fits
@@ -896,8 +917,9 @@ conditioned.
 The regression method matters much less than either. Fitting the same data
 with the hiPhive cluster space \cite{ref59} and nine methods of the trainstation
 library distributed with hiPhive
-(least squares, ridge, Bayesian ridge, ARD, RFE, OMP, LASSO, adaptive LASSO,
-elastic net) changes the dispersion error at eight calls by at most
+(least squares, ridge, Bayesian ridge, automatic relevance determination,
+recursive feature elimination, orthogonal matching pursuit, LASSO, adaptive
+LASSO, elastic net) changes the dispersion error at eight calls by at most
 0.03~THz for any material and design (Table~S4), and least squares is never
 significantly worse than a sparse or Bayesian method; with SOTC-D data the
 error is lower than with canonical data for every method in 9 of the 11
@@ -971,8 +993,9 @@ self-consistent workflows can be compared at equal numbers of force calls
 harmonic trial; sTDEP with three iterations of equal size, fitted to the last
 iteration or to all of them; SOTC-D-SC (Sec.~\ref{sec:sotcdsc}); and SSCHA,
 run with python-sscha \cite{ref50} with the surrogate as an exact calculator,
-starting from the same harmonic trial (minimization step 0.1, Kong--Liu
-threshold 0.5, meaningful factor 0.2, fixed centroids, at most 30
+starting from the same harmonic trial (minimization step 0.1, threshold 0.5 on the
+Kong--Liu effective sample size, stopping when the gradient is below 0.2
+times its statistical error, fixed centroids, at most 30
 populations of $N=8$--128 configurations, 5 repetitions against 12 for the
 other protocols). Because the smallest SSCHA population has eight
 configurations, a factor of 2 between SSCHA and SOTC-D-SC at a threshold
@@ -1106,33 +1129,49 @@ energy, and the last term, averaged over the last two designed pairs, is the
 anharmonic energy correction of the SCHA \cite{ref7,ref50}. The linear
 thermal expansion coefficient follows as $\alpha=(\partial S/\partial
 V)_T/3B_T$, with the isothermal bulk modulus $B_T=V\partial^2F/\partial V^2$,
-both at the volume that minimizes $F$. The harmonic quasiharmonic
-approximation (QHA) in the same cell uses the FD FC2 and no correction
+both at the volume that minimizes $F$. The quasiharmonic
+approximation (QHA) with the harmonic FD FC2 in the same cell uses the FD FC2 and no correction
 term. Neither requires derivatives of the FC2 with respect to temperature.
 
-Table~\ref{tab:qha} gives the results. With the harmonic FD FC2 of the
-32-atom cell, the QHA overestimates $\alpha$ by 13\% at 300~K and 15\% at
-400~K. It increases steeply above 500~K, and at 900~K its free-energy minimum
-lies outside the volume grid. The reason is the truncated cell: its
-interpolated harmonic spectrum has small regions of imaginary frequencies
-from 4.05~\AA\ upward, with the minimum frequency falling from $-0.27$ to
-$-1.08$~THz between 4.05 and 4.15~\AA. The self-consistent FC2 is stable at
-every volume (minimum frequency 0.30--0.41~THz at 300 and 900~K).
-With the self-consistent FC2, $\alpha$ is 21.3 and
-$21.8\times10^{-6}$~K$^{-1}$ at 300 and 400~K, 8\% and 13\% below the measured
-23.2 and 25.1, and it stays finite up to 900~K. The anharmonic energy term is
-0.4--16~meV per atom. Its statistical uncertainty with four configurations
-per point dominates the uncertainty of $B_T$ above 500~K: the spread of
-$\alpha$ over three treatments of the term (Table~\ref{tab:qha}) is
-$0.4\times10^{-6}$~K$^{-1}$ at 300~K and up to $7\times10^{-6}$~K$^{-1}$ at 900~K. Repeating the fit with
-the FC2 after two, four, and six calls changes $(\partial S/\partial V)_T$ at
-300~K by at most 4\%. At 700 and 900~K, $\alpha$ (25--26) is well below the
-measured 36 at 923~K, of which vacancies contribute about two units
-\cite{nakashima2020}. Within the uncertainty of the correction term and the
-truncation of the 32-atom cell, the self-consistent harmonic level therefore
-accounts for the expansion near room temperature but not close to melting.
-The calculation needed 53 force calls per volume for six temperatures,
-including the FD trial.
+Table~\ref{tab:qha} gives the results. The QHA with the converged 125-atom
+harmonic FC2 gives 24.1 and $26.2\times10^{-6}$~K$^{-1}$ at 300 and 400~K,
+4\% above the measured 23.2 and 25.1, and 40.2 at 900~K, against 36 at
+923~K, of which vacancies contribute about two units \cite{nakashima2020}.
+With the harmonic FD FC2 of the 32-atom cell, the QHA overestimates $\alpha$
+by 13--15\% at 300--400~K and diverges above 500~K; at 900~K its free-energy
+minimum lies outside the volume grid. The cause is the truncated cell: its
+interpolated harmonic spectrum has imaginary frequencies at all but the
+smallest volume, with the minimum frequency (full $20^3$ mesh) falling from
+$-0.45$ to $-1.25$~THz between 4.025 and 4.150~\AA. The self-consistent
+FC2 is stable at every volume and temperature (minimum frequency
+0.30--0.40~THz).
+
+Two independent self-consistent grids were computed, one with design seeds
+that differ between volumes and one with the same seeds at all volumes.
+They agree within $0.2\times10^{-6}$~K$^{-1}$ at 100~K,
+$1.5\times10^{-6}$~K$^{-1}$ at 300~K, and $3\times10^{-6}$~K$^{-1}$ at
+400--500~K. At 300 and 400~K they lie 0--7\% and 5--17\% below experiment,
+and below the converged QHA. Above 500~K the two grids differ by up to
+$10\times10^{-6}$~K$^{-1}$, so the self-consistent thermal expansion is
+not determined there. The reason is the curvature of $F(V)$. Across the
+grid, $F$ varies by a few meV per atom, and the statistical error of
+$F_{\rm h}$ from an FC2 fitted to 16 configurations (about 0.05~THz in the
+frequencies) is a sizable fraction of that at high temperature. The
+anharmonic energy term (between $-0.4$ and $-17$~meV per atom) is not the
+main source: omitting it changes $\alpha$ by less than the difference
+between the grids. The fixed amplitudes of the design bias the energy
+term as they bias the FC2 [Eq.~(\ref{eq:bias})], which is a further, smaller
+error at high temperature.
+
+In summary, the self-consistent design removes the instability of the
+small-cell QHA and gives the thermal expansion of Al within 17\% of
+experiment at 300--400~K, reproducibly up to 500~K. Close to melting, the free-energy
+curvature needs many more configurations per volume than the budgets for
+which SOTC-D was designed. For a crystal whose large-cell harmonic FC2 is
+stable, such as Al, the converged harmonic QHA is the more accurate route.
+The calculation used 1379 force calls in the 32-atom cell (two grids of
+seven volumes and six temperatures with 16 calls each, plus the FD trials)
+and 21 in the 125-atom cell.
 
 \input{tables/tab_qha}
 
@@ -1194,10 +1233,13 @@ in 50 of 56 comparisons at equal budget; in the other six, pooled sTDEP (W
 and NaCl at 64 and 16 calls, respectively, Si at 16, Mg at 32 and 64) or SSCHA (Al at 64)
 is better by at most 0.006~THz. It needs a factor of 2--16 fewer force calls
 than SSCHA for a given accuracy in 13 of 14 cases, and with DFT forces for
-Al it reaches with four calls the accuracy SSCHA reaches with 256, within the
-0.1~THz resolution of that test. Third, the regression method, including sparsity-promoting
+Al it reaches with four calls the accuracy SSCHA reaches with 256 when both
+are measured against the iteration-1 effective FC2; against the SSCHA result
+itself the two are not distinguished at the 0.1~THz resolution of that test. Third, the regression method, including sparsity-promoting
 and Bayesian fits, changes the result by at most 0.03~THz, whereas the
-design changes it by factors of two or more; the crystal-symmetry basis
+design changes it by up to a factor of 2.6 relative to random canonical
+subsets at two and eight calls in the supercell basis
+(Table~\ref{tab:matched}), and by less in the crystal basis; the crystal-symmetry basis
 reduces the number of parameters by an order of magnitude at no loss in
 held-out accuracy and should be used by any method. The gain of SOTC-D
 diminishes with budget, as expected once the sampling error falls below the
@@ -1229,7 +1271,9 @@ TDEP samples the classical anharmonic ensemble, including non-Gaussian
 displacement statistics, and is not replaced by a Gaussian design; SOTC-D
 addresses the self-consistent harmonic level, at which quantum zero-point
 motion enters through the mode amplitudes. For Al at 300~K the two
-effective FC2 models differ by 0.28~THz. With DFT forces, AIMD-TDEP needed about 500
+effective FC2 models differ by 0.28~THz, mostly because of the non-Gaussian
+distribution sampled by the MD rather than zero-point motion
+(Sec.~\ref{sec:iter1}). With DFT forces, AIMD-TDEP needed about 500
 MD steps per trajectory to come within 0.1~THz of its own limit, whereas
 SOTC-D-SC needed four force calls to reach the same error relative to its target
 (Sec.~\ref{sec:iter1}); the 250 equilibration steps are part of this
@@ -1239,12 +1283,15 @@ both references, this is an order-of-magnitude comparison.
 SOTC-D gives the effective FC2 at one volume. Repeated on a volume grid, it
 gives the free energy of the self-consistent harmonic model, because the
 designed configurations also provide the energies for its anharmonic
-correction. For Al this reproduces the measured expansion within 8--13\% at
-300--400~K with eight force calls per volume and temperature, and removes
-the divergence of the QHA of the same cell (Sec.~\ref{sec:qha}). Near
-melting the self-consistent harmonic expansion is too small. Testing whether
-this persists in larger cells and with more configurations for the energy term
-is left for future work.
+correction. For Al, with 16 force calls per volume and temperature, this
+removes the divergence of the QHA of the same 32-atom cell and gives the
+thermal expansion within 17\% of experiment at 300--400~K, reproducibly up to 500~K
+(Sec.~\ref{sec:qha}). At higher temperatures the curvature of the free
+energy with respect to volume is not resolved at this budget. Thermal
+expansion is therefore an application in which the small-budget advantage of
+the design is limited: it needs free-energy differences between volumes to
+better than 1~meV per atom, and for crystals with a stable harmonic FC2 in
+a large cell the converged QHA is the cheaper and more accurate route.
 
 The comparison also shows where the remaining errors are. In 32--72-atom cells
 the supercell truncation error (up to 0.5~THz) is comparable to or larger than
@@ -1286,9 +1333,11 @@ finite-temperature renormalization (up to 1.4~THz) and supercell truncation
 room-temperature Debye--Waller factors of Al, Cu, and Au are recovered within
 6\% of tabulated values when force constants at the room-temperature
 lattice parameter are used. On a volume grid, the self-consistent
-form gives the thermal expansion of Al within 8--13\% of experiment at
-300--400~K and stays finite up to 900~K, where the harmonic QHA of the
-same cell diverges. Because the gain is
+form gives the thermal expansion of Al within 17\% of experiment at
+300--400~K, reproducibly up to 500~K, whereas the QHA of the same small
+cell diverges above 500~K; at higher temperatures 16 force calls per volume
+do not resolve the free-energy curvature, and for Al the converged harmonic
+QHA is more accurate. Because the gain is
 largest at budgets of a few force calls, the design is most useful where each
 calculation is expensive---hybrid functionals, large cells, or
 high-throughput screening of finite-temperature phonons---and it can be used
@@ -1313,7 +1362,9 @@ Eq.~(\ref{eq:Q}), the surrogate design study, the design comparison in the
 crystal-symmetry basis, the regression-framework comparison, the
 individual SOTC-C iterations, the lattice-parameter sensitivity, an
 overview of the reference accuracy, the electronic-convergence and cutoff
-tests of the higher-order fits, and the NaCl comparison with neutron data.
+tests of the higher-order fits, the NaCl comparison with neutron data, the
+branch-resolved convergence of SOTC-D for Al and Au with the Al neutron
+model, and the design comparisons at four and sixteen force calls.
 
 \section*{Data Availability}
 The data that support the findings of this study, including all QE inputs and

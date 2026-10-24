@@ -104,6 +104,10 @@ python codes/validation/aimd_tdep.py al 0                    # QE MD trajectory 
 python codes/validation/aimd_tdep_compare.py al               # AIMD-TDEP convergence vs MD steps
 python codes/validation/dft_qha.py al 4.050                  # volume-grid point: FD trial + SOTC-D-SC at 100-900 K (thermal expansion)
 python codes/validation/dft_qha_analyze.py al                 # thermal expansion alpha(T) from the volume grid
+python codes/validation/dft_qha.py al 4.050 --budget 16 --common-seed  # second grid with common design seeds
+python codes/validation/dft_qha_large.py al 4.050            # converged 125-atom harmonic FD on the volume grid
+python codes/validation/dft_classical_gaussian.py al          # classical-amplitude Gaussian ensemble (AIMD gap)
+python codes/validation/classical_gaussian_compare.py al      # quantum vs classical vs AIMD effective FC2
 python codes/validation/make_jap_tables.py && python codes/validation/plot_robustness.py \
     && python codes/validation/plot_designs.py
 ```

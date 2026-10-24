@@ -1,0 +1,25 @@
+\begin{table*}[t]
+\caption{Updated trial (iteration 1, supercell basis). Mesh RMSE (THz) against the iteration-1 effective FC2. Matched trial: SOTC-D designed from the iteration-1 trial (D$_1$) versus the better of random canonical subsets and pairs drawn from the same trial (C$_1$), scored against the disjoint effective FC2. Equal cost: bootstrapped SOTC-D (B; first pair from the harmonic trial, later pairs from the model refitted to the first pair, no extra force calls) and one-shot SOTC-D (D$_0$) versus canonical pairs from the harmonic trial (C$_0$; a single sTDEP iteration), scored against the 40-snapshot iteration-1 effective FC2, which shares no configuration with them. B and D$_0$ coincide at 2 calls by construction. The best entry of each group is bold.}
+\label{tab:selfconsistent_4_16}
+\begin{ruledtabular}
+\begin{tabular}{lcccccccccc}
+ & \multicolumn{2}{c}{matched, 4} & \multicolumn{3}{c}{equal cost, 4} & \multicolumn{2}{c}{matched, 16} & \multicolumn{3}{c}{equal cost, 16}\\
+ & D$_1$ & C$_1$ & B & D$_0$ & C$_0$ & D$_1$ & C$_1$ & B & D$_0$ & C$_0$\\
+\hline
+Al & \textbf{0.10} & 0.21 & \textbf{0.07} & 0.09 & 0.15 & \textbf{0.08} & 0.10 & \textbf{0.06} & 0.06 & 0.10\\
+Ag & \textbf{0.15} & 0.15 & 0.12 & \textbf{0.12} & 0.17 & 0.10 & \textbf{0.10} & \textbf{0.08} & 0.09 & 0.13\\
+Au & \textbf{0.07} & 0.15 & \textbf{0.14} & 0.20 & 0.24 & \textbf{0.07} & 0.09 & \textbf{0.06} & 0.19 & 0.24\\
+Cu & \textbf{0.48} & 0.74 & 0.55 & \textbf{0.37} & 1.18 & \textbf{0.21} & 0.21 & 0.25 & \textbf{0.21} & 0.29\\
+Mo & \textbf{0.07} & 0.10 & 0.06 & \textbf{0.06} & 0.10 & \textbf{0.06} & 0.06 & 0.05 & \textbf{0.05} & 0.07\\
+W & \textbf{0.05} & 0.08 & \textbf{0.05} & 0.06 & 0.07 & \textbf{0.04} & 0.04 & 0.03 & \textbf{0.03} & 0.04\\
+NaCl & \textbf{0.14} & 0.19 & \textbf{0.16} & 0.30 & 0.23 & \textbf{0.10} & 0.11 & \textbf{0.07} & 0.16 & 0.15\\
+MgO & \textbf{0.23} & 0.38 & \textbf{0.33} & 0.44 & 0.44 & \textbf{0.21} & 0.22 & \textbf{0.16} & 0.36 & 0.30\\
+PbTe & \textbf{0.05} & 0.11 & \textbf{0.09} & 0.18 & 0.14 & \textbf{0.05} & 0.06 & \textbf{0.06} & 0.11 & 0.10\\
+Si & \textbf{0.05} & 0.07 & \textbf{0.06} & 0.09 & 0.09 & 0.06 & \textbf{0.04} & \textbf{0.04} & 0.09 & 0.06\\
+Mg & \textbf{0.04} & 0.05 & 0.03 & \textbf{0.03} & 0.04 & 0.04 & \textbf{0.04} & \textbf{0.02} & 0.04 & 0.03\\
+\hline
+D$_1<$C$_1$ / B$<$C$_0$ & \multicolumn{2}{c}{11/11} & \multicolumn{3}{c}{11/11} & \multicolumn{2}{c}{8/11} & \multicolumn{3}{c}{11/11}\\
+held-out force D$_1<$C$_1$ & \multicolumn{2}{c}{10/11} & \multicolumn{3}{c}{} & \multicolumn{2}{c}{6/11} & \multicolumn{3}{c}{}\\
+\end{tabular}
+\end{ruledtabular}
+\end{table*}
