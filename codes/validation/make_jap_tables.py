@@ -796,6 +796,50 @@ def qha_table():
               r"\end{table}"]
     return "\n".join(lines)
 
+def bvk_table():
+    path = ROOT / "validation_results" / "summaries" / "experimental_bvk.json"
+    if not path.exists():
+        return ""
+    r = json.loads(path.read_text())
+    expt = r["experiment"]
+    # Temperature-matched experiment: Al at 300 K; Cu interpolated to 1200 K.
+    cu = [np.interp(1200, [973, 1336], [expt["cu"]["973"][k], expt["cu"]["1336"][k]])
+          for k in range(3)]
+    rows = {"al": ("Al, 300~K", expt["al"]["300"]), "cu": ("Cu, 1200~K", cu)}
+    names = (("harmonic_converged", "harmonic, large cell"),
+             ("harmonic_cell", "harmonic, SOTC cell"),
+             ("effective_iter1", "effective FC2"),
+             ("sotcd_updated_8", "SOTC-D (8, updated)"),
+             ("boot_8", "bootstrapped (8)"))
+    lines = [
+        r"\begin{table}[t]",
+        r"\caption{Nearest-neighbour force constants (N/m): first- and second-shell"
+        r" longitudinal ($K_1$, $K_2$) and mean first-shell transverse ($K_{T1}$),"
+        r" averaged over all pairs of the shell. Experiment: Born--von K\'arm\'an fits"
+        r" to inelastic neutron data compiled in Ref.~\onlinecite{kresch2009thesis}"
+        r" (Cu interpolated linearly between 973 and 1336~K). All models at the"
+        r" production lattice parameters (300~K for Al, 1200~K for Cu).}",
+        r"\label{tab:bvk}",
+        r"\footnotesize",
+        r"\begin{ruledtabular}",
+        r"\begin{tabular}{lcccccc}",
+        r" & \multicolumn{3}{c}{Al, 300~K} & \multicolumn{3}{c}{Cu, 1200~K}\\",
+        r" & $K_1$ & $K_2$ & $K_{T1}$ & $K_1$ & $K_2$ & $K_{T1}$\\",
+        r"\hline",
+    ]
+    for key, label in names:
+        cells = []
+        for m in ("al", "cu"):
+            v = r["models"][m][key]
+            cells += [f"{v['K1']:.1f}", f"{v['K2']:.2f}", f"{v['KT1']:.2f}"]
+        lines.append(label + " & " + " & ".join(cells) + r"\\")
+    lines.append(r"neutron BvK & " + " & ".join(
+        f"{v:.1f}" if k == 0 else f"{v:.2f}" for m in ("al", "cu")
+        for k, v in enumerate(rows[m][1])) + r"\\")
+    lines += [r"\end{tabular}", r"\end{ruledtabular}", r"\end{table}"]
+    return "\n".join(lines)
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "tab_runs.tex").write_text(runs_table() + "\n")
@@ -816,6 +860,7 @@ def main():
     (OUT / "tab_selfconsistent_crystal_4_16.tex").write_text(
         selfconsistent_table(counts=(4, 16), basis="crystal",
                              label="tab:selfconsistent_crystal_4_16") + "\n")
+    (OUT / "tab_bvk.tex").write_text(bvk_table() + "\n")
     (OUT / "tab_qha.tex").write_text(qha_table() + "\n")
     (OUT / "tab_cost.tex").write_text(cost_table() + "\n")
     (OUT / "tab_basis.tex").write_text(basis_table() + "\n")

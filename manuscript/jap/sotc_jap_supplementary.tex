@@ -249,6 +249,28 @@ the same definitions.
 \input{tables/tab_selfconsistent_crystal_4_16}
 \input{tables/tab_selfconsistent_4_16}
 
+\section{Nearest-neighbour force constants against neutron data}
+
+Table~\ref{tab:bvk} compares the leading real-space force constants with
+Born--von K\'arm\'an fits to inelastic neutron data \cite{kresch2009thesis}
+where the measurement temperature matches the model: Al at 300~K and Cu at
+1200~K (interpolated between 973 and 1336~K). For the other crystals the
+neutron fits are at room temperature, whereas the models are at
+1000--1500~K and the corresponding lattice parameters, so they are not
+compared. The converged harmonic reference of Al reproduces the 300~K
+constants within 4\%. In the 32-atom Al cell, truncation distorts
+individual constants (the second-shell constant falls to 0.5~N/m). The
+effective and SOTC-D models partly compensate, so shell constants of the
+small cell should not be read as converged. For Cu, where truncation is small
+($K_1$ 23.5~N/m in both cells), the harmonic model at the 1200~K lattice
+parameter is 8\% softer than experiment in $K_1$. The effective and SOTC-D
+models are 16--18\% stiffer (bootstrapped SOTC-D 30\%). The SCHA auxiliary
+FC2 omits the cubic (bubble) contribution to the physical spectrum, which
+softens it, so a stiffer auxiliary FC2 than the measured spectrum is the
+expected sign.
+
+\input{tables/tab_bvk}
+
 \bibliography{refs_jap}
 
 \end{document}

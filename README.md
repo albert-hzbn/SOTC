@@ -108,6 +108,9 @@ python codes/validation/dft_qha.py al 4.050 --budget 16 --common-seed  # second 
 python codes/validation/dft_qha_large.py al 4.050            # converged 125-atom harmonic FD on the volume grid
 python codes/validation/dft_classical_gaussian.py al          # classical-amplitude Gaussian ensemble (AIMD gap)
 python codes/validation/classical_gaussian_compare.py al      # quantum vs classical vs AIMD effective FC2
+python codes/validation/experimental_bvk_compare.py           # near-neighbour force constants vs neutron Born-von Karman fits
+python codes/validation/dft_qha.py cu 3.6149 --temperatures 300 --budget 8  # SOTC-D at the room-temperature lattice (also au 4.0782)
+python codes/validation/sotc_uiso_room.py                     # U_iso(300 K) of Cu and Au from SOTC models
 python codes/validation/make_jap_tables.py && python codes/validation/plot_robustness.py \
     && python codes/validation/plot_designs.py
 ```

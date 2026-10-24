@@ -422,7 +422,14 @@ bonds. Because these priors can bias the result, Sec.~\ref{sec:audit} reports
 the same data refitted without the projection, with different $\lambda$ and
 cutoffs, and in a complete space-group, permutation, and sum-rule adapted FC2
 basis constructed with symfc \cite{ref54}, solved by unregularized least
-squares; this fit is used for SOTC-D and for all matched canonical baselines.
+squares; this fit is used for SOTC-D and for all matched canonical baselines. It is the estimator of TDEP: ordinary least squares for the
+second-order force constants in a basis that imposes the space-group,
+permutation, and acoustic-sum-rule constraints \cite{ref5}. The TDEP code
+itself was not used. The only differences from a TDEP fit are the basis (the
+space group of the supercell rather than that of the crystal, compared in
+Sec.~\ref{sec:design}) and the absence of TDEP's optional higher-order terms.
+All protocols, including the canonical, sTDEP, and AIMD baselines, use this
+same fit, so they differ only in the configurations.
 For that basis, the rank and condition number of the column-normalized
 design matrix are reported.
 
@@ -652,7 +659,13 @@ reference and the 300~K effective FC2 of the 32-atom cell (TA(X) 5.39 against
 5.72 and 6.01--6.29~THz, the degeneracy being lifted by the cell). Most of the
 stiffening of the effective FC2 is already present in the harmonic FD model of
 the same cell (5.87--6.09~THz) and is therefore a truncation effect
-(Supplementary Fig.~S4). By contrast,
+(Supplementary Fig.~S4). The same comparison in real space is in Supplementary
+Table~S10. The converged Al reference reproduces the 300~K neutron
+nearest-neighbour constants within 4\%. For Cu at 1200~K, the effective and
+SOTC-D first-shell constants are 16--18\% stiffer than the neutron value
+interpolated to that temperature. This is the expected sign, because the
+auxiliary FC2 omits the bubble softening of the measured spectrum
+(Sec.~\ref{sec:intro}). By contrast,
 the $3\times3\times3$ FD model places TA(L) at 4.91~THz, 15\% higher: in
 small cells the truncation error is of the same size as the thermal effects
 studied here. The effective FC2 at
@@ -1102,7 +1115,16 @@ room-temperature one, the SOTC-cell models can be compared directly
 (harmonic trial), 0.0104 (bootstrapped), and 0.0106~\AA$^2$ (updated trial),
 3--7\% above the tabulated value. The harmonic FD model of the same 32-atom cell
 gives 0.0150~\AA$^2$, because its interpolated spectrum has small regions of
-imaginary and near-zero frequencies (minimum $-0.67$~THz). At the production lattice parameters, Ag, Mo, and W give
+imaginary and near-zero frequencies (minimum $-0.67$~THz). For Cu and Au,
+the same 32-atom cell was scaled to the room-temperature lattice parameters
+(3.6149 and 4.0782~\AA), and SOTC-D-SC was run at 300~K with eight force
+calls after the harmonic FD trial. It gives 0.0062 (Cu) and
+0.0074~\AA$^2$ (Au), 11\% and 5\% below the tabulated values, against 0.0064
+and 0.0088~\AA$^2$ for the harmonic FD model of that cell. The result
+changes by less than 3\% between two and eight calls. For Au the
+self-consistent model removes most of the overestimate of the small-cell
+harmonic model; for Cu the remaining deficit is that of the cell, since the
+harmonic model of the same cell is also 9\% low. At the production lattice parameters, Ag, Mo, and W give
 0.0096, 0.0029, and 0.0022~\AA$^2$, 3--10\% above the tabulated 0.0093,
 0.0027, and 0.0020~\AA$^2$, as expected because the production lattice
 parameters of these crystals are those near their design temperatures
@@ -1331,8 +1353,9 @@ regression methods do not close this gap. Converged references reveal that
 finite-temperature renormalization (up to 1.4~THz) and supercell truncation
 (up to 0.5~THz) are as large as or larger than the sampling errors, and
 room-temperature Debye--Waller factors of Al, Cu, and Au are recovered within
-6\% of tabulated values when force constants at the room-temperature
-lattice parameter are used. On a volume grid, the self-consistent
+6\% of tabulated values by converged harmonic references and within 3--11\%
+by SOTC-D with eight force calls, when force constants at the
+room-temperature lattice parameter are used. On a volume grid, the self-consistent
 form gives the thermal expansion of Al within 17\% of experiment at
 300--400~K, reproducibly up to 500~K, whereas the QHA of the same small
 cell diverges above 500~K; at higher temperatures 16 force calls per volume
