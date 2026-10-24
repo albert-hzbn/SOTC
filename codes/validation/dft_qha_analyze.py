@@ -11,7 +11,7 @@ free energy of the self-consistent SOTC-D FC2 (Fourier-interpolated from
 the 32-atom cell, 20^3 mesh), and dU = <E - E(0) - u.Phi.u/2> the
 anharmonic energy term of the SCHA free energy, averaged over the second
 half of the designed configurations and fitted linearly in V. Results are
-given after 8 and 16 force calls per volume and temperature.  Because the SCHA free energy
+given after 8, 16, and 32 force calls per volume and temperature.  Because the SCHA free energy
 is stationary in Phi, the entropy is the harmonic entropy S_h[Phi](T), and
 
     alpha = (dS/dV)_T / (3 B_T),   B_T = V d^2F/dV^2,

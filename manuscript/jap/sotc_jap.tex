@@ -44,7 +44,7 @@ to 16 calls and two-iteration sTDEP in all crystals at eight calls. On
 anharmonic model potentials, the self-consistent form needs 2--16 times
 fewer force calls than the stochastic self-consistent harmonic approximation
 in 13 of 14 cases. On a volume grid, it gives the thermal expansion of
-Al within 8\% of experiment at 300--400~K.
+Al within 3\% of experiment at 300~K.
 \end{abstract}
 
 \maketitle
@@ -59,7 +59,7 @@ shifts the phonon frequencies at fixed volume.
 
 Finite-temperature lattice-dynamics methods differ in the ensemble over which
 the forces are averaged and in the anharmonic terms they retain. The
-quasiharmonic approximation keeps harmonic force constants and lets them
+quasiharmonic approximation (QHA) keeps harmonic force constants and lets them
 depend on volume only, so it omits the explicit temperature dependence that
 anharmonic coupling produces at fixed volume. Self-consistent harmonic
 theories include this dependence through an effective harmonic Hamiltonian
@@ -1139,8 +1139,8 @@ are not compared with room-temperature data.
 \subsection{Thermal expansion of Al}\label{sec:qha}
 
 Because the SCHA free energy is stationary with respect to the auxiliary
-force constants, its temperature derivative at fixed volume is the harmonic
-entropy of the self-consistent FC2, $S=S_{\rm h}[\boldsymbol\Phi_{\rm
+force constants, its temperature derivative at fixed volume is minus the
+harmonic entropy of the self-consistent FC2, $S=S_{\rm h}[\boldsymbol\Phi_{\rm
 SC}](T)$. The free energy per atom on the volume grid is
 \begin{align}
 F(V,T)={}&E_{\rm st}(V)+F_{\rm h}[\boldsymbol\Phi_{\rm SC}(V,T)](T)\nonumber\\
@@ -1167,7 +1167,7 @@ of the FC2 with respect to temperature.
 
 Table~\ref{tab:qha} gives the results. The QHA with the converged 125-atom
 harmonic FC2 gives 24.1 and $26.2\times10^{-6}$~K$^{-1}$ at 300 and 400~K,
-4\% above the measured 23.2 and 25.1, and 40.2 at 900~K, against 36 at
+4--5\% above the measured 23.2 and 25.1, and 40.2 at 900~K, against 36 at
 923~K, of which vacancies contribute about $2\times10^{-6}$~K$^{-1}$
 \cite{nakashima2020}.
 With the harmonic FD FC2 of the 32-atom cell, the QHA overestimates $\alpha$
@@ -1184,25 +1184,29 @@ that differ between volumes and one with the same seeds at all volumes,
 each with 32 force calls per volume and temperature. Up to 400~K they agree
 within $0.6\times10^{-6}$~K$^{-1}$, and $\alpha$ increases monotonically:
 13.1, 22.8, and $23.3\times10^{-6}$~K$^{-1}$ (means) at 100, 300, and 400~K,
-1--3\% and 7--8\% below experiment at 300 and 400~K and 5--12\% below the
+1--3\% and 7--8\% below experiment at 300 and 400~K and 4--12\% below the
 converged QHA. With 16 calls the grids differed by up to
 $3\times10^{-6}$~K$^{-1}$ in this range. Replacing the cubic $F(V)$ by a
-quartic changes $\alpha$ by at most $0.3\times10^{-6}$~K$^{-1}$ up to 300~K,
-and omitting the anharmonic energy term (between $-0.4$ and $-15$~meV per
-atom) changes it by less than $1\times10^{-6}$~K$^{-1}$ up to 700~K. Between
+quartic changes $\alpha$ by at most $0.3\times10^{-6}$~K$^{-1}$ up to 300~K
+but by $-1.0$ and $+6.3\times10^{-6}$~K$^{-1}$ for the two grids at 400~K
+(for the converged QHA by at most $0.7\times10^{-6}$~K$^{-1}$ at any
+temperature); the 400~K value therefore carries a fit-order uncertainty.
+Omitting the anharmonic energy term (between $-0.4$ and $-15$~meV per
+atom) changes $\alpha$ by less than $1\times10^{-6}$~K$^{-1}$ up to 700~K. Between
 500 and 700~K the grids differ by 1.4--$2.1\times10^{-6}$~K$^{-1}$, and
 $\alpha$ stays at 22--25 instead of rising as in experiment and the QHA;
 at 900~K the grids differ by $11\times10^{-6}$~K$^{-1}$. At high
 temperature the curvature of $F(V)$ is therefore not resolved, because
-$F$ varies across the grid by only a few meV per atom and the statistical
-error of $F_{\rm h}$ from an FC2 fitted to 32 configurations is a sizable
-fraction of that. The fixed amplitudes of the design bias the energy term
+near its minimum $F$ changes by only a few meV per atom between neighboring
+volumes, and the statistical error of $F_{\rm h}$ from an FC2 fitted to 32
+configurations is a sizable fraction of that. The fixed amplitudes of the design bias the energy term
 as they bias the FC2 [Eq.~(\ref{eq:bias})], which is a further, smaller
 error at high temperature.
 
 In summary, the self-consistent design removes the instability of the
-small-cell QHA and gives a reproducible thermal expansion of Al within 8\%
-of experiment at 300--400~K. Above 400~K it underestimates the rise of
+small-cell QHA and gives a reproducible thermal expansion of Al within 3\%
+of experiment at 300~K and 7--8\% below it at 400~K, where the result also
+depends on the order of the free-energy fit. Above 400~K it underestimates the rise of
 $\alpha$, and close to melting the free-energy curvature needs many more
 configurations per volume than the budgets for which SOTC-D was designed.
 For a crystal whose large-cell harmonic FC2 is stable, such as Al, the
@@ -1323,8 +1327,8 @@ gives the free energy of the self-consistent harmonic model, because the
 designed configurations also provide the energies for its anharmonic
 correction. For Al, with 32 force calls per volume and temperature, this
 removes the divergence of the QHA of the same 32-atom cell and gives a
-reproducible thermal expansion within 8\% of experiment at 300--400~K
-(Sec.~\ref{sec:qha}). Above 400~K it underestimates the rise of $\alpha$, and
+reproducible thermal expansion within 3\% of experiment at 300~K and
+7--8\% below it at 400~K (Sec.~\ref{sec:qha}). Above 400~K it underestimates the rise of $\alpha$, and
 near melting the curvature of the free energy with respect to volume is not
 resolved at this budget. Thermal expansion is therefore an application in
 which the small-budget advantage of the design is limited: it needs
@@ -1373,8 +1377,8 @@ room-temperature Debye--Waller factors of Al, Cu, and Au are recovered within
 6\% of tabulated values by converged harmonic references and within 2--11\%
 by SOTC-D with eight force calls, when force constants at the
 room-temperature lattice parameter are used. On a volume grid, the self-consistent
-form gives a reproducible thermal expansion of Al within 8\% of experiment
-at 300--400~K, whereas the QHA of the same small cell diverges above 500~K;
+form gives a reproducible thermal expansion of Al within 3\% of experiment
+at 300~K and 7--8\% below it at 400~K, whereas the QHA of the same small cell diverges above 500~K;
 at higher temperatures it underestimates the rise of $\alpha$, the
 free-energy curvature is not resolved with 32 force calls per volume, and
 for Al the converged harmonic QHA is more accurate. Because the gain is
