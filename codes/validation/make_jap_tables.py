@@ -638,7 +638,7 @@ def iteration_table():
     lines = [
         r"\begin{longtable*}{lcccccc}",
         r"\caption{Individual iterations of the SOTC-C runs: configurations,"
-        r" r.m.s.\ displacement, unstable mesh fraction and minimum frequency of"
+        r" rms displacement, unstable mesh fraction and minimum frequency of"
         r" the axial-prior fit, and normalized condition number of the"
         r" space-group adapted design.\label{tab:iterations}}\\",
         r"\hline\hline",
@@ -813,7 +813,7 @@ def bvk_table():
              ("boot_8", "bootstrapped (8)"))
     lines = [
         r"\begin{table}[t]",
-        r"\caption{Nearest-neighbour force constants (N/m): first- and second-shell"
+        r"\caption{Nearest-neighbor force constants (N/m): first- and second-shell"
         r" longitudinal ($K_1$, $K_2$) and mean first-shell transverse ($K_{T1}$),"
         r" averaged over all pairs of the shell. Experiment: Born--von K\'arm\'an fits"
         r" to inelastic neutron data compiled in Ref.~\onlinecite{kresch2009thesis}"

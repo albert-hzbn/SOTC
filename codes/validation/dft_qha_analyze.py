@@ -46,7 +46,7 @@ EV_PER_KJMOL = 1.0 / 96.48533212
 EXPERIMENT_ALPHA = {50: (3.7, 0.4), 273: (22.7, 0.4), 298: (23.2, 0.2), 400: (25.1, 0.2),
                     923: (36.0, 1.0)}
 EXPERIMENT_A = {0: 4.0317, 298: 4.0497, 400: 4.059, 923: 4.1237}
-CALLS = (8, 16)
+CALLS = (8, 16, 32)
 
 
 def birch_murnaghan(v, e0, v0, b0, bp):
@@ -119,9 +119,9 @@ def main(material="al", grid_dir="qha"):
     v = np.asarray([g["volume"] for g in grid])
     e_st = np.asarray([e_static(x) for x in v])
 
-    def expansion(f, s):
+    def expansion(f, s, degree=3):
         # Cubic polynomial F(V) and quadratic S(V) over the seven volumes.
-        c = np.polyfit(v, f, 3)
+        c = np.polyfit(v, f, degree)
         roots = np.roots(np.polyder(c))
         roots = roots[np.isreal(roots)].real
         roots = roots[(np.polyval(np.polyder(c, 2), roots) > 0)]
@@ -153,6 +153,7 @@ def main(material="al", grid_dir="qha"):
             fl, sl = map(np.asarray, zip(*[thermal(ph, np.asarray(ph.force_constants), t)
                                            for ph in large]))
             entry["harmonic_qha_converged"] = expansion(e_st + fl, sl)
+            entry["harmonic_qha_converged_quartic"] = expansion(e_st + fl, sl, degree=4)
         for c in calls:
             fh, sh = map(np.asarray, zip(*[thermal(ph, g["phi"][c][it], t)
                                            for g, ph in zip(grid, phonons)]))
@@ -162,6 +163,7 @@ def main(material="al", grid_dir="qha"):
             entry[f"sotcd_sc_{c}"] = expansion(e_st + fh + du_fit, sh)
             entry[f"sotcd_sc_{c}_raw_du"] = expansion(e_st + fh + du, sh)
             entry[f"sotcd_sc_{c}_no_du"] = expansion(e_st + fh, sh)
+            entry[f"sotcd_sc_{c}_quartic"] = expansion(e_st + fh + du_fit, sh, degree=4)
         report["temperatures"][f"{t:.0f}"] = entry
         print(f"T={t:.0f}: dU({primary})={np.round(entry[f'du_mev_per_atom_{primary}'], 2)} meV/atom")
         for key, e in entry.items():
