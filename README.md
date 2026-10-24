@@ -100,6 +100,8 @@ python codes/validation/surrogate_amplitude_bias.py <mat>         # fixed vs mom
 python codes/validation/dft_sscha.py al <N> <seed>              # SSCHA with QE forces in the SOTC cell (venv313)
 python codes/validation/dft_sotcd_sc.py al <seed>                # SOTC-D-SC with QE forces
 python codes/validation/dft_selfconsistent_compare.py al         # DFT-level SSCHA vs SOTC-D-SC comparison
+python codes/validation/aimd_tdep.py al 0                    # QE MD trajectory k (0..3) in the SOTC cell; --parse-only after a time limit
+python codes/validation/aimd_tdep_compare.py al               # AIMD-TDEP convergence vs MD steps
 python codes/validation/make_jap_tables.py && python codes/validation/plot_robustness.py \
     && python codes/validation/plot_designs.py
 ```

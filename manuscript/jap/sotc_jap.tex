@@ -126,7 +126,7 @@ finite-displacement (FD) references and with an effective FC2 fitted to a
 temperature and electronic settings; and (iii)~compare SOTC with canonical
 samples of exactly the same size, fitted by the same regression, on
 held-out canonical forces, and also with special displacements, thermal
-rattle, sTDEP, SSCHA (with DFT forces for Al and on anharmonic model potentials), and sparse and Bayesian regression. Diamond Si and hcp
+rattle, sTDEP, SSCHA (with DFT forces for Al and on anharmonic model potentials), TDEP fitted to ab initio molecular dynamics (Al), and sparse and Bayesian regression. Diamond Si and hcp
 Mg are added to test other structure classes. We further report the
 non-analytic LO--TO correction for the polar crystals, Debye--Waller factors
 against a tabulated reference, and an independent test of constrained third-
@@ -538,7 +538,14 @@ same harmonic trial, and the minimizer settings of
 Sec.~\ref{sec:sc_surrogate}, with populations of $N=16$, 32, 64, and 256
 configurations; SOTC-D-SC was run with three seeds up to 32 force calls. For
 comparison, the SSCHA force constants are projected onto the same supercell
-basis. Iteration-1 results are scored against the iteration-1 effective
+basis. As an AIMD-TDEP baseline for Al, four Born--Oppenheimer
+molecular-dynamics trajectories were run with QE in the same cell and with the same
+electronic settings (Verlet integration, 3.9~fs time step, stochastic velocity
+rescaling at 300~K), each started from an independent canonical
+configuration and run for 1307--1372 steps. After 250 equilibration steps, the
+FC2 was fitted with the same basis and regression to the first $n$
+production steps of each trajectory; every MD step is counted as one force
+call. Iteration-1 results are scored against the iteration-1 effective
 FC2.
 
 The same protocol was applied to two further classes of crystal: covalent
@@ -780,6 +787,22 @@ limited by the reference: measured instead against the 256-configuration
 SSCHA result, which is 0.24~THz from the harmonic trial, all protocols,
 including the iteration-1 FC2 (0.09~THz), lie at 0.09--0.14~THz, the
 statistical uncertainty of that reference.
+
+AIMD-TDEP converges more slowly in force calls and to a different
+limit. Measured against the fit to all 4370 production steps, the median
+error of a single trajectory is 0.27~THz after 282 steps (including the 250
+equilibration steps), 0.12~THz after 378, 0.097~THz after 506, and
+0.056~THz after 1274 steps. SOTC-D-SC reaches a comparable error relative
+to its own target with four force calls. The converged AIMD-TDEP FC2 lies
+0.28~THz from the iteration-1 effective FC2 and 0.27~THz from the harmonic
+trial. The mean mesh frequency is 5.84~THz for both the harmonic trial and
+the AIMD-TDEP limit, but 6.11~THz for the effective FC2. The two targets
+differ in two ways that are not separated here: classical
+nuclei rather than quantum mode amplitudes (the rms displacements are 0.154
+and 0.159~\AA), and the actual anharmonic displacement distribution rather
+than a Gaussian one. AIMD-TDEP and the self-consistent protocols
+therefore converge to different quantities, and the force-call comparison
+applies to each method's own target.
 
 Figure~\ref{fig:dispersions} shows the resulting dispersions for six
 representative crystals. The difference between the effective FC2 and the
@@ -1125,7 +1148,12 @@ would have to be evaluated from the fitted effective model instead. AIMD-based
 TDEP samples the classical anharmonic ensemble, including non-Gaussian
 displacement statistics, and is not replaced by a Gaussian design; SOTC-D
 addresses the self-consistent harmonic level, at which quantum zero-point
-motion enters through the mode amplitudes. Volume-dependent properties
+motion enters through the mode amplitudes. For Al at 300~K the two
+effective FC2 models differ by 0.28~THz. With DFT forces, AIMD-TDEP needed about 500
+MD steps per trajectory to come within 0.1~THz of its own limit, whereas
+SOTC-D-SC needed four force calls to reach the same error relative to its target
+(Sec.~\ref{sec:iter1}). Correlated MD steps and the equilibration period
+account for most of this difference. Volume-dependent properties
 would require repeating the calculation on a volume grid; they are not
 addressed here.
 
