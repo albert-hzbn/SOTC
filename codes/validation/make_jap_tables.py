@@ -746,6 +746,47 @@ def calls_to_accuracy_table(thresholds=(0.05, 0.03, 0.02)):
     return "\n".join(lines)
 
 
+def qha_table():
+    path = ROOT / "validation_results" / "al" / "robustness" / "qha_thermal_expansion.json"
+    if not path.exists():
+        return ""
+    r = json.loads(path.read_text())
+    expt = r["experiment_alpha_1e6"]
+    near = {"300": "298", "400": "400", "900": "923"}
+    lines = [
+        r"\begin{table}[t]",
+        r"\caption{Thermal expansion of Al in the 32-atom SOTC cell (PBE). $a$:"
+        r" equilibrium lattice parameter (\AA); $B_T$: isothermal bulk modulus (GPa);"
+        r" $\alpha$: linear expansion coefficient ($10^{-6}$~K$^{-1}$) from"
+        r" $(\partial S/\partial V)_T/3B_T$. SC: self-consistent SOTC-D (8 calls per"
+        r" volume and temperature); the range in parentheses is the spread over the"
+        r" treatment of the anharmonic energy term (linear fit, raw, omitted). QHA:"
+        r" harmonic FD FC2 of the same cell. Experiment: averages of measured"
+        r" values at 298, 400, and 923~K (in the 300, 400, and 900~K rows) compiled"
+        r" in Ref.~\onlinecite{nakashima2020}.}",
+        r"\label{tab:qha}",
+        r"\footnotesize",
+        r"\begin{ruledtabular}",
+        r"\begin{tabular}{lccccc}",
+        r"$T$ (K) & $a$ (SC) & $B_T$ (SC) & $\alpha$ (SC) & $\alpha$ (QHA) & $\alpha$ (expt.)\\",
+        r"\hline",
+    ]
+    for t, e in r["temperatures"].items():
+        sc = e["sotcd_sc"]
+        spread = [e[k]["alpha_1e6"] for k in ("sotcd_sc", "sotcd_sc_raw_du", "sotcd_sc_no_du")]
+        q = e["harmonic_qha"]
+        qa = f"{q['alpha_1e6']:.1f}" + ("" if q["inside_grid"] else r"$^a$")
+        ex = expt.get(near.get(t, ""), None)
+        lines.append(" & ".join([
+            t, f"{sc['a_ang']:.3f}", f"{sc['B_gpa']:.0f}",
+            f"{sc['alpha_1e6']:.1f} ({min(spread):.1f}--{max(spread):.1f})", qa,
+            f"{ex[0]:.1f}" if ex else "--"]) + r"\\")
+    lines += [r"\end{tabular}", r"\end{ruledtabular}",
+              r"\footnotesize{$^a$Minimum outside the volume grid.}",
+              r"\end{table}"]
+    return "\n".join(lines)
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "tab_runs.tex").write_text(runs_table() + "\n")
@@ -764,6 +805,7 @@ def main():
     (OUT / "tab_selfconsistent_crystal_4_16.tex").write_text(
         selfconsistent_table(counts=(4, 16), basis="crystal",
                              label="tab:selfconsistent_crystal_4_16") + "\n")
+    (OUT / "tab_qha.tex").write_text(qha_table() + "\n")
     (OUT / "tab_cost.tex").write_text(cost_table() + "\n")
     (OUT / "tab_basis.tex").write_text(basis_table() + "\n")
     (OUT / "tab_fitters.tex").write_text(fitter_table() + "\n")

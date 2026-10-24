@@ -102,6 +102,8 @@ python codes/validation/dft_sotcd_sc.py al <seed>                # SOTC-D-SC wit
 python codes/validation/dft_selfconsistent_compare.py al         # DFT-level SSCHA vs SOTC-D-SC comparison
 python codes/validation/aimd_tdep.py al 0                    # QE MD trajectory k (0..3) in the SOTC cell; --parse-only after a time limit
 python codes/validation/aimd_tdep_compare.py al               # AIMD-TDEP convergence vs MD steps
+python codes/validation/dft_qha.py al 4.050                  # volume-grid point: FD trial + SOTC-D-SC at 100-900 K (thermal expansion)
+python codes/validation/dft_qha_analyze.py al                 # thermal expansion alpha(T) from the volume grid
 python codes/validation/make_jap_tables.py && python codes/validation/plot_robustness.py \
     && python codes/validation/plot_designs.py
 ```

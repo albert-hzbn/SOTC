@@ -37,7 +37,7 @@ forces exactly;
 \item with the same trial, SOTC-D has the lowest dispersion error of five
 designs in 10 of 11 crystals at two and at eight force calls; its
 bootstrapped form beats one-shot canonical sampling in all
-eleven crystals at every budget from 4 to 16 calls and two-iteration sTDEP
+eleven crystals at every budget from 4 to 16 calls (supercell basis) and two-iteration sTDEP
 with DFT forces in all eleven at eight calls, and on anharmonic
 model potentials of five crystals its fully self-consistent form reaches a
 given accuracy with a factor of 2--16 fewer force calls than SSCHA in 13 of
@@ -49,7 +49,10 @@ of the cubic crystals by up to a factor of 30 at no loss of accuracy;
 renormalization (up to 1.4~THz) and supercell truncation (up to 0.5~THz),
 room-temperature Debye--Waller factors of Al, Cu, and Au within 6\% of
 tabulated values,
-and non-analytic LO--TO corrections for the polar crystals.
+and non-analytic LO--TO corrections for the polar crystals;
+\item on a volume grid, the thermal expansion of Al within 8--13\% of
+experiment at 300--400~K, finite up to 900~K, where the harmonic
+quasiharmonic approximation of the same cell diverges.
 \end{itemize}
 All inputs, outputs, and analysis scripts are openly available.
 

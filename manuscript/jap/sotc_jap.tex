@@ -554,7 +554,11 @@ configuration and run for 1307--1372 steps. After 250 equilibration steps, the
 FC2 was fitted with the same basis and regression to the first $n$
 production steps of each trajectory; every MD step is counted as one force
 call. Iteration-1 results are scored against the iteration-1 effective
-FC2.
+FC2. For the thermal expansion of Al, the 32-atom cell was scaled to seven
+lattice parameters from 4.000 to 4.150~\AA\ in steps of 0.025~\AA. At each,
+the harmonic FD trial (four displacements and the undisplaced cell) was
+computed, and SOTC-D-SC was run with eight force calls at 100, 300, 400, 500,
+700, and 900~K (371 force calls in total).
 
 The same protocol was applied to two further classes of crystal: covalent
 diamond Si (600~K, 64-atom conventional $2\times2\times2$ cell, $r_{\rm
@@ -1085,6 +1089,53 @@ are not compared with room-temperature data.
 
 \input{tables/tab_thermo}
 
+\subsection{Thermal expansion of Al}\label{sec:qha}
+
+Because the SCHA free energy is stationary with respect to the auxiliary
+force constants, its temperature derivative at fixed volume is the harmonic
+entropy of the self-consistent FC2, $S=S_{\rm h}[\boldsymbol\Phi_{\rm
+SC}](T)$. The free energy per atom on the volume grid is
+\begin{align}
+F(V,T)={}&E_{\rm st}(V)+F_{\rm h}[\boldsymbol\Phi_{\rm SC}(V,T)](T)\nonumber\\
+&+\big\langle E-E_0-\tfrac12\mathbf u\cdot\boldsymbol\Phi_{\rm SC}\mathbf u\big\rangle ,
+\label{eq:fqha}
+\end{align}
+where $E_{\rm st}$ is the static energy (third-order Birch--Murnaghan fit of
+the primitive-cell PBE energies), $F_{\rm h}$ is the quantum harmonic free
+energy, and the last term, averaged over the last two designed pairs, is the
+anharmonic energy correction of the SCHA \cite{ref7,ref50}. The linear
+thermal expansion coefficient follows as $\alpha=(\partial S/\partial
+V)_T/3B_T$, with the isothermal bulk modulus $B_T=V\partial^2F/\partial V^2$,
+both at the volume that minimizes $F$. The harmonic quasiharmonic
+approximation (QHA) in the same cell uses the FD FC2 and no correction
+term. Neither requires derivatives of the FC2 with respect to temperature.
+
+Table~\ref{tab:qha} gives the results. With the harmonic FD FC2 of the
+32-atom cell, the QHA overestimates $\alpha$ by 13\% at 300~K and 15\% at
+400~K. It increases steeply above 500~K, and at 900~K its free-energy minimum
+lies outside the volume grid. The reason is the truncated cell: its
+interpolated harmonic spectrum has small regions of imaginary frequencies
+from 4.05~\AA\ upward, with the minimum frequency falling from $-0.27$ to
+$-1.08$~THz between 4.05 and 4.15~\AA. The self-consistent FC2 is stable at
+every volume (minimum frequency 0.30--0.41~THz at 300 and 900~K).
+With the self-consistent FC2, $\alpha$ is 21.3 and
+$21.8\times10^{-6}$~K$^{-1}$ at 300 and 400~K, 8\% and 13\% below the measured
+23.2 and 25.1, and it stays finite up to 900~K. The anharmonic energy term is
+0.4--16~meV per atom. Its statistical uncertainty with four configurations
+per point dominates the uncertainty of $B_T$ above 500~K: the spread of
+$\alpha$ over three treatments of the term (Table~\ref{tab:qha}) is
+$0.4\times10^{-6}$~K$^{-1}$ at 300~K and up to $7\times10^{-6}$~K$^{-1}$ at 900~K. Repeating the fit with
+the FC2 after two, four, and six calls changes $(\partial S/\partial V)_T$ at
+300~K by at most 4\%. At 700 and 900~K, $\alpha$ (25--26) is well below the
+measured 36 at 923~K, of which vacancies contribute about two units
+\cite{nakashima2020}. Within the uncertainty of the correction term and the
+truncation of the 32-atom cell, the self-consistent harmonic level therefore
+accounts for the expansion near room temperature but not close to melting.
+The calculation needed 53 force calls per volume for six temperatures,
+including the FD trial.
+
+\input{tables/tab_qha}
+
 \subsection{Polar crystals}
 
 Born effective charges and dielectric constants from DFPT at the production
@@ -1185,12 +1236,15 @@ SOTC-D-SC needed four force calls to reach the same error relative to its target
 difference, and successive MD steps are correlated. Given the uncertainty of
 both references, this is an order-of-magnitude comparison.
 
-Thermal expansion and other volume-dependent properties are not addressed.
-SOTC-D gives the effective FC2 at one volume; a quasiharmonic or
-self-consistent thermal-expansion calculation repeats it on a volume grid
-and adds the anharmonic free-energy terms, which require the average
-potential energy as well as the FC2. A meaningful test requires at least
-five to seven volumes per temperature and is left for future work.
+SOTC-D gives the effective FC2 at one volume. Repeated on a volume grid, it
+gives the free energy of the self-consistent harmonic model, because the
+designed configurations also provide the energies for its anharmonic
+correction. For Al this reproduces the measured expansion within 8--13\% at
+300--400~K with eight force calls per volume and temperature, and removes
+the divergence of the QHA of the same cell (Sec.~\ref{sec:qha}). Near
+melting the self-consistent harmonic expansion is too small. Testing whether
+this persists in larger cells and with more configurations for the energy term
+is left for future work.
 
 The comparison also shows where the remaining errors are. In 32--72-atom cells
 the supercell truncation error (up to 0.5~THz) is comparable to or larger than
@@ -1231,7 +1285,10 @@ finite-temperature renormalization (up to 1.4~THz) and supercell truncation
 (up to 0.5~THz) are as large as or larger than the sampling errors, and
 room-temperature Debye--Waller factors of Al, Cu, and Au are recovered within
 6\% of tabulated values when force constants at the room-temperature
-lattice parameter are used. Because the gain is
+lattice parameter are used. On a volume grid, the self-consistent
+form gives the thermal expansion of Al within 8--13\% of experiment at
+300--400~K and stays finite up to 900~K, where the harmonic QHA of the
+same cell diverges. Because the gain is
 largest at budgets of a few force calls, the design is most useful where each
 calculation is expensive---hybrid functionals, large cells, or
 high-throughput screening of finite-temperature phonons---and it can be used
