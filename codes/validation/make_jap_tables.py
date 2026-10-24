@@ -91,7 +91,10 @@ def accuracy_table():
         r" ``SOTC-C'' is the correlator-matched model (selected iteration, axial prior);"
         r" ``SOTC-D'' is the D-optimal antithetic design with the space-group"
         r" adapted fit at 8 force calls. The last column is the RMSE between"
-        r" the harmonic and effective models (finite-temperature renormalization).}",
+        r" the harmonic and effective models (finite-temperature renormalization)."
+        r" Because the reference here is the full 40-snapshot fit, SOTC-D values"
+        r" differ by up to 0.02~THz from those of Table~\ref{tab:matched}, whose"
+        r" reference is disjoint from the scored design.}",
         r"\label{tab:accuracy}",
         r"\begin{ruledtabular}",
         r"\begin{tabular}{lccccccc}",
@@ -153,7 +156,7 @@ def bold_min(values, digits, cap=None):
     return texts
 
 
-def matched_table(counts=(2, 8)):
+def matched_table(counts=(2, 8), label="tab:matched"):
     """Iteration 0: every design from the same-cell harmonic FD trial."""
     kinds = ["D", "C", "P", "Z", "R"]
     head = " & ".join(
@@ -173,7 +176,7 @@ def matched_table(counts=(2, 8)):
         r" The best entry is bold; the last row counts the materials in which D"
         r" is best. Entries $>$10~THz ($>$100 in force) are singular fits of"
         r" designs that do not identify the model.}",
-        r"\label{tab:matched}",
+        r"\label{" + label + "}",
         r"\begin{ruledtabular}",
         r"\begin{tabular}{l" + "c" * 5 * len(counts) + "}",
         " & " + head + r"\\",
@@ -215,7 +218,7 @@ def matched_table(counts=(2, 8)):
     return "\n".join(lines)
 
 
-def selfconsistent_table(counts=(2, 8), basis="supercell"):
+def selfconsistent_table(counts=(2, 8), basis="supercell", label=None):
     """Iteration 1: designs from the updated trial, and the equal-cost test."""
     lines = [
         r"\begin{table*}[t]",
@@ -231,7 +234,7 @@ def selfconsistent_table(counts=(2, 8), basis="supercell"):
         r" effective FC2, which shares no configuration with them. B and D$_0$"
         r" coincide at 2 calls by construction. The best entry of each group is"
         r" bold.}",
-        r"\label{tab:selfconsistent" + ("" if basis == "supercell" else "_" + basis) + "}",
+        r"\label{" + (label or "tab:selfconsistent" + ("" if basis == "supercell" else "_" + basis)) + "}",
         r"\begin{ruledtabular}",
         r"\begin{tabular}{l" + "ccccc" * len(counts) + "}",
         " & " + " & ".join(
@@ -297,10 +300,11 @@ def cost_table():
         if rep is None or "iter1" not in rep["targets"]:
             continue
         base = ROOT / "validation_results" / m / "primary_cell"
+        # The DFT SSCHA and SOTC-D-SC runs used a different parallel layout.
+        skip = ("sscha_dft", "sotcd_sc_dft")
         walls = [float(np.load(f)["wall_seconds"]) for f in
-                 base.glob("*/state_*/result.npz")] + \
-                [float(np.load(f)["wall_seconds"]) for f in
-                 base.glob("*/*/state_*/result.npz")]
+                 list(base.glob("*/state_*/result.npz")) + list(base.glob("*/*/state_*/result.npz"))
+                 if f.relative_to(base).parts[0] not in skip]
         n_fd = len(list((base / "fd").glob("**/result.npz"))) or len(
             list((base / "fd").glob("**/espresso.pwo")))
         e = rep["targets"]["iter1"]["supercell"]
@@ -755,6 +759,11 @@ def main():
     (OUT / "tab_selfconsistent.tex").write_text(selfconsistent_table() + "\n")
     (OUT / "tab_selfconsistent_crystal.tex").write_text(
         selfconsistent_table(basis="crystal") + "\n")
+    (OUT / "tab_matched_4_16.tex").write_text(
+        matched_table(counts=(4, 16), label="tab:matched_4_16") + "\n")
+    (OUT / "tab_selfconsistent_crystal_4_16.tex").write_text(
+        selfconsistent_table(counts=(4, 16), basis="crystal",
+                             label="tab:selfconsistent_crystal_4_16") + "\n")
     (OUT / "tab_cost.tex").write_text(cost_table() + "\n")
     (OUT / "tab_basis.tex").write_text(basis_table() + "\n")
     (OUT / "tab_fitters.tex").write_text(fitter_table() + "\n")

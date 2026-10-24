@@ -12,9 +12,8 @@
 
 \begin{document}
 
-\title{Supplementary Material for ``Special optimal thermal cells:
-correlator-designed displacements for finite-temperature effective-harmonic
-phonons''}
+\title{Supplementary Material for ``Special optimal thermal cells: D-optimal
+thermal displacements for finite-temperature effective-harmonic phonons''}
 
 \author{Albert Linda}
 \affiliation{Department of Materials Science and Engineering, Indian Institute
@@ -116,6 +115,7 @@ force differences.}
 \label{fig:ifc34}
 \end{figure*}
 
+\clearpage
 \section{Individual iterations of the SOTC-C runs}
 
 \input{tables/tab_iterations}
@@ -204,5 +204,51 @@ $\mathbf u_i=\sum_m A_m\mathbf e_{im}/\sqrt{M_i}$. The optimization is
 carried out in mode amplitudes and phases with random restarts.
 
 \bibliography{refs_jap}
+
+\section{Branch-resolved convergence and neutron model for Al}
+
+Figure~\ref{fig:dispconv} shows the dispersions of SOTC-D from the updated
+trial with 2, 4, 8, and 16 force calls for Al (300~K) and Au (1200~K),
+together with the converged large-cell harmonic FD reference and the
+40-snapshot iteration-1 effective FC2 of the same cell. For Au, whose
+single-configuration SOTC-C fits are unstable (Table~\ref{tab:iterations}),
+the SOTC-D dispersions are stable at every budget and approach the effective
+FC2 branch by branch; with two calls the largest deviations are in the
+transverse branches along X--W--K and $\Gamma$--L. For Al the Born--von
+K\'arm\'an models fitted to the inelastic neutron spectrum at 10 and 300~K
+(Kresch \textit{et al.}, Phys.\ Rev.\ B \textbf{77}, 024301 (2008), eight
+shells) are also shown. The converged harmonic reference agrees with the 10~K
+model within 1.1\% at X and L. The 300~K model is softer in the transverse
+branches (TA(X) 5.39~THz) than both the converged harmonic reference
+(5.72~THz) and the effective FC2 of the 32-atom cell (6.01 and 6.29~THz, the
+degeneracy being lifted by the cell), most of whose stiffening is already
+present in the harmonic FD model of that cell (5.87 and 6.09~THz). A
+quantitative test of the finite-temperature renormalization against
+experiment is therefore limited by the supercell truncation of the
+32-atom cell and by the non-uniqueness of density-of-states-fitted
+force-constant models for individual branches, especially away from the
+high-symmetry points.
+
+\begin{figure*}[p]
+\centering
+\includegraphics[width=\textwidth]{figures/fig_dispersion_convergence.pdf}
+\caption{Dispersions of SOTC-D from the updated trial (blue dashed) with 2,
+4, 8, and 16 force calls, the converged large-cell harmonic FD reference
+(gray), the 40-snapshot iteration-1 effective FC2 (black), and, for Al, the
+Born--von K\'arm\'an models fitted to inelastic neutron data at 10~K (yellow)
+and 300~K (green). Same-cell models are Fourier interpolated from the
+32-atom SOTC cell.}
+\label{fig:dispconv}
+\end{figure*}
+
+\section{Designs at four and sixteen force calls}
+
+Tables~\ref{tab:matched_4_16} and \ref{tab:selfconsistent_crystal_4_16}
+extend Table~IV of the main text (supercell basis) and Table~\ref{tab:selfconsistent_crystal}
+(crystal-symmetry basis) to four and sixteen force calls, with the same
+definitions.
+
+\input{tables/tab_matched_4_16}
+\input{tables/tab_selfconsistent_crystal_4_16}
 
 \end{document}

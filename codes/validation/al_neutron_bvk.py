@@ -5,7 +5,7 @@ Kresch, Caltech PhD thesis (2009), Table 9.2), for comparison with the
 converged harmonic reference. Prints frequencies in THz at 10, 150, 300 K."""
 import numpy as np, itertools
 # Kresch thesis Table 9.2 (N/m); columns 10,150,300,525,775 K
-T={'10':0,'150':1,'300':2}
+COLUMNS = {10: 0, 150: 1, 300: 2}
 raw="""K1xx 10.112 9.708 9.708
 K1xy 11.148 10.697 10.378
 K1zz -1.356 -1.201 -2.059
@@ -63,5 +63,14 @@ def freqs(q,i):  # q in units 2pi/a
             Dm+=Kr*(1-np.cos(2*np.pi/a*np.dot(q,Rv)))
     w=np.sqrt(np.clip(np.linalg.eigvalsh(Dm/m),0,None))/(2*np.pi)/1e12
     return np.sort(w)
-for t,i in T.items():
-    print(t,'X',freqs(np.array([1,0,0]),i).round(2),'L',freqs(np.array([.5,.5,.5]),i).round(2))
+
+
+def bvk_frequencies(q_cart, temperature):
+    """Frequencies (THz) at Cartesian wave vectors q_cart (1/A, without 2 pi)."""
+    return np.array([freqs(q * a * 1e10, COLUMNS[temperature]) for q in np.atleast_2d(q_cart)])
+
+
+if __name__ == "__main__":
+    for t, i in COLUMNS.items():
+        print(t, 'X', freqs(np.array([1, 0, 0]), i).round(2),
+              'L', freqs(np.array([.5, .5, .5]), i).round(2))
