@@ -303,7 +303,7 @@ def main():
     handles, legend_labels = axes[-1].get_legend_handles_labels()
     figure.legend(handles, legend_labels, loc="upper center", ncol=2,
                   bbox_to_anchor=(0.5, 1.08), frameon=False, fontsize=7)
-    destination = ROOT / "manuscript" / "figures" / "fig_polar_sotc_nac"
+    destination = ROOT / "manuscript" / "jap" / "figures" / "fig_polar_sotc_nac"
     figure.savefig(destination.with_suffix(".pdf"), bbox_inches="tight")
     figure.savefig(destination.with_suffix(".png"), dpi=240, bbox_inches="tight")
     plt.close(figure)

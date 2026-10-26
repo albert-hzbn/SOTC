@@ -81,38 +81,54 @@ submit_*.sh
 # Theory
 Theory/
 
-# Reviews
-reviews/
-
-# Public manuscript source and generated submission figures
+# Manuscripts: public sources, figures, tables and compiled PDFs only.
+# Referee reports, internal checklists and LaTeX build output stay local.
 !manuscript/
 manuscript/*
-!manuscript/manuscript.tex
-!manuscript/manuscript_original.tex
-!manuscript/manuscript_original.pdf
-!manuscript/refs_original.bib
-!manuscript/manuscript_clean.tex
-!manuscript/manuscript_clean.pdf
-!manuscript/manuscript_updated.tex
-!manuscript/manuscript_updated.pdf
-!manuscript/cover_letter.tex
-!manuscript/cover_letter.pdf
-!manuscript/FILE_MAP.md
-!manuscript/refs.bib
-!manuscript/figures/
-manuscript/figures/*
-!manuscript/figures/fig2_phonons_all.pdf
-!manuscript/figures/fig_nacl_loto.pdf
-!manuscript/figures/fig_ifc34_diagnostics.pdf
-!manuscript/figures/fig_dispersion_controls.pdf
-!manuscript/figures/fig_matched_sampling.pdf
-!manuscript/figures/fig_polar_sotc_nac.pdf
+!manuscript/README.md
 
-# Point-by-point response included in the submission package
-!reviews/
-reviews/*
-!reviews/response_to_reviewers.tex
-!reviews/response_to_reviewers.pdf
+# PRB submission (manuscript/prb) with its point-by-point response
+!manuscript/prb/
+manuscript/prb/*
+!manuscript/prb/manuscript_original.tex
+!manuscript/prb/manuscript_original.pdf
+!manuscript/prb/refs_original.bib
+!manuscript/prb/manuscript_clean.tex
+!manuscript/prb/manuscript_clean.pdf
+!manuscript/prb/manuscript_updated.tex
+!manuscript/prb/manuscript_updated.pdf
+!manuscript/prb/cover_letter.tex
+!manuscript/prb/cover_letter.pdf
+!manuscript/prb/FILE_MAP.md
+!manuscript/prb/refs.bib
+!manuscript/prb/figures/
+manuscript/prb/figures/*
+!manuscript/prb/figures/fig2_phonons_all.pdf
+!manuscript/prb/figures/fig_nacl_loto.pdf
+!manuscript/prb/figures/fig_ifc34_diagnostics.pdf
+!manuscript/prb/figures/fig_dispersion_controls.pdf
+!manuscript/prb/figures/fig_matched_sampling.pdf
+!manuscript/prb/figures/fig_polar_sotc_nac.pdf
+!manuscript/prb/reviews/
+manuscript/prb/reviews/*
+!manuscript/prb/reviews/response_to_reviewers.tex
+!manuscript/prb/reviews/response_to_reviewers.pdf
+
+# JAP submission (manuscript/jap)
+!manuscript/jap/
+manuscript/jap/*
+!manuscript/jap/Makefile
+!manuscript/jap/sotc_jap.tex
+!manuscript/jap/sotc_jap.pdf
+!manuscript/jap/sotc_jap_supplementary.tex
+!manuscript/jap/sotc_jap_supplementary.pdf
+!manuscript/jap/cover_letter_jap.tex
+!manuscript/jap/cover_letter_jap.pdf
+!manuscript/jap/refs_jap.bib
+!manuscript/jap/tables/
+!manuscript/jap/figures/
+manuscript/jap/figures/*
+!manuscript/jap/figures/*.pdf
 
 # Compact validation results are public; transient QE/HPC artifacts stay local
 validation_results/**/*.out
@@ -135,21 +151,6 @@ core.*
 !validation_results/nacl/production_sotc_nac/production_sotc_nac_bands.npz
 !validation_results/mgo/production_sotc_nac/production_sotc_nac_bands.npz
 !validation_results/pbte/production_sotc_nac/production_sotc_nac_bands.npz
-
-# JAP manuscript: sources, tables, figures and compiled PDFs
-!manuscript/jap/
-manuscript/jap/*
-!manuscript/jap/sotc_jap.tex
-!manuscript/jap/sotc_jap.pdf
-!manuscript/jap/sotc_jap_supplementary.tex
-!manuscript/jap/sotc_jap_supplementary.pdf
-!manuscript/jap/cover_letter_jap.tex
-!manuscript/jap/cover_letter_jap.pdf
-!manuscript/jap/refs_jap.bib
-!manuscript/jap/tables/
-!manuscript/jap/figures/
-manuscript/jap/figures/*
-!manuscript/jap/figures/*.pdf
 
 # SSCHA scratch dynamical matrices written to the working directory
 dyn_pop*

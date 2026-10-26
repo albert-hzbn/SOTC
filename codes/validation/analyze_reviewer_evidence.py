@@ -341,7 +341,7 @@ def main():
     material_results = {
         material: material_analysis(material) for material in MATERIALS
     }
-    output_base = ROOT / "manuscript" / "figures" / "fig_dispersion_controls"
+    output_base = ROOT / "manuscript" / "prb" / "figures" / "fig_dispersion_controls"
     make_figure(material_results, output_base)
     report = {
         "scope": "postprocessing of archived Quantum ESPRESSO calculations only",

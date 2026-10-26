@@ -108,7 +108,7 @@ def main():
     handles, labels = axes[0, 0].get_legend_handles_labels()
     figure.legend(handles, labels, loc="upper center", ncol=4,
                   bbox_to_anchor=(0.5, 1.045), frameon=False, fontsize=7)
-    destination = ROOT / "manuscript" / "figures" / "fig_matched_sampling"
+    destination = ROOT / "manuscript" / "prb" / "figures" / "fig_matched_sampling"
     figure.savefig(destination.with_suffix(".pdf"), bbox_inches="tight")
     figure.savefig(destination.with_suffix(".png"), dpi=240,
                    bbox_inches="tight")

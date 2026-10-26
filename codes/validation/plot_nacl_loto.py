@@ -33,7 +33,7 @@ DEFAULT_DFPT = (
     / "dfpt_summary.json"
 )
 DEFAULT_DATA_DIR = ROOT / "validation_results" / "nacl" / "dfpt_nac"
-DEFAULT_FIGURE = ROOT / "manuscript" / "figures" / "fig_nacl_loto"
+DEFAULT_FIGURE = ROOT / "manuscript" / "jap" / "figures" / "fig_nacl_loto"
 DEFAULT_NEUTRON = ROOT / "data" / "nacl_neutron_80k.csv"
 
 # Zone-center optical limits reported in NBS Special Publication 301

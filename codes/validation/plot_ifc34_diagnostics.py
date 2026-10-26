@@ -15,7 +15,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_SUMMARY = ROOT / "validation_results" / "ifc34_campaign_summary.json"
-DEFAULT_FIGURE = ROOT / "manuscript" / "figures" / "fig_ifc34_diagnostics"
+DEFAULT_FIGURE = ROOT / "manuscript" / "jap" / "figures" / "fig_ifc34_diagnostics"
 DEFAULT_PLOT_SUMMARY = (
     ROOT / "validation_results" / "ifc34_diagnostics_plot_summary.json"
 )

@@ -73,14 +73,12 @@ codes/
 validation_results/        ← Compact QE/IFC validation outputs and summaries
 
 pseudopotentials/          ← Bundled SSSP efficiency + ONCV UPF files for QE
-manuscript/                ← Paper source (RevTeX4-2 + BibTeX)
+manuscript/                ← Paper sources: jap/ (current) and prb/ (earlier submission); see manuscript/README.md
 requirements.txt           ← Python dependencies
 README.md                  ← this file
 ```
 
-The manuscript sources are kept separate: `manuscript_original.tex`/`.pdf` archive the original submission, `manuscript_clean.tex`/`.pdf` are the uncolored revised submission, and `manuscript_updated.tex`/`.pdf` are the selectively marked revision. The marked source contains only the revised text plus blue color commands; hidden deleted text and `latexdiff` tracking macros have been removed.
-
-`manuscript/jap/` holds the Journal of Applied Physics version (`sotc_jap.tex`, `sotc_jap_supplementary.tex`, `cover_letter_jap.tex`, generated `tables/` and `figures/`). Its validation pipeline is:
+`manuscript/jap/` holds the Journal of Applied Physics version (`sotc_jap.tex`, `sotc_jap_supplementary.tex`, `cover_letter_jap.tex`, generated `tables/` and `figures/`; build with `make` in that folder). The earlier Physical Review B submission, with its referee response, is in `manuscript/prb/` (see `manuscript/README.md`). The JAP validation pipeline is:
 
 ```bash
 python codes/validation/run_fd_references.py <mat> [--large]      # converged harmonic FD references
