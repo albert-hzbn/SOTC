@@ -37,8 +37,8 @@ trial update is the self-consistent harmonic one. For eleven crystals of
 five structure classes, SOTC-D with eight force calls reproduces the
 effective dispersions within 0.03--0.31~THz and, with the same trial, has the
 lowest error of five designs, including canonical sampling, special
-displacements, and thermal rattle, in 10 of 11 crystals at two and eight
-calls (two ties). A bootstrapped form updating the trial once outperforms,
+displacements, and thermal rattle, in 8 of 11 crystals at two and 9 of 11 at
+eight calls. A bootstrapped form updating the trial once outperforms,
 in the supercell basis, one-shot canonical sampling in all crystals from 4
 to 16 calls and two-iteration sTDEP in all crystals at eight calls. On
 anharmonic model potentials, the self-consistent form needs 2--16 times
@@ -550,14 +550,29 @@ regression of Sec.~\ref{sec:fit} rather than the TDEP code, for budgets of 8 and
 seeds each): half of the budget as canonical $\pm$ pairs from the harmonic
 trial (taken from the iteration-0 pool), and half as new canonical $\pm$
 pairs drawn from the model refitted to them (36 additional force calls per
-crystal). For Al, SSCHA and SOTC-D-SC (Sec.~\ref{sec:sotcdsc}) were also run
-with DFT forces in the same 32-atom cell. SSCHA used python-sscha
+crystal). For Al and Si, the self-consistent protocols were also run with
+DFT forces in the SOTC cells, all from the same harmonic trial and up to 32
+force calls: SOTC-D-SC (Sec.~\ref{sec:sotcdsc}, three seeds); sTDEP iterated
+to self-consistency with four canonical configurations (two $\pm$ pairs) per
+iteration, fitted to the last iteration as in Ref.~\onlinecite{ref60} or to
+all iterations (three seeds); and a self-consistent form of special
+displacements (ZG-SC), which adds one ZG $\pm$ pair designed from the
+current model per iteration and refits all of them, in the spirit of the
+anharmonic special-displacement method. SSCHA used python-sscha
 \cite{ref50} with the whole cell as the unit cell ($\Gamma$ point only), the
 same harmonic trial, and the minimizer settings of
 Sec.~\ref{sec:sc_surrogate}, with populations of $N=16$, 32, 64, and 256
-configurations; SOTC-D-SC was run with three seeds up to 32 force calls. For
-comparison, the SSCHA force constants are projected onto the same supercell
-basis. As an AIMD-TDEP baseline for Al, four Born--Oppenheimer
+configurations. SSCHA force constants, which are not restricted to $r_{\rm
+cut}$, are projected onto the supercell basis in the metric of the thermal
+displacement covariance, i.e., as a force regression on thermal
+displacements would see them; a Euclidean projection of the same matrix
+differs from it by 0.10 (Al) and 0.06~THz (Si). The reference for these
+comparisons is the converged self-consistent effective FC2: sTDEP with
+128 canonical configurations per iteration, four iterations, the last
+iteration fitted alone, two independent seeds averaged (1024 force calls per
+crystal). The two seeds agree within 0.029 (Al) and 0.013~THz (Si), and the
+last two iterations of each change it by 0.04--0.05 (Al, the statistical
+level of 128 samples) and 0.02~THz (Si). As an AIMD-TDEP baseline for Al, four Born--Oppenheimer
 molecular-dynamics trajectories were run with QE in the same cell and with the same
 electronic settings (Verlet integration, 3.9~fs time step, stochastic velocity
 rescaling at 300~K with a 77~fs time constant), each started from an independent canonical
@@ -702,26 +717,36 @@ designed $\pm$ pair excites every commensurate mode at its thermal amplitude
 and is free of cubic-force noise, whereas two canonical draws excite some
 modes weakly and carry the full cubic noise. Accordingly, with two calls
 SOTC-D gives the lowest dispersion and held-out force errors of all five
-designs for every crystal except Cu in dispersion, whose 90-parameter model
-no two-call design determines, and PbTe in force, whose trial is defective
-(see below). The ranking in dispersion holds in 8 of 11 crystals at four
-calls (Supplementary Table~S7): paired canonical sampling is better for NaCl
-and PbTe (0.24 versus 0.25 and 0.13 versus 0.16~THz), and special
-displacements are better for MgO (0.395 versus 0.405~THz). At eight calls it holds in 10 of 11
-crystals, where the Si and Mg results are ties within 0.005~THz; in held-out force SOTC-D is best in 8 of
-11 crystals at eight calls and within 2.1\% of the best design in the
-others. At 16 calls SOTC-D is best in only 4 of 11 crystals: the sampling
+designs in dispersion for 8 of 11 crystals: the exceptions are Cu, whose
+90-parameter model no two-call design determines, and Si and Mg, for which
+special displacements are better (0.060 versus 0.066 and 0.046 versus
+0.065~THz). In held-out force it is best for every crystal except PbTe,
+whose trial is defective (see below). The ranking in dispersion holds in 8
+of 11 crystals at four calls (Supplementary Table~S7): paired canonical
+sampling is better for NaCl (0.239 versus 0.254~THz), and special
+displacements are better for PbTe and Si (0.123 versus 0.161 and 0.032
+versus 0.040~THz). At eight calls it holds in 9 of 11 crystals; the
+exceptions are PbTe (unpaired canonical sampling, 0.097 versus 0.107~THz)
+and Si (special displacements, 0.033 versus 0.047~THz). In held-out force
+SOTC-D is best in 8 of 11 crystals at eight calls and within 2\% of the best
+design in the others. At 16 calls SOTC-D is best in only 4 of 11 crystals: the sampling
 error of every design approaches the noise of the disjoint reference, and
 the designs can no longer be distinguished.
 
 The special-displacement design, which also fixes the mode amplitudes but uses
-orthogonal rather than information-optimal signs, is worse than SOTC-D in all
-11 crystals at eight calls, by up to a factor of six for Si (0.29 versus
-0.05~THz); with two calls in Cu it does not identify the model. Its Walsh
-patterns assign equal signs to modes that are adjacent in the frequency
-ordering and are not chosen with respect to the force-constant basis, so
-that they leave the information matrix less well conditioned than the
-D-optimal signs. Thermal rattle, a common training set of hiPhive workflows,
+orthogonal rather than information-optimal signs, is worse than SOTC-D in 9
+of 11 crystals at eight calls, by up to a factor of 2.0 (Ag), and better for
+Si and PbTe (factors 0.71 and 0.93); with two calls in Cu it does not
+identify the model. Its Walsh patterns assign equal signs to modes that are
+adjacent in the frequency ordering and are not chosen with respect to the
+force-constant basis, so that in most crystals they leave the information
+matrix less well conditioned than the D-optimal signs. For crystals with
+more than one atom in the primitive cell, the real commensurate modes must
+carry the Bloch phase of the full atomic position; with the phase of the
+lattice vector alone, the configurations have the canonical mean-square
+displacement of each atom but a nearest-neighbor bond-stretch variance up
+to three times too large (Si), and the special-displacement errors are
+then several times larger. Thermal rattle, a common training set of hiPhive workflows,
 is worse than SOTC-D in every crystal and the worst of all designs in 9 of
 11 (0.06--0.89~THz at eight calls). Independent atomic displacements have
 the canonical on-site variance but no interatomic correlations; the fitted
@@ -817,33 +842,53 @@ only the first approximation; the model potentials of
 Sec.~\ref{sec:sc_surrogate}, for which the self-consistent target is known
 exactly, remove this limitation.
 
-For Al, SSCHA and SOTC-D-SC were also compared with DFT forces. Measured
-against the iteration-1 effective FC2, which lies 0.27~THz from the harmonic
-trial, SOTC-D-SC reaches median errors of 0.097, 0.075, 0.055, and
-0.050~THz with 4, 8, 16, and 32 force calls (three seeds). SSCHA stops after
-its first population for every population size, because the statistical
-error of its free-energy gradient exceeds the gradient itself; its result
-approaches the effective FC2 only as the population grows, with errors of
-0.217, 0.193, 0.131, and 0.092~THz for populations of 16, 32, 64, and 256
-force calls. Against this reference, SOTC-D-SC with four force calls is
-as close to the effective FC2 as SSCHA with 256. The test is limited by the
-reference, however. Measured instead against the 256-configuration SSCHA
-result (projected onto the same basis, which changes it by 0.23~THz; it is
-0.24~THz from the harmonic trial), SSCHA with 64 configurations and the
-iteration-1 FC2 lie at 0.09~THz, SOTC-D-SC at 0.12, 0.12, 0.11, and
-0.10~THz with 4, 8, 16, and 32 calls, and the smaller SSCHA populations,
-one-shot canonical pairs, and two-iteration sTDEP at 0.12--0.19~THz. With
-DFT forces in this cell, differences below about 0.1~THz between these
-protocols are therefore not resolved.
+Table~\ref{tab:dft_sc} compares the self-consistent protocols, and the
+one-shot designs from the harmonic trial, with DFT forces in Al and Si
+against the converged self-consistent effective FC2. The two crystals differ
+in how far this target lies from the trial: 0.31~THz for Al at 300~K and
+0.095~THz for Si at 600~K. In Al, SOTC-D-SC reaches 0.086--0.095~THz with
+four force calls (three seeds), where iterated sTDEP reaches 0.16--0.19~THz
+and ZG-SC 0.18~THz. With 32 calls SOTC-D-SC (0.043--0.050~THz) and sTDEP
+pooled over its iterations (0.052--0.063~THz) both approach the 0.03~THz
+precision of the reference; fitted to its last iteration alone, as in the
+original protocol, sTDEP stays at 0.15~THz, because every refit then rests on
+four configurations. In Si, where the anharmonic correction is small, the
+ranking changes: with 32 calls ZG-SC (one seed, 0.014~THz) and pooled sTDEP
+(0.031--0.037~THz) are closer to the target than SOTC-D-SC
+(0.046--0.059~THz). The advantage of the D-optimal design is thus largest
+at small budgets and for strong renormalization; for weakly anharmonic Si
+with DFT forces it is not present.
+
+One-shot designs from the harmonic trial cannot reach the self-consistent
+target; their limit is the iteration-0 effective FC2, 0.037 (Al) and
+0.048~THz (Si) from it. Within this limit, SOTC-D is the best one-shot design
+for Al at every budget (four calls: 0.088~THz, against 0.16 for canonical
+pairs and for special displacements and 0.27 for rattle), and special
+displacements are the best for Si (four calls: 0.053~THz, against 0.072 for
+SOTC-D and 0.079 for canonical pairs). Thermal rattle, which ignores the
+correlation of neighboring displacements, is the worst design in both
+crystals (Si: 0.55--0.64~THz at every budget).
+
+SSCHA stops after its first population in both crystals, because the
+statistical error of its free-energy gradient exceeds the gradient itself;
+its result therefore stays near the effective FC2 of the harmonic-trial
+ensemble. Its accuracy at small populations is limited by the estimator
+rather than by the data. With 16 and 32 configurations the SSCHA FC2 lies 0.25
+and 0.22~THz (Al) and 0.089 and 0.079~THz (Si) from the target, whereas the
+same configurations and DFT forces refitted by the regression of
+Sec.~\ref{sec:fit} lie 0.072 and 0.064~THz (Al) and 0.061 and 0.047~THz
+(Si) from it. With 256 configurations SSCHA reaches 0.069 (Al) and
+0.053~THz (Si), which SOTC-D-SC reaches with four (Al) and 16--32 force
+calls (Si).
 
 AIMD-TDEP converges more slowly in force calls and to a different
 limit. Measured against the fit to all 4370 production steps, the median
 error of a single trajectory is 0.27~THz after 282 steps (including the 250
 equilibration steps), 0.12~THz after 378, 0.097~THz after 506, and
 0.056~THz after 1274 steps. SOTC-D-SC reaches a comparable error relative
-to its own target with four force calls, although that target, the
-40-snapshot iteration-1 FC2, is itself uncertain at the 0.1~THz level
-(see above). The converged AIMD-TDEP FC2 lies
+to its own target with four force calls; that target, the
+40-snapshot iteration-1 FC2, lies 0.043~THz from the converged
+self-consistent FC2. The converged AIMD-TDEP FC2 lies
 0.28~THz from the iteration-1 effective FC2 and 0.27~THz from the harmonic
 trial. The mean mesh frequency is 5.84~THz for both the harmonic trial and
 the AIMD-TDEP limit, but 6.11~THz for the effective FC2. The two targets
@@ -885,6 +930,8 @@ deviations are in the optical branches of MgO and PbTe near X and W.
 \input{tables/tab_selfconsistent}
 
 \input{tables/tab_stdep}
+
+\input{tables/tab_dft_sc}
 
 \begin{figure*}[t]
 \centering
@@ -953,10 +1000,12 @@ and 0.05~THz (Mg) of the 128- and 150-atom references, and thermal
 renormalization at 600~K changes the dispersions by 0.26 and 0.28~THz
 (Table~\ref{tab:accuracy}), softening Si and stiffening Mg. SOTC-D with eight
 force calls reproduces the effective FC2 within 0.04 (Si) and 0.03~THz (Mg),
-the same accuracy as for the bcc metals. It is the best design at two calls
-for both crystals (Si: 0.07 versus 0.10~THz for paired canonical sampling;
-Mg: 0.07 versus 0.08) and equal to paired canonical sampling at eight;
-special displacements and rattle are again worse (Table~\ref{tab:matched}),
+the same accuracy as for the bcc metals. At two calls it is better than canonical
+sampling for both crystals (Si: 0.07 versus 0.10~THz for
+paired canonical sampling; Mg: 0.07 versus 0.08) and equal to paired
+canonical sampling at eight; special displacements are better than SOTC-D
+for both at two calls and for Si at eight (0.03 versus 0.05~THz), and
+rattle is again the worst design (Table~\ref{tab:matched}),
 and bootstrapped SOTC-D reaches 0.05 (Si) and 0.02~THz (Mg) at eight calls
 (Table~\ref{tab:selfconsistent}). The behavior of the method thus does not
 depend on the structure class.
@@ -993,8 +1042,11 @@ improve the larger budgets further (16 calls: 0.025 versus 0.032~THz for Al and
 surrogate cells, which have only 7--8 FC2 parameters. In the
 30--90-parameter SOTC cells the signs matter more: special displacements,
 which fix the amplitudes but choose the signs by orthogonal Walsh patterns
-rather than by D-optimality, are worse than SOTC-D in every crystal at eight
-calls (Sec.~\ref{sec:matched}). In these one-shot designs with up to 16 calls,
+rather than by D-optimality, are worse than SOTC-D in 9 of 11 crystals at
+eight calls (Sec.~\ref{sec:matched}). On the surrogates their accuracy
+depends strongly on the crystal: they are the best design for Si
+(0.022--0.036~THz at 2--16 calls) but become worse with more sign patterns
+for NaCl (0.133~THz at four calls, 0.174 at sixteen; Table~S1). In these one-shot designs with up to 16 calls,
 stratified Gaussian-quantile amplitudes, which match the fourth moment of
 the canonical distribution, give no further improvement, and no amplitude
 bias of the fixed-amplitude design is detectable, as expected from
@@ -1165,7 +1217,13 @@ seven volumes. For the QHA, $F_{\rm h}$ and $S$ are those of the harmonic FD
 FC2 and the correction term is omitted. Neither route requires derivatives
 of the FC2 with respect to temperature.
 
-Table~\ref{tab:qha} gives the results. The QHA with the converged 125-atom
+Table~\ref{tab:qha} gives the results; Supplementary Table~S11 adds $B_T$
+and $C_P$ and a Gr\"uneisen cross-check. Evaluated at $V(T)$ with $B_T$, the
+Gr\"uneisen formula reproduces the minimization within
+$0.1\times10^{-6}$~K$^{-1}$, whereas the usual shortcut with the static $B_0$
+and $V_0$ is 13--44\% low at 300--900~K. The converged QHA gives $C_P$
+within 1~J~mol$^{-1}$K$^{-1}$ of the NIST-JANAF values \cite{chase1998}
+between 300 and 900~K. The QHA with the converged 125-atom
 harmonic FC2 gives 24.1 and $26.2\times10^{-6}$~K$^{-1}$ at 300 and 400~K,
 4--5\% above the measured 23.2 and 25.1, and 40.2 at 900~K, against 36 at
 923~K, of which vacancies contribute about $2\times10^{-6}$~K$^{-1}$
@@ -1265,8 +1323,8 @@ self-consistent effective FC2; special displacements \cite{ref42}; thermal
 rattle with hiPhive regression \cite{ref59}; and nine sparse, Bayesian, and
 least-squares fit methods. Three results stand out. First, at the small
 budgets typical of high-throughput or expensive-functional calculations,
-SOTC-D is the best design with the same trial in 10 of 11 crystals at two
-and at eight force calls (8 of 11 at four), and its bootstrapped form beats
+SOTC-D is the best design with the same trial in 8, 8, and 9 of 11 crystals
+at two, four, and eight force calls, and its bootstrapped form beats
 one-shot canonical sampling in all 11 crystals at every budget from 4 to 16
 calls and two-iteration sTDEP with DFT forces in all 11 at eight calls and
 9 of 11 at sixteen. Second, on model potentials with an exactly known
@@ -1274,10 +1332,12 @@ self-consistent target, SOTC-D-SC is at least as accurate as sTDEP and SSCHA
 in 50 of 56 comparisons at equal budget; in the other six, pooled sTDEP (W
 and NaCl at 64 and 16 calls, respectively, Si at 16, Mg at 32 and 64) or SSCHA (Al at 64)
 is better by at most 0.006~THz. It needs a factor of 2--16 fewer force calls
-than SSCHA for a given accuracy in 13 of 14 cases, and with DFT forces for
-Al it reaches with four calls the accuracy SSCHA reaches with 256 when both
-are measured against the iteration-1 effective FC2; against the SSCHA result
-itself the two are not distinguished at the 0.1~THz resolution of that test. Third, the regression method, including sparsity-promoting
+than SSCHA for a given accuracy in 13 of 14 cases. With DFT forces, against
+a converged self-consistent reference, it reaches for Al with four calls the
+accuracy SSCHA reaches with 256 and halves the error of iterated sTDEP and
+self-consistent special displacements at four calls; for weakly anharmonic
+Si, pooled sTDEP and self-consistent special displacements are more accurate
+at 32 calls. Third, the regression method, including sparsity-promoting
 and Bayesian fits, changes the result by at most 0.03~THz, whereas the
 design changes it by up to a factor of 2.6 relative to random canonical
 subsets at two and eight calls in the supercell basis
@@ -1370,8 +1430,13 @@ canonical sampling in every crystal at every budget from 4 to 16 calls and
 two-iteration sTDEP in every crystal at eight calls; on anharmonic model
 potentials of five crystals, the fully self-consistent form reaches a given
 accuracy with a factor of 2--16 fewer force calls than SSCHA in 13 of 14
-cases. Special displacements, thermal rattle, and alternative
-regression methods do not close this gap. Converged references reveal that
+cases. With DFT forces and a converged self-consistent reference, it halves
+the error of iterated sTDEP and of self-consistent special displacements at
+four calls for Al and matches 256-configuration SSCHA with four calls, whereas
+for weakly anharmonic Si those two protocols are more accurate at 32 calls.
+Special displacements are competitive for Si and Mg but not in
+general, and thermal rattle and alternative regression methods do not close
+this gap. Converged references reveal that
 finite-temperature renormalization (up to 1.4~THz) and supercell truncation
 (up to 0.5~THz) are as large as or larger than the sampling errors, and
 room-temperature Debye--Waller factors of Al, Cu, and Au are recovered within

@@ -1,0 +1,17 @@
+\begin{table*}[t]
+\caption{Al thermodynamics on the volume grid (PBE). $\alpha$ ($10^{-6}$~K$^{-1}$) of the converged 125-atom QHA from free-energy minimization and from the Gr\"uneisen formula $\alpha=\sum_k\gamma_kc_k/3BV$, evaluated with the static $B_0$ and $V_0$ (shortcut) and with $B_T$ and $V(T)$ of the minimization (exact). $B_T$ (GPa) and $C_P=C_V+TV\beta^2B_T$ (J~mol$^{-1}$K$^{-1}$, phonon part only) of the converged QHA and of the self-consistent SOTC-D (32 calls, independent-seed grid). Experiment: NIST-JANAF $C_P$ (Shomate fit, 298--933~K, including the electronic contribution) \cite{chase1998}.}
+\label{tab:qha_thermo}
+\begin{ruledtabular}
+\begin{tabular}{lcccccccc}
+ & \multicolumn{3}{c}{$\alpha$, converged QHA} & \multicolumn{2}{c}{$B_T$} & \multicolumn{3}{c}{$C_P$}\\
+$T$ (K) & min. & Gr\"uneisen, exact & Gr\"uneisen, shortcut & QHA & SC & QHA & SC & expt.\\
+\hline
+100 & 12.9 & 12.9 & 11.9 & 75.0 & 75.3 & 13.24 & 13.48 & --\\
+300 & 24.1 & 24.1 & 20.9 & 69.6 & 69.5 & 24.14 & 24.01 & 24.25\\
+400 & 26.2 & 26.3 & 21.7 & 66.6 & 68.9 & 25.56 & 25.21 & 25.78\\
+500 & 28.2 & 28.2 & 22.1 & 63.3 & 67.0 & 26.61 & 25.87 & 26.84\\
+700 & 32.9 & 32.9 & 22.4 & 55.8 & 74.0 & 28.62 & 26.96 & 29.10\\
+900 & 40.2 & 40.1 & 22.6 & 46.6 & 58.5 & 31.34 & 27.02 & 32.31\\
+\end{tabular}
+\end{ruledtabular}
+\end{table*}

@@ -90,8 +90,11 @@ the fixed-amplitude design ($\kappa_e=1$). The
 statement is verified numerically by exact enumeration of all $2^6$ sign
 patterns of a random six-mode quartic model in the test suite
 (\texttt{test\_optimal\_design.py}), as are the exact cancellation of
-arbitrary cubic forces by $\pm$ pairs and the thermal mean-square
-displacements of the ZG and rattle designs.
+arbitrary cubic forces by $\pm$ pairs, the thermal mean-square
+displacements of the ZG and rattle designs, and, for a crystal with a
+two-atom basis, the canonical nearest-neighbor bond-stretch variance of the
+ZG configurations, which requires the Bloch phase of the full atomic
+position.
 
 \section{Higher-order force-constant validation}
 
@@ -270,6 +273,27 @@ softens it, so a stiffer auxiliary FC2 than the measured spectrum is the
 expected sign.
 
 \input{tables/tab_bvk}
+
+\section{Thermodynamics of Al on the volume grid}
+
+Table~\ref{tab:qha_thermo} complements Table~XIII of the main text. The
+Gr\"uneisen formula $\alpha=\sum_k\gamma_kc_k/3B_TV$, with mode Gr\"uneisen
+parameters from the converged harmonic FC2 on the volume grid, reproduces the
+free-energy minimization to $0.1\times10^{-6}$~K$^{-1}$ at every temperature
+when it is evaluated at $V(T)$ with $B_T$, which checks the numerics of the
+minimization. Evaluated with the static $B_0$ and $V_0$ (the common
+shortcut), it is 8\% low at 100~K and 13--44\% low at 300--900~K, because it
+omits the softening of $B_T$ and the volume dependence of the mode
+Gr\"uneisen parameters; the shortcut is therefore not a valid check of a QHA
+calculation above about 100~K for Al. The converged QHA gives $C_P$ within
+0.1--1.0~J~mol$^{-1}$K$^{-1}$ of the NIST-JANAF values between 300 and
+900~K, a difference of the size of the electronic heat capacity
+($\gamma_eT\approx0.4$--1.2~J~mol$^{-1}$K$^{-1}$), which is not included.
+The self-consistent model gives the same $C_P$ and $B_T$ at 300~K; above
+400~K its $C_P$ is lower because its $\alpha$ is (main text,
+Sec.~V\,K).
+
+\input{tables/tab_qha_thermo}
 
 \bibliography{refs_jap}
 

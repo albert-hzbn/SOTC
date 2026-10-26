@@ -72,27 +72,27 @@
      },
      "zg": {
       "2": {
-       "held_out_force_rmse": 0.7036569862785086,
-       "mesh_vs_disjoint": 0.8256219451595355,
-       "mesh_vs_full_reference": 0.8288396784837151,
-       "unstable_fraction": 0.0
+       "held_out_force_rmse": 0.7717142538338486,
+       "mesh_vs_disjoint": 1.1420012545266798,
+       "mesh_vs_full_reference": 1.1417070453703073,
+       "unstable_fraction": 0.0009645061728395061
       },
       "4": {
-       "held_out_force_rmse": 0.6732600689060974,
-       "mesh_vs_disjoint": 0.39523845202006913,
-       "mesh_vs_full_reference": 0.38478195798404696,
+       "held_out_force_rmse": 0.6877172854452422,
+       "mesh_vs_disjoint": 0.4721435562005622,
+       "mesh_vs_full_reference": 0.4692447968333839,
        "unstable_fraction": 0.0
       },
       "8": {
-       "held_out_force_rmse": 0.6675048252975806,
-       "mesh_vs_disjoint": 0.3381002992821298,
-       "mesh_vs_full_reference": 0.32576233281036665,
+       "held_out_force_rmse": 0.6696699924816063,
+       "mesh_vs_disjoint": 0.3765764876872461,
+       "mesh_vs_full_reference": 0.36409757683350585,
        "unstable_fraction": 0.0
       },
       "16": {
-       "held_out_force_rmse": 0.669439556194465,
-       "mesh_vs_disjoint": 0.3029940266043342,
-       "mesh_vs_full_reference": 0.25214052170538426,
+       "held_out_force_rmse": 0.6714226378006325,
+       "mesh_vs_disjoint": 0.3605348602608387,
+       "mesh_vs_full_reference": 0.3307718072335469,
        "unstable_fraction": 0.0
       }
      },
@@ -1358,27 +1358,27 @@
      },
      "zg": {
       "2": {
-       "held_out_force_rmse": 0.6769310939428784,
-       "mesh_vs_disjoint": 0.48040819712220517,
-       "mesh_vs_full_reference": 0.480963270127713,
+       "held_out_force_rmse": 0.6662575845870932,
+       "mesh_vs_disjoint": 0.20458293321508544,
+       "mesh_vs_full_reference": 0.2078243922653847,
        "unstable_fraction": 0.0
       },
       "4": {
-       "held_out_force_rmse": 0.666829568735916,
-       "mesh_vs_disjoint": 0.23268703950399977,
-       "mesh_vs_full_reference": 0.22417838237620594,
+       "held_out_force_rmse": 0.6639227039621617,
+       "mesh_vs_disjoint": 0.1926726145629335,
+       "mesh_vs_full_reference": 0.1866921737990424,
        "unstable_fraction": 0.0
       },
       "8": {
-       "held_out_force_rmse": 0.6654296040521799,
-       "mesh_vs_disjoint": 0.26583266562652486,
-       "mesh_vs_full_reference": 0.25943143811139796,
+       "held_out_force_rmse": 0.6638219456397877,
+       "mesh_vs_disjoint": 0.2921035903643316,
+       "mesh_vs_full_reference": 0.290818430779505,
        "unstable_fraction": 0.0
       },
       "16": {
-       "held_out_force_rmse": 0.664846925936753,
-       "mesh_vs_disjoint": 0.1481630497201024,
-       "mesh_vs_full_reference": 0.11972698171868039,
+       "held_out_force_rmse": 0.6640084529420905,
+       "mesh_vs_disjoint": 0.22450231527581854,
+       "mesh_vs_full_reference": 0.20795747894668284,
        "unstable_fraction": 0.0
       }
      },
@@ -2698,27 +2698,27 @@
      },
      "zg": {
       "2": {
-       "held_out_force_rmse": 0.5691460991123709,
-       "mesh_vs_disjoint": 0.7820306796102597,
-       "mesh_vs_full_reference": 0.7784510276879193,
-       "unstable_fraction": 0.0
+       "held_out_force_rmse": 0.6289323998843757,
+       "mesh_vs_disjoint": 1.1048956660552918,
+       "mesh_vs_full_reference": 1.1043302401100232,
+       "unstable_fraction": 0.0009645061728395061
       },
       "4": {
-       "held_out_force_rmse": 0.5148642068657491,
-       "mesh_vs_disjoint": 0.3305719777168988,
-       "mesh_vs_full_reference": 0.3264922211679665,
+       "held_out_force_rmse": 0.5270688771844289,
+       "mesh_vs_disjoint": 0.41596692500328525,
+       "mesh_vs_full_reference": 0.4120006508570133,
        "unstable_fraction": 0.0
       },
       "8": {
-       "held_out_force_rmse": 0.5097968040970731,
-       "mesh_vs_disjoint": 0.24041980274584196,
-       "mesh_vs_full_reference": 0.2261057025298432,
+       "held_out_force_rmse": 0.5110468591588182,
+       "mesh_vs_disjoint": 0.2885528223876176,
+       "mesh_vs_full_reference": 0.28199095864542206,
        "unstable_fraction": 0.0
       },
       "16": {
-       "held_out_force_rmse": 0.5131504497932318,
-       "mesh_vs_disjoint": 0.35375576289509647,
-       "mesh_vs_full_reference": 0.32175387702617736,
+       "held_out_force_rmse": 0.5106159028884543,
+       "mesh_vs_disjoint": 0.34992678669269284,
+       "mesh_vs_full_reference": 0.33077649086899397,
        "unstable_fraction": 0.0
       }
      }
@@ -4070,27 +4070,27 @@
      },
      "zg": {
       "2": {
-       "held_out_force_rmse": 0.5207745404108313,
-       "mesh_vs_disjoint": 0.4626839896294075,
-       "mesh_vs_full_reference": 0.460544416944015,
+       "held_out_force_rmse": 0.5107321395164721,
+       "mesh_vs_disjoint": 0.2928775308429825,
+       "mesh_vs_full_reference": 0.2958218041889129,
        "unstable_fraction": 0.0
       },
       "4": {
-       "held_out_force_rmse": 0.50665300646979,
-       "mesh_vs_disjoint": 0.1497890001749967,
-       "mesh_vs_full_reference": 0.1508400819112066,
+       "held_out_force_rmse": 0.5050933592243191,
+       "mesh_vs_disjoint": 0.15954450389932517,
+       "mesh_vs_full_reference": 0.15914705080700867,
        "unstable_fraction": 0.0
       },
       "8": {
-       "held_out_force_rmse": 0.5046974483878737,
-       "mesh_vs_disjoint": 0.11557424613186215,
-       "mesh_vs_full_reference": 0.10389612835883272,
+       "held_out_force_rmse": 0.5044118857176678,
+       "mesh_vs_disjoint": 0.2040538977432604,
+       "mesh_vs_full_reference": 0.1992479073170707,
        "unstable_fraction": 0.0
       },
       "16": {
-       "held_out_force_rmse": 0.506930800276099,
-       "mesh_vs_disjoint": 0.21468788574167585,
-       "mesh_vs_full_reference": 0.18995153483056332,
+       "held_out_force_rmse": 0.5063656431683091,
+       "mesh_vs_disjoint": 0.22695978937612257,
+       "mesh_vs_full_reference": 0.21229872630022614,
        "unstable_fraction": 0.0
       }
      }

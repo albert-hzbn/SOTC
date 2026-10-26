@@ -72,27 +72,27 @@
      },
      "zg": {
       "2": {
-       "held_out_force_rmse": 0.9252888117256814,
-       "mesh_vs_disjoint": 1.580915970412471,
-       "mesh_vs_full_reference": 1.5805012317741132,
-       "unstable_fraction": 0.056712962962962965
+       "held_out_force_rmse": 0.8963718684518356,
+       "mesh_vs_disjoint": 0.8046536401959032,
+       "mesh_vs_full_reference": 0.8052483087189461,
+       "unstable_fraction": 0.020833333333333332
       },
       "4": {
-       "held_out_force_rmse": 0.868533210467262,
-       "mesh_vs_disjoint": 0.4988790501842492,
-       "mesh_vs_full_reference": 0.5008360094164848,
-       "unstable_fraction": 0.0
+       "held_out_force_rmse": 0.8764062626839109,
+       "mesh_vs_disjoint": 0.34158664230144387,
+       "mesh_vs_full_reference": 0.341768322793919,
+       "unstable_fraction": 0.00038580246913580245
       },
       "8": {
-       "held_out_force_rmse": 0.872677707446974,
-       "mesh_vs_disjoint": 0.3249612231232209,
-       "mesh_vs_full_reference": 0.32961998709353285,
+       "held_out_force_rmse": 0.8794758233827096,
+       "mesh_vs_disjoint": 0.18811684199988526,
+       "mesh_vs_full_reference": 0.18613900470965825,
        "unstable_fraction": 0.0
       },
       "16": {
-       "held_out_force_rmse": 0.8679488186385038,
-       "mesh_vs_disjoint": 0.3343395558881593,
-       "mesh_vs_full_reference": 0.3325315084613033,
+       "held_out_force_rmse": 0.8739367358919712,
+       "mesh_vs_disjoint": 0.1506021330980693,
+       "mesh_vs_full_reference": 0.14230917534756402,
        "unstable_fraction": 0.0
       }
      },
@@ -1358,27 +1358,27 @@
      },
      "zg": {
       "2": {
-       "held_out_force_rmse": 0.8709301575087652,
-       "mesh_vs_disjoint": 0.2566927619093453,
-       "mesh_vs_full_reference": 0.2560313859452859,
+       "held_out_force_rmse": 0.8764169022269558,
+       "mesh_vs_disjoint": 0.1513853422032803,
+       "mesh_vs_full_reference": 0.14941148303687285,
        "unstable_fraction": 0.0
       },
       "4": {
-       "held_out_force_rmse": 0.8659292356563398,
-       "mesh_vs_disjoint": 0.3398036061424303,
-       "mesh_vs_full_reference": 0.3431828768160816,
+       "held_out_force_rmse": 0.8747292407243631,
+       "mesh_vs_disjoint": 0.06655558612836723,
+       "mesh_vs_full_reference": 0.06785716310533475,
        "unstable_fraction": 0.0
       },
       "8": {
-       "held_out_force_rmse": 0.8678659259872399,
-       "mesh_vs_disjoint": 0.25498308045355067,
-       "mesh_vs_full_reference": 0.2592274520222697,
+       "held_out_force_rmse": 0.8744779492029109,
+       "mesh_vs_disjoint": 0.060927614459200474,
+       "mesh_vs_full_reference": 0.06430030566931275,
        "unstable_fraction": 0.0
       },
       "16": {
-       "held_out_force_rmse": 0.8664556515209481,
-       "mesh_vs_disjoint": 0.2831608882475981,
-       "mesh_vs_full_reference": 0.2852347873116131,
+       "held_out_force_rmse": 0.8735920865968865,
+       "mesh_vs_disjoint": 0.07574680548545498,
+       "mesh_vs_full_reference": 0.07253555399493118,
        "unstable_fraction": 0.0
       }
      },
@@ -2698,27 +2698,27 @@
      },
      "zg": {
       "2": {
-       "held_out_force_rmse": 0.3691845239934488,
-       "mesh_vs_disjoint": 1.6065035865506934,
-       "mesh_vs_full_reference": 1.607194846765535,
-       "unstable_fraction": 0.056712962962962965
+       "held_out_force_rmse": 0.27566549917417066,
+       "mesh_vs_disjoint": 0.8034050861886987,
+       "mesh_vs_full_reference": 0.8030974632150127,
+       "unstable_fraction": 0.020833333333333332
       },
       "4": {
-       "held_out_force_rmse": 0.2548710413993716,
-       "mesh_vs_disjoint": 0.584503661390625,
-       "mesh_vs_full_reference": 0.5867706759391687,
-       "unstable_fraction": 0.0
+       "held_out_force_rmse": 0.2353225511083992,
+       "mesh_vs_disjoint": 0.3594027553067203,
+       "mesh_vs_full_reference": 0.3608600324791565,
+       "unstable_fraction": 0.00038580246913580245
       },
       "8": {
-       "held_out_force_rmse": 0.2411471679341946,
-       "mesh_vs_disjoint": 0.410867902289884,
-       "mesh_vs_full_reference": 0.4099260447048463,
+       "held_out_force_rmse": 0.23311565239068288,
+       "mesh_vs_disjoint": 0.24357604285771478,
+       "mesh_vs_full_reference": 0.24357483395578025,
        "unstable_fraction": 0.0
       },
       "16": {
-       "held_out_force_rmse": 0.23905375540245874,
-       "mesh_vs_disjoint": 0.45226760620124384,
-       "mesh_vs_full_reference": 0.4363134898958841,
+       "held_out_force_rmse": 0.22870356020846994,
+       "mesh_vs_disjoint": 0.2312138091526098,
+       "mesh_vs_full_reference": 0.2209475402006325,
        "unstable_fraction": 0.0
       }
      }
@@ -4070,27 +4070,27 @@
      },
      "zg": {
       "2": {
-       "held_out_force_rmse": 0.2349696350263619,
-       "mesh_vs_disjoint": 0.35411447958435205,
-       "mesh_vs_full_reference": 0.35578747174028347,
+       "held_out_force_rmse": 0.2278447850602816,
+       "mesh_vs_disjoint": 0.2111180896454168,
+       "mesh_vs_full_reference": 0.21043344097957065,
        "unstable_fraction": 0.0
       },
       "4": {
-       "held_out_force_rmse": 0.23777373110636738,
-       "mesh_vs_disjoint": 0.444853521924118,
-       "mesh_vs_full_reference": 0.44740977417822675,
+       "held_out_force_rmse": 0.2251043303099407,
+       "mesh_vs_disjoint": 0.15732512412013225,
+       "mesh_vs_full_reference": 0.1593038255137674,
        "unstable_fraction": 0.0
       },
       "8": {
-       "held_out_force_rmse": 0.23265061258405595,
-       "mesh_vs_disjoint": 0.3671795490949751,
-       "mesh_vs_full_reference": 0.3658101412339895,
+       "held_out_force_rmse": 0.22503623855022264,
+       "mesh_vs_disjoint": 0.17532794588103584,
+       "mesh_vs_full_reference": 0.17424170620742988,
        "unstable_fraction": 0.0
       },
       "16": {
-       "held_out_force_rmse": 0.23407183753279892,
-       "mesh_vs_disjoint": 0.41307858039988665,
-       "mesh_vs_full_reference": 0.39935271864257815,
+       "held_out_force_rmse": 0.22524223084628148,
+       "mesh_vs_disjoint": 0.19565292609317286,
+       "mesh_vs_full_reference": 0.1829609584445172,
        "unstable_fraction": 0.0
       }
      }

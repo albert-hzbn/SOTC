@@ -72,27 +72,27 @@
      },
      "zg": {
       "2": {
-       "held_out_force_rmse": 0.194292222795049,
-       "mesh_vs_disjoint": 0.23176253032815702,
-       "mesh_vs_full_reference": 0.22967536745454228,
+       "held_out_force_rmse": 0.19059933287258798,
+       "mesh_vs_disjoint": 0.059508294951236856,
+       "mesh_vs_full_reference": 0.057966535181308385,
        "unstable_fraction": 0.0
       },
       "4": {
-       "held_out_force_rmse": 0.1957832594129199,
-       "mesh_vs_disjoint": 0.2684527616441917,
-       "mesh_vs_full_reference": 0.27031996409641557,
+       "held_out_force_rmse": 0.19009118171121983,
+       "mesh_vs_disjoint": 0.03166796189953429,
+       "mesh_vs_full_reference": 0.029882885330397683,
        "unstable_fraction": 0.0
       },
       "8": {
-       "held_out_force_rmse": 0.19673666229537903,
-       "mesh_vs_disjoint": 0.2864312395012041,
-       "mesh_vs_full_reference": 0.2857842155208082,
+       "held_out_force_rmse": 0.1897898379916556,
+       "mesh_vs_disjoint": 0.033472616432323826,
+       "mesh_vs_full_reference": 0.024727222879940787,
        "unstable_fraction": 0.0
       },
       "16": {
-       "held_out_force_rmse": 0.19789759197441084,
-       "mesh_vs_disjoint": 0.30320029585992725,
-       "mesh_vs_full_reference": 0.29590353014257653,
+       "held_out_force_rmse": 0.18989960126197367,
+       "mesh_vs_disjoint": 0.042249004491531364,
+       "mesh_vs_full_reference": 0.02837242627676239,
        "unstable_fraction": 0.0
       }
      },
@@ -1358,27 +1358,27 @@
      },
      "zg": {
       "2": {
-       "held_out_force_rmse": 0.19429222279504918,
-       "mesh_vs_disjoint": 0.23176253032816096,
-       "mesh_vs_full_reference": 0.229675367454547,
+       "held_out_force_rmse": 0.19059933287258782,
+       "mesh_vs_disjoint": 0.05950829495122313,
+       "mesh_vs_full_reference": 0.05796653518130236,
        "unstable_fraction": 0.0
       },
       "4": {
-       "held_out_force_rmse": 0.19578325941291985,
-       "mesh_vs_disjoint": 0.2684527616441873,
-       "mesh_vs_full_reference": 0.27031996409641684,
+       "held_out_force_rmse": 0.1900911817112199,
+       "mesh_vs_disjoint": 0.031667961899532526,
+       "mesh_vs_full_reference": 0.029882885330402648,
        "unstable_fraction": 0.0
       },
       "8": {
-       "held_out_force_rmse": 0.19673666229537937,
-       "mesh_vs_disjoint": 0.28643123950120997,
-       "mesh_vs_full_reference": 0.28578421552081834,
+       "held_out_force_rmse": 0.18978983799165544,
+       "mesh_vs_disjoint": 0.03347261643232205,
+       "mesh_vs_full_reference": 0.024727222879941956,
        "unstable_fraction": 0.0
       },
       "16": {
-       "held_out_force_rmse": 0.19789759197441056,
-       "mesh_vs_disjoint": 0.30320029585991587,
-       "mesh_vs_full_reference": 0.2959035301425698,
+       "held_out_force_rmse": 0.1898996012619737,
+       "mesh_vs_disjoint": 0.042249004491546574,
+       "mesh_vs_full_reference": 0.02837242627676764,
        "unstable_fraction": 0.0
       }
      },
@@ -2698,27 +2698,27 @@
      },
      "zg": {
       "2": {
-       "held_out_force_rmse": 0.1970364572300067,
-       "mesh_vs_disjoint": 0.26712534593223464,
-       "mesh_vs_full_reference": 0.2671262561554417,
+       "held_out_force_rmse": 0.1917809274134005,
+       "mesh_vs_disjoint": 0.08324051389341802,
+       "mesh_vs_full_reference": 0.08285637485637042,
        "unstable_fraction": 0.0
       },
       "4": {
-       "held_out_force_rmse": 0.1985693651216779,
-       "mesh_vs_disjoint": 0.30525286195528545,
-       "mesh_vs_full_reference": 0.30471016739245677,
+       "held_out_force_rmse": 0.1915841148691508,
+       "mesh_vs_disjoint": 0.07928301145076794,
+       "mesh_vs_full_reference": 0.07829386739216179,
        "unstable_fraction": 0.0
       },
       "8": {
-       "held_out_force_rmse": 0.1989993662922916,
-       "mesh_vs_disjoint": 0.31417370275937606,
-       "mesh_vs_full_reference": 0.3139338699734369,
+       "held_out_force_rmse": 0.19150873914119845,
+       "mesh_vs_disjoint": 0.07809681322714046,
+       "mesh_vs_full_reference": 0.07820184438017068,
        "unstable_fraction": 0.0
       },
       "16": {
-       "held_out_force_rmse": 0.19976752028219336,
-       "mesh_vs_disjoint": 0.3181838859232844,
-       "mesh_vs_full_reference": 0.3260954129710636,
+       "held_out_force_rmse": 0.19149504261312314,
+       "mesh_vs_disjoint": 0.08049332658838143,
+       "mesh_vs_full_reference": 0.07644319594051069,
        "unstable_fraction": 0.0
       }
      }
@@ -4070,27 +4070,27 @@
      },
      "zg": {
       "2": {
-       "held_out_force_rmse": 0.19703645723000687,
-       "mesh_vs_disjoint": 0.26712534593225046,
-       "mesh_vs_full_reference": 0.267126256155458,
+       "held_out_force_rmse": 0.19178092741340036,
+       "mesh_vs_disjoint": 0.08324051389340867,
+       "mesh_vs_full_reference": 0.0828563748563613,
        "unstable_fraction": 0.0
       },
       "4": {
-       "held_out_force_rmse": 0.19856936512167808,
-       "mesh_vs_disjoint": 0.30525286195528933,
-       "mesh_vs_full_reference": 0.3047101673924722,
+       "held_out_force_rmse": 0.19158411486915083,
+       "mesh_vs_disjoint": 0.07928301145077615,
+       "mesh_vs_full_reference": 0.07829386739216666,
        "unstable_fraction": 0.0
       },
       "8": {
-       "held_out_force_rmse": 0.19899936629229226,
-       "mesh_vs_disjoint": 0.3141737027593735,
-       "mesh_vs_full_reference": 0.3139338699734606,
+       "held_out_force_rmse": 0.1915087391411985,
+       "mesh_vs_disjoint": 0.07809681322715031,
+       "mesh_vs_full_reference": 0.0782018443801788,
        "unstable_fraction": 0.0
       },
       "16": {
-       "held_out_force_rmse": 0.199767520282193,
-       "mesh_vs_disjoint": 0.31818388592327357,
-       "mesh_vs_full_reference": 0.32609541297106776,
+       "held_out_force_rmse": 0.19149504261312317,
+       "mesh_vs_disjoint": 0.08049332658839084,
+       "mesh_vs_full_reference": 0.07644319594051814,
        "unstable_fraction": 0.0
       }
      }

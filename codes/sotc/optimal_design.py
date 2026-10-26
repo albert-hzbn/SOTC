@@ -260,9 +260,11 @@ def zg_modes(phonon, temperature: float, omega_min_thz: float = 0.05):
     for q, trim in chosen:
         f, vecs = phonon.get_frequencies_with_eigenvectors(q)
         order = np.argsort(f)
-        # Lattice vector of each supercell atom relative to its primitive image.
-        reference = positions - positions[s2p]
-        phase = np.exp(2j * np.pi * (reference @ np.linalg.inv(pcell)) @ q)
+        # Phonopy's dynamical matrix carries the phase exp(iq.r) of the full
+        # atomic position r = R + tau, so the Bloch factor must too; the
+        # lattice vector R alone distorts the relative motion of the basis
+        # atoms (nearest-neighbour bond-stretch variance x3 in diamond Si).
+        phase = np.exp(2j * np.pi * (positions @ np.linalg.inv(pcell)) @ q)
         for nu in order:
             if f[nu] <= omega_min_thz:
                 continue

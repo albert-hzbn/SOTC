@@ -598,38 +598,40 @@ def surrogate_table():
     kinds = [("canonical", "Canonical"), ("canonical_paired", r"Canonical $\pm$"),
              ("rademacher_random", "Exact ampl., random signs"),
              ("sotcd", "SOTC-D"), ("sotcdq", "Stratified ampl. + D-opt."),
-             ("canonical_dopt", "Gaussian ampl. + D-opt.")]
+             ("canonical_dopt", "Gaussian ampl. + D-opt."),
+             ("zg", "Special displ. (ZG)"), ("rattle", "Thermal rattle")]
+    materials = ("al", "w", "nacl", "si")
     lines = [
         r"\begin{table*}[t]",
-        r"\caption{Surrogate design study (Al 300~K, W 1500~K, NaCl 700~K;"
+        r"\caption{Surrogate design study (Al 300~K, W 1500~K, NaCl 700~K, Si 600~K;"
         r" DFT-fitted FC2+FC3+FC4 surrogates in $3\times3\times3$ cells). Median"
         r" mesh RMSE (THz) against the surrogate effective FC2 over 30"
         r" repetitions, at 2/4/8/16 force calls.}",
         r"\label{tab:surrogate}",
-        r"\begin{ruledtabular}",
-        r"\begin{tabular}{lccc}",
-        r"Design & Al & W & NaCl\\",
+        r"\begin{ruledtabular}", r"\footnotesize", r"\setlength{\tabcolsep}{3pt}",
+        r"\begin{tabular}{lcccc}",
+        r"Design & Al & W & NaCl & Si\\",
         r"\hline",
     ]
     data = {}
-    for m in ("al", "w", "nacl"):
+    for m in materials:
         path = ROOT / "validation_results" / m / "surrogate_design" / "surrogate_design_study.json"
         data[m] = json.loads(path.read_text()) if path.exists() else None
     for key, label in kinds:
         cells = [label]
-        for m in ("al", "w", "nacl"):
+        for m in materials:
             if data[m] is None:
                 cells.append("--")
                 continue
             rows = data[m]["results"][key]
             cells.append("/".join(
-                f"{np.median([r['mesh_rmse_thz'] for r in rows[c]]):.3f}"
+                f"{np.median([r['mesh_rmse_thz'] for r in rows[c]]):.3f}"[1:]
                 for c in ("2", "4", "8", "16")))
         lines.append(" & ".join(cells) + r"\\")
     lines.append(r"\hline")
     lines.append("Harmonic vs effective & " + " & ".join(
         f"{data[m]['harmonic_vs_effective_mesh']['rmse_thz']:.3f}" if data[m] else "--"
-        for m in ("al", "w", "nacl")) + r"\\")
+        for m in materials) + r"\\")
     lines += [r"\end{tabular}", r"\end{ruledtabular}", r"\end{table*}"]
     return "\n".join(lines)
 
@@ -840,7 +842,140 @@ def bvk_table():
     return "\n".join(lines)
 
 
+def qha_thermo_table():
+    path = ROOT / "validation_results" / "al" / "robustness" / "qha_thermal_expansion.json"
+    if not path.exists():
+        return ""
+    r = json.loads(path.read_text())
+    c = r["primary_calls"]
+    lines = [
+        r"\begin{table*}[t]",
+        r"\caption{Al thermodynamics on the volume grid (PBE). $\alpha$ ($10^{-6}$~K$^{-1}$)"
+        r" of the converged 125-atom QHA from free-energy minimization and from the"
+        r" Gr\"uneisen formula $\alpha=\sum_k\gamma_kc_k/3BV$, evaluated with the"
+        r" static $B_0$ and $V_0$ (shortcut) and with $B_T$ and $V(T)$ of the"
+        r" minimization (exact). $B_T$ (GPa) and $C_P=C_V+TV\beta^2B_T$"
+        r" (J~mol$^{-1}$K$^{-1}$, phonon part only) of the converged QHA and of the"
+        r" self-consistent SOTC-D (" + str(c) + r" calls, independent-seed grid)."
+        r" Experiment: NIST-JANAF $C_P$ (Shomate fit, 298--933~K, including the"
+        r" electronic contribution) \cite{chase1998}.}",
+        r"\label{tab:qha_thermo}",
+        r"\begin{ruledtabular}",
+        r"\begin{tabular}{lcccccccc}",
+        r" & \multicolumn{3}{c}{$\alpha$, converged QHA} & \multicolumn{2}{c}{$B_T$} &"
+        r" \multicolumn{3}{c}{$C_P$}\\",
+        r"$T$ (K) & min. & Gr\"uneisen, exact & Gr\"uneisen, shortcut & QHA & SC &"
+        r" QHA & SC & expt.\\",
+        r"\hline",
+    ]
+    for t, e in r["temperatures"].items():
+        q, sc = e["harmonic_qha_converged"], e[f"sotcd_sc_{c}"]
+        g = r["gruneisen_shortcut"][t]
+        ex = r["experiment_cp_J_molK"].get(t)
+        lines.append(" & ".join([
+            t, f"{q['alpha_1e6']:.1f}", f"{g['alpha_at_VT_BT_1e6']:.1f}", f"{g['alpha_1e6']:.1f}",
+            f"{q['B_gpa']:.1f}", f"{sc['B_gpa']:.1f}", f"{q['Cp_J_molK']:.2f}",
+            f"{sc['Cp_J_molK']:.2f}", f"{ex:.2f}" if ex else "--"]) + r"\\")
+    lines += [r"\end{tabular}", r"\end{ruledtabular}", r"\end{table*}"]
+    return "\n".join(lines)
+
+
+def dft_sc_table(budgets=(4, 8, 16, 32), materials=("al", "si")):
+    data = {}
+    for m in materials:
+        path = ROOT / "validation_results" / m / "robustness" / "dft_selfconsistent.json"
+        if path.exists() and "vs_sc" in json.loads(path.read_text()):
+            data[m] = json.loads(path.read_text())
+    if not data:
+        return ""
+
+    def cell(values):
+        return f"{np.median(values):.3f}"[1:] if values else "--"
+
+    def curve(seeds, key="vs_sc"):
+        return {b: [row[key] for rows in seeds.values() for row in rows
+                    if row["force_calls"] == b] for b in budgets}
+
+    def sotcd_sc(v):
+        return {b: [row["mesh_rmse_thz"] for rows in v["sotcd_sc"].values() for row in rows
+                    if row["force_calls"] == b] for b in budgets}
+
+    def sscha(v):
+        return {b: [rows[-1]["mesh_rmse_thz"] for rows in v["sscha"].values()
+                    if rows[-1]["force_calls"] == b] for b in budgets}
+
+    def refit(v):
+        return {b: [e for n, e in v["sscha_refit"].items() if int(n[1:].split("_")[0]) == b]
+                for b in budgets}
+
+    rows = [
+        ("\\textit{One shot from the harmonic trial}", None),
+        ("SOTC-D", lambda r: {b: [r["vs_sc"]["oneshot_first_n"]["sotcd"].get(str(b))]
+                              if str(b) in r["vs_sc"]["oneshot_first_n"]["sotcd"] else []
+                              for b in budgets}),
+        ("Canonical $\\pm$ (TDEP)", lambda r: {
+            b: [r["vs_sc"]["oneshot_first_n"]["canonical"][str(b)]]
+            if str(b) in r["vs_sc"]["oneshot_first_n"]["canonical"] else [] for b in budgets}),
+        ("Canonical, SSCHA population", lambda r: refit(r["vs_sc"])),
+        ("Special displacements (ZG)", lambda r: {
+            b: [r["vs_sc"]["oneshot_first_n"]["zg"][str(b)]]
+            if str(b) in r["vs_sc"]["oneshot_first_n"]["zg"] else [] for b in budgets}),
+        ("Thermal rattle", lambda r: {
+            b: [r["vs_sc"]["oneshot_first_n"]["rattle"][str(b)]]
+            if str(b) in r["vs_sc"]["oneshot_first_n"]["rattle"] else [] for b in budgets}),
+        ("\\textit{Self-consistent}", None),
+        ("sTDEP, last iteration", lambda r: curve(r["iterated"]["stdep_last"])),
+        ("sTDEP, pooled", lambda r: curve(r["iterated"]["stdep_pooled"])),
+        ("ZG-SC (pooled)", lambda r: curve(r["iterated"]["zgsc_pooled"])),
+        ("SSCHA", lambda r: sscha(r["vs_sc"])),
+        ("SOTC-D-SC", lambda r: sotcd_sc(r["vs_sc"])),
+    ]
+    head = " & ".join(f"\\multicolumn{{{len(budgets)}}}{{c}}{{{LABELS[m]}}}" for m in data)
+    lines = [
+        r"\begin{table*}[t]",
+        r"\caption{Protocols with DFT forces in the SOTC cells of Al (300~K) and Si"
+        r" (600~K). Mesh RMSE (THz) against the converged self-consistent effective"
+        r" FC2 at " + "/".join(str(b) for b in budgets) + r" force calls; medians over"
+        r" seeds where several were run (sTDEP and SOTC-D-SC: 3; canonical: 20 random"
+        r" subsets of pairs). sTDEP draws 4 canonical configurations per iteration"
+        r" and fits the last iteration or all of them; ZG-SC adds one special-displacement"
+        r" $\pm$ pair per iteration and refits all of them. SSCHA (python-sscha) stops"
+        r" after its first population; SSCHA force constants are projected onto"
+        r" the supercell basis in the metric of the thermal displacement covariance."
+        r" ``Canonical, SSCHA population'': the same SSCHA configurations and DFT"
+        r" forces refitted by the regression of Sec.~\ref{sec:fit}.}",
+        r"\label{tab:dft_sc}",
+        r"\begin{ruledtabular}",
+        r"\begin{tabular}{l" + "c" * (len(budgets) * len(data)) + "}",
+        " & " + head + r"\\",
+        "Calls & " + " & ".join(str(b) for _ in data for b in budgets) + r"\\",
+        r"\hline",
+    ]
+    for label, getter in rows:
+        if getter is None:
+            lines.append(label + " & " * (len(budgets) * len(data)) + r"\\")
+            continue
+        cells = [label]
+        for r in data.values():
+            values = getter(r)
+            cells += [cell([x for x in values[b] if x is not None]) for b in budgets]
+        lines.append(" & ".join(cells) + r"\\")
+    lines.append(r"\hline")
+    lines.append("Harmonic trial & " + " & ".join(
+        f"\\multicolumn{{{len(budgets)}}}{{c}}{{{r['vs_sc']['harmonic']:.3f}}}"
+        for r in data.values()) + r"\\")
+    lines.append("Iteration-0 effective FC2 (256 calls) & " + " & ".join(
+        f"\\multicolumn{{{len(budgets)}}}{{c}}{{{r['vs_sc']['iteration0_population']:.3f}}}"
+        for r in data.values()) + r"\\")
+    lines.append("Reference: seed-to-seed & " + " & ".join(
+        f"\\multicolumn{{{len(budgets)}}}{{c}}{{{r['vs_sc']['seed_to_seed']:.3f}}}"
+        for r in data.values()) + r"\\")
+    lines += [r"\end{tabular}", r"\end{ruledtabular}", r"\end{table*}"]
+    return "\n".join(lines)
+
+
 def main():
+    (OUT / "tab_dft_sc.tex").write_text(dft_sc_table() + "\n")
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "tab_runs.tex").write_text(runs_table() + "\n")
     (OUT / "tab_accuracy.tex").write_text(accuracy_table() + "\n")
@@ -861,6 +996,7 @@ def main():
         selfconsistent_table(counts=(4, 16), basis="crystal",
                              label="tab:selfconsistent_crystal_4_16") + "\n")
     (OUT / "tab_bvk.tex").write_text(bvk_table() + "\n")
+    (OUT / "tab_qha_thermo.tex").write_text(qha_thermo_table() + "\n")
     (OUT / "tab_qha.tex").write_text(qha_table() + "\n")
     (OUT / "tab_cost.tex").write_text(cost_table() + "\n")
     (OUT / "tab_basis.tex").write_text(basis_table() + "\n")

@@ -1,0 +1,27 @@
+\begin{table*}[t]
+\caption{Protocols with DFT forces in the SOTC cells of Al (300~K) and Si (600~K). Mesh RMSE (THz) against the converged self-consistent effective FC2 at 4/8/16/32 force calls; medians over seeds where several were run (sTDEP and SOTC-D-SC: 3; canonical: 20 random subsets of pairs). sTDEP draws 4 canonical configurations per iteration and fits the last iteration or all of them; ZG-SC adds one special-displacement $\pm$ pair per iteration and refits all of them. SSCHA (python-sscha) stops after its first population; SSCHA force constants are projected onto the supercell basis in the metric of the thermal displacement covariance. ``Canonical, SSCHA population'': the same SSCHA configurations and DFT forces refitted by the regression of Sec.~\ref{sec:fit}.}
+\label{tab:dft_sc}
+\begin{ruledtabular}
+\begin{tabular}{lcccccccc}
+ & \multicolumn{4}{c}{Al} & \multicolumn{4}{c}{Si}\\
+Calls & 4 & 8 & 16 & 32 & 4 & 8 & 16 & 32\\
+\hline
+\textit{One shot from the harmonic trial} &  &  &  &  &  &  &  & \\
+SOTC-D & .088 & .076 & .059 & -- & .072 & .076 & .076 & --\\
+Canonical $\pm$ (TDEP) & .161 & .117 & .083 & -- & .079 & .051 & .051 & --\\
+Canonical, SSCHA population & -- & -- & .072 & .064 & -- & -- & .061 & .047\\
+Special displacements (ZG) & .158 & .137 & .125 & -- & .053 & .059 & .052 & --\\
+Thermal rattle & .269 & .207 & .155 & -- & .629 & .642 & .555 & --\\
+\textit{Self-consistent} &  &  &  &  &  &  &  & \\
+sTDEP, last iteration & .171 & .150 & .200 & .151 & .091 & .092 & .073 & .097\\
+sTDEP, pooled & .171 & .117 & .068 & .057 & .091 & .064 & .040 & .035\\
+ZG-SC (pooled) & .178 & .220 & .172 & .159 & .044 & .031 & .021 & .014\\
+SSCHA & -- & -- & .250 & .223 & -- & -- & .089 & .079\\
+SOTC-D-SC & .087 & .076 & .052 & .047 & .079 & .065 & .058 & .051\\
+\hline
+Harmonic trial & \multicolumn{4}{c}{0.308} & \multicolumn{4}{c}{0.095}\\
+Iteration-0 effective FC2 (256 calls) & \multicolumn{4}{c}{0.037} & \multicolumn{4}{c}{0.048}\\
+Reference: seed-to-seed & \multicolumn{4}{c}{0.029} & \multicolumn{4}{c}{0.013}\\
+\end{tabular}
+\end{ruledtabular}
+\end{table*}

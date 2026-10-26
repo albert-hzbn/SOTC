@@ -223,3 +223,56 @@ def test_zg_modes_and_rattle_match_canonical_mean_square():
     rattle = thermal_rattle(np.random.default_rng(0), phonon, 300.0, 4000)
     np.testing.assert_allclose(np.mean(rattle ** 2, axis=0).mean(axis=1),
                                canonical.mean(axis=1), rtol=0.03)
+
+
+def _rocksalt_spring_phonon():
+    """Rock-salt nearest-neighbour central-spring model in a 3x3x3 cell."""
+    from phonopy import Phonopy
+    from phonopy.structure.atoms import PhonopyAtoms
+
+    a = 5.6
+    cell = 0.5 * a * np.array([[0., 1., 1.], [1., 0., 1.], [1., 1., 0.]])
+    unit = PhonopyAtoms(symbols=["Na", "Cl"], cell=cell,
+                        scaled_positions=[[0., 0., 0.], [0.5, 0.5, 0.5]])
+    phonon = Phonopy(unit, np.diag([3, 3, 3]))
+    pos = np.asarray(phonon.supercell.positions)
+    scell = np.asarray(phonon.supercell.cell)
+    n = len(pos)
+    fc = np.zeros((n, n, 3, 3))
+    for i in range(n):
+        for j in range(n):
+            if i == j:
+                continue
+            for image in itertools.product((-1, 0, 1), repeat=3):
+                d = pos[j] + np.asarray(image) @ scell - pos[i]
+                if abs(np.linalg.norm(d) - a / 2) < 1e-6:
+                    e = d / np.linalg.norm(d)
+                    fc[i, j] -= 2.0 * np.outer(e, e)
+    for i in range(n):
+        fc[i, i] = -fc[i].sum(axis=0)
+    phonon.force_constants = fc
+    return phonon
+
+
+def test_zg_reproduces_canonical_bond_fluctuations_with_a_basis():
+    # With two atoms per primitive cell the Bloch phase must include the
+    # basis position; otherwise the relative motion of neighbours is wrong
+    # although the mean-square displacement per atom is right.
+    from sotc.optimal_design import zg_modes
+
+    phonon = _rocksalt_spring_phonon()
+    masses = np.asarray(phonon.supercell.masses)
+    pos = np.asarray(phonon.supercell.positions)
+    scell = np.asarray(phonon.supercell.cell)
+    frac = (pos[None] - pos[:, None]) @ np.linalg.inv(scell)
+    d = (frac - np.rint(frac)) @ scell
+    r = np.linalg.norm(d, axis=2)
+    i, j = np.where(np.abs(r - 2.8) < 1e-6)
+    rhat = d[i, j] / r[i, j][:, None]
+    _, patterns, sigma = thermal_modes(np.asarray(phonon.force_constants), masses, 300.0)
+    stretch = np.einsum("mpa,pa->mp", patterns[:, j] - patterns[:, i], rhat)
+    canonical = np.mean(np.einsum("m,mp->p", sigma ** 2, stretch ** 2))
+    _, zp, zs = zg_modes(phonon, 300.0)
+    u = configurations(walsh_signs(len(zs), 4), zp, zs)
+    zg = np.mean(np.einsum("spa,pa->sp", u[:, j] - u[:, i], rhat) ** 2)
+    np.testing.assert_allclose(zg, canonical, rtol=0.05)

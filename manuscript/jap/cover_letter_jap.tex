@@ -34,13 +34,19 @@ effective force constants are the Gaussian-averaged Hessian, SOTC-D estimates
 them with an $O(1/M)$ bias at fourth order, and inversion pairs cancel cubic
 forces exactly;
 \item with the same trial, SOTC-D has the lowest dispersion error of five
-designs in 10 of 11 crystals at two and at eight force calls; its
+designs in 8 of 11 crystals at two and 9 of 11 at eight force calls; its
 bootstrapped form beats one-shot canonical sampling in all
 eleven crystals at every budget from 4 to 16 calls (supercell basis) and two-iteration sTDEP
 with DFT forces in all eleven at eight calls, and on anharmonic
 model potentials of five crystals its fully self-consistent form reaches a
 given accuracy with a factor of 2--16 fewer force calls than SSCHA in 13 of
 14 cases;
+\item with DFT forces in Al and Si, scored against a converged
+self-consistent reference, SOTC-D-SC is compared with iterated sTDEP,
+self-consistent special displacements, SSCHA, and AIMD-TDEP: it is the most
+accurate at small budgets for strongly renormalized Al, whereas for weakly
+anharmonic Si pooled sTDEP and self-consistent special displacements are
+more accurate at 32 calls;
 \item regression method (nine least-squares, sparse, and Bayesian fits)
 matters little, whereas a crystal-symmetry basis reduces the parameter count
 of the cubic crystals by up to a factor of 30 at no loss of accuracy;
