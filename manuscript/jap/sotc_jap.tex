@@ -139,7 +139,7 @@ molecular dynamics (Al), and sparse and Bayesian regression. Diamond Si and hcp
 Mg are added to test other structure classes. We further report the
 non-analytic LO--TO correction for the polar crystals, Debye--Waller factors
 against a tabulated reference, an independent test of constrained third-
-and fourth-order fits, and the thermal expansion of Al from self-consistent
+and fourth-order fits, and the thermal expansion of Al and PbTe from self-consistent
 SOTC-D on a volume grid.
 
 This analysis identifies two weaknesses of correlator matching: its scalar
@@ -587,6 +587,9 @@ computed, and SOTC-D-SC was run with 32 force calls at 100, 300, 400, 500,
 700, and 900~K, twice: once with design seeds that differ between volumes and
 once with the same seeds at all volumes. The harmonic FD FC2 was also computed
 on the same volumes in the 125-atom cell with the large-cell settings above.
+For PbTe, the 72-atom cell was scaled to seven lattice parameters from 6.52
+to 6.70~\AA\ in steps of 0.03~\AA, and SOTC-D-SC was run with 32 force
+calls at 300, 500, and 700~K with the same seeds at all volumes.
 
 The same protocol was applied to two further classes of crystal: covalent
 diamond Si (600~K, 64-atom conventional $2\times2\times2$ cell, $r_{\rm
@@ -1261,6 +1264,22 @@ configurations is a sizable fraction of that. The fixed amplitudes of the design
 as they bias the FC2 [Eq.~(\ref{eq:bias})], which is a further, smaller
 error at high temperature.
 
+The same construction was applied to PbTe, whose harmonic FC2 in the
+72-atom cell is unstable at every volume of the grid ($a=6.52$--6.70~\AA,
+minimum frequency $-1.7$ to $-2.0$~THz), with 32 force calls per volume at
+300, 500, and 700~K and design seeds common to all volumes. The
+self-consistent FC2 is stable everywhere (minimum frequency 0.09--0.11~THz).
+At 300~K it gives $\alpha=14.2$, 15.7, and $16.4\times10^{-6}$~K$^{-1}$
+from the first 8, 16, and 32 calls, and 15.8 with a quartic $F(V)$, about
+20\% below the measured $20.4\times10^{-6}$~K$^{-1}$
+\cite{houston1968,madelung2004}; the anharmonic energy term is below
+1.6~meV per atom and changes $\alpha$ by less than
+$0.1\times10^{-6}$~K$^{-1}$. The QHA in the same cell gives 19.9, but only
+because the unstable modes are excluded from $F_{\rm h}$, so its agreement
+is not meaningful. At 500 and 700~K the self-consistent $\alpha$ changes by
+up to a factor of 3 between 8, 16, and 32 calls and is not resolved, for
+the reason given above for Al.
+
 In summary, the self-consistent design removes the instability of the
 small-cell QHA and gives a reproducible thermal expansion of Al within 3\%
 of experiment at 300~K and 7--8\% below it at 400~K, where the value
@@ -1391,7 +1410,9 @@ reproducible thermal expansion within 3\% of experiment at 300~K and
 7--8\% below it at 400~K with a cubic free-energy fit, a value that
 depends on the fit order (Sec.~\ref{sec:qha}). Above 400~K it underestimates the rise of $\alpha$, and
 near melting the curvature of the free energy with respect to volume is not
-resolved at this budget. Thermal expansion is therefore an application in
+resolved at this budget. For PbTe, whose small-cell harmonic FC2 is
+unstable at every volume, the self-consistent FC2 is stable and gives
+$\alpha$ about 20\% below experiment at 300~K. Thermal expansion is therefore an application in
 which the small-budget advantage of the design is limited: it needs
 free-energy differences between volumes to better than 1~meV per atom, and
 for crystals with a stable harmonic FC2 in a large cell the converged QHA
@@ -1447,7 +1468,9 @@ form gives a reproducible thermal expansion of Al within 3\% of experiment
 at 300~K and, with a cubic free-energy fit, 7--8\% below it at 400~K, whereas the QHA of the same small cell diverges above 500~K;
 at higher temperatures it underestimates the rise of $\alpha$, the
 free-energy curvature is not resolved with 32 force calls per volume, and
-for Al the converged harmonic QHA is more accurate. Because the gain is
+for Al the converged harmonic QHA is more accurate. For PbTe, whose
+small-cell harmonic FC2 is unstable, the self-consistent form gives
+$\alpha$ about 20\% below experiment at 300~K. Because the gain is
 largest at budgets of a few force calls, the design is most useful where each
 calculation is expensive---hybrid functionals, large cells, or
 high-throughput screening of finite-temperature phonons---and it can be used
