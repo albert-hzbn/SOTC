@@ -133,7 +133,7 @@ finite-displacement (FD) references and with an effective FC2 fitted to a
 temperature and electronic settings; and (iii)~compare SOTC with canonical
 samples of exactly the same size, fitted by the same regression, on
 held-out canonical forces, and also with special displacements, thermal
-rattle, sTDEP, SSCHA (with density-functional theory (DFT) forces for Al and on anharmonic model
+rattle, sTDEP, SSCHA (with density-functional theory (DFT) forces for Al and Si and on anharmonic model
 potentials), TDEP fitted to \textit{ab initio}
 molecular dynamics (Al and Si), and sparse and Bayesian regression. Diamond Si and hcp
 Mg are added to test other structure classes. We further report the
@@ -247,7 +247,12 @@ C_{ab}^{\alpha\beta}(\mathbf R,T)
 \end{equation}
 where $\mathbf q$ runs over the wave vectors commensurate with the
 Born--von K\'arm\'an cell, $s$ labels branches, and $e$ are mass-weighted
-polarization vectors (standard result \cite{ref56}; derivation in
+polarization vectors in the gauge in which the Bloch phase carries only the
+lattice vector $\mathbf R$; for polarization vectors in the gauge of the full
+atomic position (as returned by Phonopy), $\mathbf R$ is replaced by
+$\mathbf R+\boldsymbol\tau_b-\boldsymbol\tau_a$, and mixing the two gauges
+leaves the on-site terms unchanged but corrupts the correlation between
+different basis atoms (standard result \cite{ref56}; derivation in
 Supplementary Material, Sec.~S10). The $\coth$ factor interpolates between zero-point motion
 and classical equipartition. The SOTC target is the shell- and trace-averaged
 scalar
@@ -881,7 +886,7 @@ and 0.22~THz (Al) and 0.089 and 0.079~THz (Si) from the target, whereas the
 same configurations and DFT forces refitted by the regression of
 Sec.~\ref{sec:fit} lie 0.072 and 0.064~THz (Al) and 0.061 and 0.047~THz
 (Si) from it. With 256 configurations SSCHA reaches 0.069 (Al) and
-0.053~THz (Si), which SOTC-D-SC reaches with four (Al) and 16--32 force
+0.053~THz (Si), which SOTC-D-SC reaches with 16 (Al) and 32 force
 calls (Si).
 
 AIMD-TDEP samples unpaired configurations, whose odd displacement moments
@@ -1360,7 +1365,7 @@ in 50 of 56 comparisons at equal budget; in the other six, pooled sTDEP (W
 and NaCl at 64 and 16 calls, respectively, Si at 16, Mg at 32 and 64) or SSCHA (Al at 64)
 is better by at most 0.006~THz. It needs a factor of 2--16 fewer force calls
 than SSCHA for a given accuracy in 13 of 14 cases. With DFT forces, against
-a converged self-consistent reference, it reaches for Al with four calls the
+a converged self-consistent reference, it reaches for Al with 16 calls the
 accuracy SSCHA reaches with 256 and halves the error of iterated sTDEP and
 self-consistent special displacements at four calls; for weakly anharmonic
 Si, pooled sTDEP and self-consistent special displacements are more accurate
@@ -1463,7 +1468,7 @@ potentials of five crystals, the fully self-consistent form reaches a given
 accuracy with a factor of 2--16 fewer force calls than SSCHA in 13 of 14
 cases. With DFT forces and a converged self-consistent reference, it halves
 the error of iterated sTDEP and of self-consistent special displacements at
-four calls for Al and matches 256-configuration SSCHA with four calls, whereas
+four calls for Al and matches 256-configuration SSCHA with 16 calls, whereas
 for weakly anharmonic Si those two protocols are more accurate at 32 calls.
 Special displacements are competitive for Si and Mg but not in
 general, and thermal rattle and alternative regression methods do not close
