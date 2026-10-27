@@ -97,14 +97,17 @@ python codes/validation/surrogate_self_consistent.py <mat>        # sTDEP, SOTC-
 python codes/validation/surrogate_amplitude_bias.py <mat>         # fixed vs moment-matched SOTC-D-SC amplitudes
 python codes/validation/dft_sscha.py al <N> <seed>              # SSCHA with QE forces in the SOTC cell (venv313)
 python codes/validation/dft_sotcd_sc.py al <seed>                # SOTC-D-SC with QE forces
-python codes/validation/dft_selfconsistent_compare.py al         # DFT-level SSCHA vs SOTC-D-SC comparison
-python codes/validation/aimd_tdep.py al 0                    # QE MD trajectory k (0..3) in the SOTC cell; --parse-only after a time limit
-python codes/validation/aimd_tdep_compare.py al               # AIMD-TDEP convergence vs MD steps
+python codes/validation/dft_sc_protocols.py al stdep 10 --budget 512 --per-iter 128 --name stdep_reference  # converged SC reference (seeds 10, 11; also si)
+python codes/validation/dft_sc_protocols.py al <stdep|zgsc> <seed>  # iterated sTDEP / self-consistent ZG, 32 calls, 4 per iteration
+python codes/validation/dft_selfconsistent_compare.py al         # SSCHA, sTDEP, ZG-SC, SOTC-D-SC and one-shot designs vs the SC reference (Table VII; also si)
+python codes/validation/aimd_tdep.py al 0                    # QE MD trajectory k (0..3) in the SOTC cell (also si); --parse-only after a time limit
+python codes/validation/aimd_tdep_compare.py al               # AIMD-TDEP convergence vs MD steps, FC2 alone and jointly with FC3 (also si)
 python codes/validation/dft_qha.py al 4.050                  # volume-grid point: FD trial + SOTC-D-SC at 100-900 K (thermal expansion)
-python codes/validation/dft_qha_analyze.py al                 # thermal expansion alpha(T) from the volume grid
+python codes/validation/dft_qha_analyze.py al                 # thermal expansion alpha(T) from the volume grid (pbte qha_common: PbTe grid)
 python codes/validation/dft_qha.py al 4.050 --budget 16 --common-seed  # second grid with common design seeds
 python codes/validation/dft_qha_large.py al 4.050            # converged 125-atom harmonic FD on the volume grid
-python codes/validation/dft_classical_gaussian.py al          # classical-amplitude Gaussian ensemble (AIMD gap)
+python codes/validation/dft_qha.py pbte 6.520 --temperatures 300 500 700 --budget 32 --common-seed  # PbTe grid, a = 6.52-6.70 (step 0.03)
+python codes/validation/dft_classical_gaussian.py al          # classical-amplitude Gaussian ensemble (AIMD gap; also si)
 python codes/validation/classical_gaussian_compare.py al      # quantum vs classical vs AIMD effective FC2
 python codes/validation/experimental_bvk_compare.py           # near-neighbour force constants vs neutron Born-von Karman fits
 python codes/validation/dft_qha.py cu 3.6149 --temperatures 300 --budget 8  # SOTC-D at the room-temperature lattice (also au 4.0782)
