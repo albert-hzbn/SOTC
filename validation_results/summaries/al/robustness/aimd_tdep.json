@@ -2,44 +2,125 @@
  "material": "al",
  "n_equilibration": 250,
  "n_production_total": 4370,
- "limit_vs_iter1_thz": 0.27942033712021047,
- "limit_vs_harmonic_thz": 0.26939537784736955,
+ "fc3_cutoff_ang": 4.0,
  "u_rms_ang": 0.15380660897445703,
+ "mean_frequency_thz": {
+  "harmonic": 5.871671282894716,
+  "aimd_limit": 5.837026823145428,
+  "aimd_limit_fc23": 6.0535068021395,
+  "sc_reference": 6.11326675099435
+ },
+ "limits": {
+  "fc2_vs_harmonic": 0.140121786199943,
+  "fc2_vs_iter1_quantum": 0.27942033712021186,
+  "fc2_vs_sscha256_quantum": 0.28333129133692847,
+  "fc2_vs_sc_reference": 0.28541763461133834,
+  "fc23_vs_harmonic": 0.2228324962745034,
+  "fc23_vs_iter1_quantum": 0.07452655389953382,
+  "fc23_vs_sscha256_quantum": 0.11017106175050878,
+  "fc23_vs_sc_reference": 0.08105703867201233
+ },
+ "fc2_vs_fc23_limit_thz": 0.22095528266493944,
  "convergence": {
   "266": {
    "aimd_limit": 0.284164708816378,
+   "aimd_limit_fc23": 0.35941352698263807,
    "iter1_quantum": 0.3971641984453017,
-   "sscha256_quantum": 0.40021891505071117
+   "sscha256_quantum": 0.40021891505071117,
+   "sc_reference": 0.4061338554143613
   },
   "282": {
-   "aimd_limit": 0.2704824928183969,
+   "aimd_limit": 0.27048249281839665,
+   "aimd_limit_fc23": 0.36563215689225226,
    "iter1_quantum": 0.3905802192248955,
-   "sscha256_quantum": 0.3907282633339293
+   "sscha256_quantum": 0.3907282633339293,
+   "sc_reference": 0.3987877863503895
   },
   "314": {
-   "aimd_limit": 0.13782218551918834,
+   "aimd_limit": 0.13782218551918785,
+   "aimd_limit_fc23": 0.25216774250849444,
    "iter1_quantum": 0.29678760628515366,
-   "sscha256_quantum": 0.2976198936949102
+   "sscha256_quantum": 0.2976198936949102,
+   "sc_reference": 0.30312866865830523
   },
   "378": {
-   "aimd_limit": 0.12157305021875933,
+   "aimd_limit": 0.12157305021875915,
+   "aimd_limit_fc23": 0.24097765570548252,
    "iter1_quantum": 0.28704165783244096,
-   "sscha256_quantum": 0.28974607908489536
+   "sscha256_quantum": 0.28974607908489536,
+   "sc_reference": 0.29191282590843537
   },
   "506": {
-   "aimd_limit": 0.09657312906799809,
-   "iter1_quantum": 0.2903548523310904,
-   "sscha256_quantum": 0.28987465235606197
+   "aimd_limit": 0.09657312906799814,
+   "aimd_limit_fc23": 0.2386824316886661,
+   "iter1_quantum": 0.2903548523310918,
+   "sscha256_quantum": 0.28987465235606313,
+   "sc_reference": 0.29542334565123185
   },
   "762": {
-   "aimd_limit": 0.0801601335128411,
-   "iter1_quantum": 0.2928473502286958,
-   "sscha256_quantum": 0.2902620729437875
+   "aimd_limit": 0.08016013351284254,
+   "aimd_limit_fc23": 0.2395281524644335,
+   "iter1_quantum": 0.2928473502286964,
+   "sscha256_quantum": 0.29026207294378825,
+   "sc_reference": 0.29771140456855416
   },
   "1274": {
-   "aimd_limit": 0.055646732955525205,
-   "iter1_quantum": 0.29004927027827154,
-   "sscha256_quantum": 0.2903838933827692
+   "aimd_limit": 0.05564673295552488,
+   "aimd_limit_fc23": 0.2344099882023467,
+   "iter1_quantum": 0.29004927027827254,
+   "sscha256_quantum": 0.29038389338277015,
+   "sc_reference": 0.2946867087160772
+  }
+ },
+ "convergence_fc23": {
+  "266": {
+   "aimd_limit": 0.2713983734730781,
+   "aimd_limit_fc23": 0.1911840802290008,
+   "iter1_quantum": 0.21252529554371752,
+   "sscha256_quantum": 0.21526108686417672,
+   "sc_reference": 0.21283947321003815
+  },
+  "282": {
+   "aimd_limit": 0.2399254023331653,
+   "aimd_limit_fc23": 0.13728826481714945,
+   "iter1_quantum": 0.16996723272072162,
+   "sscha256_quantum": 0.1670535744236642,
+   "sc_reference": 0.17247044347913887
+  },
+  "314": {
+   "aimd_limit": 0.2457113966240259,
+   "aimd_limit_fc23": 0.09985492042025738,
+   "iter1_quantum": 0.12791437723001298,
+   "sscha256_quantum": 0.13536199193385798,
+   "sc_reference": 0.1331874614711422
+  },
+  "378": {
+   "aimd_limit": 0.24365231389928435,
+   "aimd_limit_fc23": 0.10174101300602101,
+   "iter1_quantum": 0.11491442732924617,
+   "sscha256_quantum": 0.13895770401458152,
+   "sc_reference": 0.11780343075049413
+  },
+  "506": {
+   "aimd_limit": 0.2250101968240541,
+   "aimd_limit_fc23": 0.08007737601000162,
+   "iter1_quantum": 0.10529529253829853,
+   "sscha256_quantum": 0.13382348907394953,
+   "sc_reference": 0.11276689249005846
+  },
+  "762": {
+   "aimd_limit": 0.24195492290907916,
+   "aimd_limit_fc23": 0.0752317275218652,
+   "iter1_quantum": 0.1060748101644353,
+   "sscha256_quantum": 0.11767148613296327,
+   "sc_reference": 0.10987262870441214
+  },
+  "1274": {
+   "aimd_limit": 0.23359554455291867,
+   "aimd_limit_fc23": 0.04695992340169942,
+   "iter1_quantum": 0.08968045037263998,
+   "sscha256_quantum": 0.1156440983185692,
+   "sc_reference": 0.09455166455880007
   }
  }
 }

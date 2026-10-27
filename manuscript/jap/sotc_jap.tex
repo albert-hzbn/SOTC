@@ -135,7 +135,7 @@ samples of exactly the same size, fitted by the same regression, on
 held-out canonical forces, and also with special displacements, thermal
 rattle, sTDEP, SSCHA (with density-functional theory (DFT) forces for Al and on anharmonic model
 potentials), TDEP fitted to \textit{ab initio}
-molecular dynamics (Al), and sparse and Bayesian regression. Diamond Si and hcp
+molecular dynamics (Al and Si), and sparse and Bayesian regression. Diamond Si and hcp
 Mg are added to test other structure classes. We further report the
 non-analytic LO--TO correction for the polar crystals, Debye--Waller factors
 against a tabulated reference, an independent test of constrained third-
@@ -572,14 +572,14 @@ comparisons is the converged self-consistent effective FC2: sTDEP with
 iteration fitted alone, two independent seeds averaged (1024 force calls per
 crystal). The two seeds agree within 0.029 (Al) and 0.013~THz (Si), and the
 last two iterations of each change it by 0.04--0.05 (Al, the statistical
-level of 128 samples) and 0.02~THz (Si). As an AIMD-TDEP baseline for Al, four Born--Oppenheimer
-molecular-dynamics trajectories were run with QE in the same cell and with the same
+level of 128 samples) and 0.02~THz (Si). As an AIMD-TDEP baseline for Al and Si, four Born--Oppenheimer
+molecular-dynamics trajectories per crystal were run with QE in the same cell and with the same
 electronic settings (Verlet integration, 3.9~fs time step, stochastic velocity
-rescaling at 300~K with a 77~fs time constant), each started from an independent canonical
-configuration and run for 1307--1372 steps. After 250 equilibration steps, the
-FC2 was fitted with the same basis and regression to the first $n$
-production steps of each trajectory; every MD step is counted as one force
-call. Iteration-1 results are scored against the iteration-1 effective
+rescaling at 300~K (Al) and 600~K (Si) with a 77~fs time constant), each started from an independent canonical
+configuration and run for 1307--1372 (Al) and 791--820 steps (Si). After 250 equilibration steps, the
+FC2 was fitted to the first $n$ production steps of each trajectory, with the
+same basis and regression alone and jointly with an FC3 (symfc basis, cutoff
+4.0~\AA); every MD step is counted as one force call. Iteration-1 results are scored against the iteration-1 effective
 FC2. For the thermal expansion of Al, the 32-atom cell was scaled to seven
 lattice parameters from 4.000 to 4.150~\AA\ in steps of 0.025~\AA. At each,
 the harmonic FD trial (four displacements and the undisplaced cell) was
@@ -884,31 +884,39 @@ Sec.~\ref{sec:fit} lie 0.072 and 0.064~THz (Al) and 0.061 and 0.047~THz
 0.053~THz (Si), which SOTC-D-SC reaches with four (Al) and 16--32 force
 calls (Si).
 
-AIMD-TDEP converges more slowly in force calls and to a different
-limit. Measured against the fit to all 4370 production steps, the median
-error of a single trajectory is 0.27~THz after 282 steps (including the 250
-equilibration steps), 0.12~THz after 378, 0.097~THz after 506, and
-0.056~THz after 1274 steps. SOTC-D-SC reaches a comparable error relative
-to its own target with four force calls; that target, the
-40-snapshot iteration-1 FC2, lies 0.043~THz from the converged
-self-consistent FC2. The converged AIMD-TDEP FC2 lies
-0.28~THz from the iteration-1 effective FC2 and 0.27~THz from the harmonic
-trial. The mean mesh frequency is 5.84~THz for both the harmonic trial and
-the AIMD-TDEP limit, but 6.11~THz for the effective FC2. The two targets
-differ in two ways: classical nuclei rather than quantum mode amplitudes, and
-the actual anharmonic displacement distribution rather than a Gaussian one.
-To separate them, 40 configurations (20 $\pm$ pairs) were drawn from the
-same harmonic trial with classical amplitudes $\sigma_e^2=k_BT/\omega_e^2$
-and computed with DFT. Their effective FC2 lies 0.08~THz from the quantum
-one (iteration-0 pool, mean frequency 6.05 against 6.11~THz; rms
-displacements 0.153 and 0.158~\AA) but 0.23~THz from the AIMD-TDEP limit
-(rms displacement 0.154~\AA). At 300~K in Al the difference is therefore
-mostly not quantum. It comes from sampling the actual, non-Gaussian
-distribution instead of a Gaussian centered on the trial, and the least-squares
-fit to that distribution gives an FC2 close to the harmonic one. AIMD-TDEP
-and the self-consistent protocols therefore converge to different
-quantities, and the force-call comparison applies to each method's own
-target.
+AIMD-TDEP samples unpaired configurations, whose odd displacement moments
+do not vanish, so a fit of the FC2 alone absorbs part of the cubic forces;
+the $\pm$ pairs of the Gaussian designs cancel these forces exactly. Fitted
+alone, the FC2 of all production steps lies 0.29 (Al) and 0.27~THz (Si) from
+the converged self-consistent FC2 and 0.22 and 0.23~THz from the joint
+FC2+FC3 fit to the same steps. In Al its mean mesh frequency, 5.84~THz,
+equals that of the harmonic trial, against 6.11~THz for the
+self-consistent FC2. The joint fit raises the mean to 6.05~THz (Si: 9.72,
+against 9.77~THz) and lies 0.081 (Al) and 0.055~THz (Si) from the converged
+self-consistent FC2. To separate the classical--quantum and non-Gaussian
+contributions to this difference, 40 configurations (20
+$\pm$ pairs) were drawn from the same harmonic trial with classical
+amplitudes $\sigma_e^2=k_BT/\omega_e^2$ and computed with DFT. In Al their
+effective FC2 lies 0.081~THz from the quantum one (iteration-0 pool; mean
+frequency 6.05 against 6.11~THz; rms displacements 0.153 and 0.158~\AA) and
+0.056~THz from the joint AIMD-TDEP fit (mean frequency 6.05~THz, rms
+displacement 0.154~\AA). In Si at 600~K the
+three ensembles agree more closely: the classical and quantum Gaussian FC2
+differ by 0.033~THz, and the joint AIMD-TDEP fit lies 0.019 and 0.028~THz
+from them, comparable to the statistical error of 40 configurations. The
+non-Gaussian part of the distribution sampled by the MD therefore changes
+the FC2 by at most 0.06~THz in both crystals; in Al the zero-point
+amplitudes contribute a similar amount.
+
+Measured against its own limit, the joint fit to a single trajectory has a
+median error of 0.14~THz after 282 steps (including the 250 equilibration
+steps), 0.10~THz after 314, 0.080~THz after 506, and 0.047~THz after 1274 in
+Al, and 0.054~THz after 282 and 0.046~THz after 762 steps in Si. Against the
+converged self-consistent FC2, it levels off at 0.09--0.11~THz in Al and
+0.07--0.09~THz in Si, the difference between the two limits. SOTC-D-SC reaches
+0.087~THz in Al with four force calls and 0.065~THz in Si with eight
+(Table~\ref{tab:dft_sc}). The 250 equilibration steps account for most of
+the cost of AIMD-TDEP, and successive MD steps are correlated.
 
 Supplementary Fig.~S4 shows, branch by branch, how the SOTC-D dispersions of Al and Au
 converge with 2--16 force calls; for Au, whose single-configuration SOTC-C fits
@@ -1391,15 +1399,17 @@ would have to be evaluated from the fitted effective model instead. AIMD-based
 TDEP samples the classical anharmonic ensemble, including non-Gaussian
 displacement statistics, and is not replaced by a Gaussian design; SOTC-D
 addresses the self-consistent harmonic level, at which quantum zero-point
-motion enters through the mode amplitudes. For Al at 300~K the two
-effective FC2 models differ by 0.28~THz, mostly because of the non-Gaussian
-distribution sampled by the MD rather than zero-point motion
-(Sec.~\ref{sec:iter1}). With DFT forces, AIMD-TDEP needed about 500
-MD steps per trajectory to come within 0.1~THz of its own limit, whereas
-SOTC-D-SC needed four force calls to reach the same error relative to its target
-(Sec.~\ref{sec:iter1}); the 250 equilibration steps are part of this
-difference, and successive MD steps are correlated. Given the uncertainty of
-both references, this is an order-of-magnitude comparison.
+motion enters through the mode amplitudes. Because MD samples are not
+paired, the FC2 must be fitted jointly with the FC3; fitted alone it is
+0.27--0.29~THz from the self-consistent FC2 in Al and Si. Fitted jointly, it
+lies 0.08 (Al) and 0.06~THz (Si) from it; zero-point motion and
+non-Gaussian statistics each change the FC2 by at most about 0.06--0.08~THz
+(Sec.~\ref{sec:iter1}). With DFT forces, a single trajectory needed
+about 310 MD steps in Al and at most 270 in Si (the shortest length
+tested), including 250 equilibration steps, to come within 0.1~THz of its
+own limit, whereas SOTC-D-SC needed four (Al)
+and eight (Si) force calls to come within 0.09 and 0.07~THz of the
+self-consistent target (Sec.~\ref{sec:iter1}).
 
 SOTC-D gives the effective FC2 at one volume. Repeated on a volume grid, it
 gives the free energy of the self-consistent harmonic model, because the
