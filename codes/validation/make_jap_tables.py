@@ -100,6 +100,7 @@ def accuracy_table():
         r"\begin{tabular}{lccccccc}",
         r" & \multicolumn{3}{c}{vs converged harmonic FD} &"
         r" \multicolumn{3}{c}{vs same-cell effective FC2} & \\",
+        rule_under([3, 3]),
         r" & FD $3^3$ & FD SOTC cell & SOTC-C & SOTC-C & SOTC-C pooled & SOTC-D (8) &"
         r" harmonic--effective\\",
         r"\hline",
@@ -156,11 +157,20 @@ def bold_min(values, digits, cap=None):
     return texts
 
 
+def rule_under(widths, start=2):
+    """Rules under consecutive column groups of the given widths."""
+    segs = []
+    for w in widths:
+        segs.append(rf"\cline{{{start}-{start + w - 1}}}")
+        start += w
+    return "".join(segs)
+
+
 def matched_table(counts=(2, 8), label="tab:matched"):
     """Iteration 0: every design from the same-cell harmonic FD trial."""
     kinds = ["D", "C", "P", "Z", "R"]
     head = " & ".join(
-        [r"\multicolumn{5}{c}{" + f"{c} calls" + "}" for c in counts])
+        [r"\multicolumn{5}{c}{" + f"{c} force calls" + "}" for c in counts])
     lines = [
         r"\begin{table*}[t]",
         r"\caption{Matched comparison in the SOTC cell at equal numbers of"
@@ -180,6 +190,7 @@ def matched_table(counts=(2, 8), label="tab:matched"):
         r"\begin{ruledtabular}",
         r"\begin{tabular}{l" + "c" * 5 * len(counts) + "}",
         " & " + head + r"\\",
+        rule_under([5] * len(counts)),
         " & " + " & ".join([" & ".join(kinds)] * len(counts)) + r"\\",
         r"\hline",
     ]
@@ -238,8 +249,12 @@ def selfconsistent_table(counts=(2, 8), basis="supercell", label=None):
         r"\begin{ruledtabular}",
         r"\begin{tabular}{l" + "ccccc" * len(counts) + "}",
         " & " + " & ".join(
-            r"\multicolumn{2}{c}{matched, " + f"{c}" + r"} & \multicolumn{3}{c}{equal cost, "
-            + f"{c}" + "}" for c in counts) + r"\\",
+            r"\multicolumn{5}{c}{" + f"{c} force calls" + "}" for c in counts) + r"\\",
+        rule_under([5] * len(counts)),
+        " & " + " & ".join(
+            r"\multicolumn{2}{c}{matched trial} & \multicolumn{3}{c}{equal cost}"
+            for c in counts) + r"\\",
+        rule_under([2, 3] * len(counts)),
         " & " + " & ".join(["D$_1$ & C$_1$ & B & D$_0$ & C$_0$"] * len(counts)) + r"\\",
         r"\hline",
     ]
@@ -372,6 +387,7 @@ def fitter_table(count="8"):
         r"\begin{ruledtabular}",
         r"\begin{tabular}{l" + "c" * len(reports) + "}",
         "Method & " + " & ".join(LABELS[m] for m in reports) + r"\\",
+        r" & \multicolumn{" + f"{len(reports)}" + r"}{c}{canonical / SOTC-D in each column}\\",
         r"\hline",
     ]
     for method in methods:
@@ -420,7 +436,8 @@ def stdep_table(counts=(8, 16), basis="supercell"):
         r"\label{tab:stdep" + ("" if basis == "supercell" else "_" + basis) + "}",
         r"\begin{ruledtabular}",
         r"\begin{tabular}{l" + "cccc" * len(counts) + "}",
-        " & " + " & ".join(r"\multicolumn{4}{c}{" + f"{c} calls" + "}" for c in counts) + r"\\",
+        " & " + " & ".join(r"\multicolumn{4}{c}{" + f"{c} force calls" + "}" for c in counts) + r"\\",
+        rule_under([4] * len(counts)),
         " & " + " & ".join(["B & sTDEP last & sTDEP pool & C$_0$"] * len(counts)) + r"\\",
         r"\hline",
     ]
@@ -474,6 +491,7 @@ def sc_surrogate_table(budgets=("8", "16", "32", "64")):
         r"\begin{ruledtabular}", r"\footnotesize",
         r"\begin{tabular}{l" + "c" * len(data) + "}",
         "Protocol & " + " & ".join(LABELS[m] for m in data) + r"\\",
+        r" & \multicolumn{" + f"{len(data)}" + r"}{c}{8/16/32/64 force calls in each column}\\",
         r"\hline",
     ]
     for key, label in protocols:
@@ -566,6 +584,7 @@ def thermo_table():
         r"\begin{tabular}{lccccccccccc}",
         r" & \multicolumn{3}{c}{$S_{\rm vib}$} & \multicolumn{3}{c}{$F_{\rm vib}$}"
         r" & \multicolumn{3}{c}{$T_D$} & \multicolumn{2}{c}{$U_{\rm iso}(300\,{\rm K})$}\\",
+        rule_under([3, 3, 3, 2]),
         r" & FD & eff. & SOTC-C & FD & eff. & SOTC-C & FD & eff. & SOTC-C & calc. & Ref.~\cite{ref55}\\",
         r"\hline",
     ]
@@ -611,6 +630,7 @@ def surrogate_table():
         r"\begin{ruledtabular}", r"\footnotesize", r"\setlength{\tabcolsep}{3pt}",
         r"\begin{tabular}{lcccc}",
         r"Design & Al & W & NaCl & Si\\",
+        r" & \multicolumn{4}{c}{2/4/8/16 force calls in each column}\\",
         r"\hline",
     ]
     data = {}
@@ -743,6 +763,7 @@ def calls_to_accuracy_table(thresholds=(0.05, 0.03, 0.02)):
         r"\begin{ruledtabular}",
         r"\begin{tabular}{l" + "c" * len(data) + "}",
         "Protocol & " + " & ".join(LABELS[m] for m in data) + r"\\",
+        r" & \multicolumn{" + f"{len(data)}" + r"}{c}{calls to reach 0.05/0.03/0.02~THz in each column}\\",
         r"\hline",
     ]
     for key, label in protocols:
@@ -780,6 +801,7 @@ def qha_table():
         r"\begin{ruledtabular}",
         r"\begin{tabular}{lcccccc}",
         r" & \multicolumn{2}{c}{SC} & \multicolumn{2}{c}{QHA} & & \\",
+        rule_under([2, 2]),
         r"$T$ (K) & indep. & common & 32 at. & 125 at. & expt. & $a$\\",
         r"\hline",
     ]
@@ -826,6 +848,7 @@ def bvk_table():
         r"\begin{ruledtabular}",
         r"\begin{tabular}{lcccccc}",
         r" & \multicolumn{3}{c}{Al, 300~K} & \multicolumn{3}{c}{Cu, 1200~K}\\",
+        rule_under([3, 3]),
         r" & $K_1$ & $K_2$ & $K_{T1}$ & $K_1$ & $K_2$ & $K_{T1}$\\",
         r"\hline",
     ]
@@ -864,6 +887,7 @@ def qha_thermo_table():
         r"\begin{tabular}{lcccccccc}",
         r" & \multicolumn{3}{c}{$\alpha$, converged QHA} & \multicolumn{2}{c}{$B_T$} &"
         r" \multicolumn{3}{c}{$C_P$}\\",
+        rule_under([3, 2, 3]),
         r"$T$ (K) & min. & Gr\"uneisen, exact & Gr\"uneisen, shortcut & QHA & SC &"
         r" QHA & SC & expt.\\",
         r"\hline",
@@ -948,7 +972,8 @@ def dft_sc_table(budgets=(4, 8, 16, 32), materials=("al", "si")):
         r"\begin{ruledtabular}",
         r"\begin{tabular}{l" + "c" * (len(budgets) * len(data)) + "}",
         " & " + head + r"\\",
-        "Calls & " + " & ".join(str(b) for _ in data for b in budgets) + r"\\",
+        rule_under([len(budgets)] * len(data)),
+        "Force calls & " + " & ".join(str(b) for _ in data for b in budgets) + r"\\",
         r"\hline",
     ]
     for label, getter in rows:
