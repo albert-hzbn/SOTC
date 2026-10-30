@@ -783,30 +783,48 @@ def calls_to_accuracy_table(thresholds=(0.05, 0.03, 0.02)):
 def qha_table():
     rob = ROOT / "validation_results" / "al" / "robustness"
     paths = [rob / "qha_thermal_expansion.json", rob / "qha_thermal_expansion_common.json"]
-    if not all(p.exists() for p in paths):
+    diag = [rob / "qha_diagnosis_qha_32.json", rob / "qha_diagnosis_qha_common_32.json",
+            rob / "qha_diagnosis_qha_common_128.json"]
+    if not all(p.exists() for p in paths + diag):
         return ""
-    ind, com = (json.loads(p.read_text()) for p in paths)
-    c = ind["primary_calls"]
+    ind = json.loads(paths[0].read_text())
+    d_ind, d_com, d_128 = (json.loads(p.read_text())["temperatures"] for p in diag)
     expt = ind["experiment_alpha_1e6"]
     near = {"300": "298", "400": "400", "900": "923"}
+
+    def sc(d, t):
+        # alpha of the full data with the bootstrap standard deviation. Where the
+        # bootstrap noise of F(V) exceeds 15% of its second difference between
+        # neighbouring volumes, the cubic fit is unstable and the bootstrap
+        # understates the error; such entries are marked as not resolved.
+        if t not in d:
+            return "--"
+        a = d[t]["alpha_1e6"]["cubic"]
+        sd = d[t]["bootstrap_mean_std_1e6"]["cubic"][1]
+        ratio = (np.mean(d[t]["f_noise_mev_per_prim"])
+                 / np.mean(d[t]["f_second_difference_mev_per_prim"]))
+        err = f"{sd:.0f}" if sd >= 10 else f"{sd:.1f}"
+        return f"{a:.1f}({err})" + (r"$^b$" if ratio > 0.15 else "")
+
     lines = [
         r"\begin{table}[t]",
         r"\caption{Linear thermal expansion coefficient $\alpha$ ($10^{-6}$~K$^{-1}$) of"
         r" Al (PBE), from $(\partial S/\partial V)_T/3B_T$ on seven volumes. SC:"
-        r" self-consistent SOTC-D in the 32-atom cell with " + str(c) + r" force calls per"
-        r" volume and temperature, from two independent grids (design seeds"
-        r" independent across volumes, and common to all volumes). QHA: harmonic FD"
-        r" FC2 in the same cell and in the converged 125-atom cell. Experiment:"
-        r" averages of measured values at 298, 400, and 923~K (300, 400, and 900~K"
-        r" rows) compiled in Ref.~\onlinecite{nakashima2020}. $a$: lattice parameter"
-        r" (\AA) of the converged QHA.}",
+        r" self-consistent SOTC-D in the 32-atom cell, two grids with 32 force calls per"
+        r" volume and temperature (design seeds independent across volumes, and common"
+        r" to all volumes) and the common grid extended to 128 calls at 700 and 900~K (column 128);"
+        r" in parentheses the standard deviation over 40 bootstrap resamplings of the"
+        r" $\pm$ pairs. QHA: harmonic FD FC2 in the same"
+        r" cell and in the converged 125-atom cell. Experiment: averages of measured"
+        r" values at 298, 400, and 923~K (300, 400, and 900~K rows) compiled in"
+        r" Ref.~\onlinecite{nakashima2020}.}",
         r"\label{tab:qha}",
         r"\footnotesize",
         r"\begin{ruledtabular}",
         r"\begin{tabular}{lcccccc}",
-        r" & \multicolumn{2}{c}{SC} & \multicolumn{2}{c}{QHA} & & \\",
-        rule_under([2, 2]),
-        r"$T$ (K) & indep. & common & 32 at. & 125 at. & expt. & $a$\\",
+        r" & \multicolumn{3}{c}{SC} & \multicolumn{2}{c}{QHA} & \\",
+        rule_under([3, 2]),
+        r"$T$ (K) & indep. & common & 128 & 32 at. & 125 at. & expt.\\",
         r"\hline",
     ]
     for t, e in ind["temperatures"].items():
@@ -815,12 +833,12 @@ def qha_table():
         ex = expt.get(near.get(t, ""), None)
         conv = e["harmonic_qha_converged"]
         lines.append(" & ".join([
-            t, f"{e[f'sotcd_sc_{c}']['alpha_1e6']:.1f}",
-            f"{com['temperatures'][t][f'sotcd_sc_{c}']['alpha_1e6']:.1f}", qa,
-            f"{conv['alpha_1e6']:.1f}", f"{ex[0]:.1f}" if ex else "--",
-            f"{conv['a_ang']:.3f}"]) + r"\\")
+            t, sc(d_ind, t), sc(d_com, t), sc(d_128, t), qa,
+            f"{conv['alpha_1e6']:.1f}", f"{ex[0]:.1f}" if ex else "--"]) + r"\\")
     lines += [r"\end{tabular}", r"\end{ruledtabular}",
-              r"$^a$Minimum outside the volume grid.",
+              r"$^a$Minimum outside the volume grid. $^b$Not resolved: the bootstrap"
+              r" noise of $F(V)$ exceeds 15\% of its second difference between"
+              r" neighboring volumes.",
               r"\end{table}"]
     return "\n".join(lines)
 
@@ -902,8 +920,11 @@ def qha_thermo_table():
         ex = r["experiment_cp_J_molK"].get(t)
         lines.append(" & ".join([
             t, f"{q['alpha_1e6']:.1f}", f"{g['alpha_at_VT_BT_1e6']:.1f}", f"{g['alpha_1e6']:.1f}",
-            f"{q['B_gpa']:.1f}", f"{sc['B_gpa']:.1f}", f"{q['Cp_J_molK']:.2f}",
-            f"{sc['Cp_J_molK']:.2f}", f"{ex:.2f}" if ex else "--"]) + r"\\")
+            # SC entries only where alpha is resolved (up to 400 K, Sec. V K).
+            f"{q['B_gpa']:.1f}", f"{sc['B_gpa']:.1f}" if float(t) <= 400 else "--",
+            f"{q['Cp_J_molK']:.2f}",
+            f"{sc['Cp_J_molK']:.2f}" if float(t) <= 400 else "--",
+            f"{ex:.2f}" if ex else "--"]) + r"\\")
     lines += [r"\end{tabular}", r"\end{ruledtabular}", r"\end{table*}"]
     return "\n".join(lines)
 

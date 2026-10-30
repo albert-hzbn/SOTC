@@ -64,6 +64,20 @@ PRIMARY = {
                T=600.0, cutoff=4.6, n_iter=0, n_ens=0,
                supercell_matrix=[[4, 0, 0], [0, 4, 0], [0, 0, 2]]),
 }
+# Dynamically stabilized bcc Zr in the 54-atom conventional 3x3x3 cell.
+PRIMARY["zr"] = dict(a=3.606, bravais="bcc", elements=["Zr"], masses=[91.224],
+                     T=1188.0, cutoff=5.0, n_iter=0, n_ens=0,
+                     supercell_matrix=[[0, 3, 3], [3, 0, 3], [3, 3, 0]])
+# Larger cells of Al, Si, and NaCl for the scaling study (same temperature,
+# cutoff, and electronic settings as the base material).
+_CONV = np.array([[-1, 1, 1], [1, -1, 1], [1, 1, -1]])
+for _key, _base, _matrix in [
+        ("al_108", "al", 3 * _CONV), ("al_256", "al", 4 * _CONV),
+        ("si_128", "si", 4 * np.eye(3, dtype=int)), ("si_216", "si", 3 * _CONV),
+        ("nacl_128", "nacl", 4 * np.eye(3, dtype=int)), ("nacl_216", "nacl", 3 * _CONV)]:
+    PRIMARY[_key] = {**{k: v for k, v in PRIMARY[_base].items()
+                        if k not in ("supercell_matrix",)},
+                     "n_iter": 0, "n_ens": 0, "supercell_matrix": _matrix.tolist()}
 RIDGES = (0.0, 1.0e-4, 1.0e-3, 1.0e-2, 1.0e-1)
 MESH = 12
 THZ_TO_K = 47.99243073366221

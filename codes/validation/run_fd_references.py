@@ -92,6 +92,17 @@ EXTRA_MATERIALS = {
 # Additional structure classes (covalent diamond, non-cubic hcp metal) with
 # no archived SOTC run; they are benchmarked with the same-cell controls.
 NEW_CLASS_MATERIALS = {
+    # beta-Zr, dynamically stabilized above the alpha->beta transition (1136 K);
+    # a at 1188 K from 3.609 A at 1253 K (Skinner & Johnston) and the
+    # expansion of beta-Zr; inelastic neutron data: Heiming et al., PRB 43,
+    # 10948 (1991), 1188 K.
+    "zr": {
+        "label": "bcc Zr", "elements": ["Zr"], "masses": [91.224],
+        "a": 3.606, "bravais": "bcc", "temperature_k": 1188.0,
+        "ecutwfc": 30.0, "ecutrho": 240.0, "kpts": (8, 8, 8),
+        "smearing": "marzari-vanderbilt", "degauss": 0.02,
+        "pseudos": {"Zr": "Zr_pbe_v1.uspp.F.UPF"},
+    },
     "si": {
         "label": "diamond Si", "elements": ["Si"], "masses": [28.0855],
         "a": 5.431, "bravais": "diamond", "temperature_k": 600.0,
@@ -112,6 +123,14 @@ for _key, _spec in EXTRA_MATERIALS.items():
     _spec["key"] = _key
 
 MATERIALS = {**CAMPAIGN_MATERIALS, **EXTRA_MATERIALS}
+
+# Larger SOTC cells for the scaling study: identical electronic settings to
+# the base material; the cell and k mesh are set in analyze_primary_archives
+# and run_primary_cell_controls.
+SCALING_CELLS = {"al_108": "al", "al_256": "al", "si_128": "si", "si_216": "si",
+                 "nacl_128": "nacl", "nacl_216": "nacl"}
+for _key, _base in SCALING_CELLS.items():
+    MATERIALS[_key] = {**MATERIALS[_base], "key": _key}
 
 # Experimental room-temperature lattice parameters (Angstrom).
 ROOM_LATTICE = {"al": 4.0495, "cu": 3.6149, "au": 4.0782}

@@ -49,7 +49,11 @@ SEED = 271828
 
 
 # Primary-cell k meshes of the new structure classes (64-atom cells).
-PRIMARY_KPTS = {"si": (2, 2, 2), "mg": (3, 3, 3)}
+PRIMARY_KPTS = {"si": (2, 2, 2), "mg": (3, 3, 3),
+                # scaling cells: k density at least that of the base SOTC cell
+                "al_108": (2, 2, 2), "al_256": (1, 1, 1), "si_128": (2, 2, 2),
+                "si_216": (2, 2, 2), "nacl_128": (1, 1, 1), "nacl_216": (1, 1, 1),
+                "zr": (3, 3, 3)}
 
 
 def primary_spec(material):

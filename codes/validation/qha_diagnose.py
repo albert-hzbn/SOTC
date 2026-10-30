@@ -59,6 +59,7 @@ def main():
     parser.add_argument("grid")
     parser.add_argument("--boot", type=int, default=40)
     parser.add_argument("--calls", type=int, default=32)
+    parser.add_argument("--temps", type=float, nargs="*", default=None)
     args = parser.parse_args()
     m = args.material
     base = ROOT / "validation_results" / m
@@ -72,7 +73,7 @@ def main():
         temps = sorted(float(p.stem[1:]) for p in d.glob("T*.npz"))
         if temps:
             points.append((float(d.name[1:]), d, temps))
-    temps = points[0][2]
+    temps = [t for t in points[0][2] if args.temps is None or t in args.temps]
     a = np.asarray([p[0] for p in points])
     v = a ** 3 / 4.0
     e_st = birch_murnaghan(v, *popt)
@@ -149,7 +150,7 @@ def main():
               f"+-{stat['quartic'][1]:.1f} fep2 {full['fep2']:.1f}; F noise "
               f"{1000 * f_noise.mean():.2f} meV, 2nd diff {1000 * curvature.mean():.2f} meV;"
               f" refit dev {refit_dev:.1e}", flush=True)
-    out = base / "robustness" / f"qha_diagnosis_{args.grid}.json"
+    out = base / "robustness" / f"qha_diagnosis_{args.grid}_{args.calls}.json"
     out.write_text(json.dumps(report, indent=1) + "\n")
 
 

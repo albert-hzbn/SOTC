@@ -197,6 +197,17 @@ def main(material):
             "sscha": {n: [{"force_calls": c, "mesh_rmse_thz": errs(project(f))}
                           for f, c in zip(r["fcs"], r["calls"])] for n, r in runs.items()},
             "sscha_refit": {n: errs(fit(*population(n))) for n in runs},
+            # Converged runs (``dft_sscha.py ... --min-pop --meaningful 1e-3
+            # --name conv_N<N>_s<seed>``): auxiliary FC2 after every population,
+            # and all populations refitted together by the regression of this work.
+            "sscha_converged": {
+                p.parent.name: [{"force_calls": int(c), "mesh_rmse_thz": errs(project(f))}
+                                for f, c in zip(np.load(p)["force_constants"],
+                                                np.load(p)["force_calls"])]
+                for p in sorted((base / "sscha_dft").glob("conv_N*_s*/history.npz"))},
+            "sscha_converged_refit": {
+                p.parent.name: errs(fit(*population(p.parent.name)))
+                for p in sorted((base / "sscha_dft").glob("conv_N*_s*/history.npz"))},
             "sotcd_sc": {p.parent.name: [{"force_calls": int(c), "mesh_rmse_thz": errs(f)}
                                          for f, c in zip(np.load(p)["force_constants"],
                                                          np.load(p)["force_calls"])]

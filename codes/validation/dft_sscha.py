@@ -15,7 +15,7 @@ with the auxiliary FC2 after every population and the cumulative number of
 force calls.
 
 Usage: dft_sscha.py <material> <N> <seed> [--max-pop 12] [--min-pop 1]
-       [--meaningful 0.2] [--step 0.1] [--kong-liu 0.5] [--name TAG]
+       [--meaningful 0.2] [--step 0.1] [--kong-liu 0.5] [--max-ka -1] [--name TAG]
 
 With the defaults, python-sscha ends the run as soon as the free-energy
 gradient falls below meaningful_factor times its statistical error, which
@@ -86,6 +86,8 @@ def main():
     parser.add_argument("--meaningful", type=float, default=0.2)
     parser.add_argument("--step", type=float, default=0.1)
     parser.add_argument("--kong-liu", type=float, default=0.5)
+    parser.add_argument("--max-ka", type=int, default=-1,
+                        help="maximum minimization steps per population (-1: no limit)")
     parser.add_argument("--name", default=None,
                         help="subdirectory of sscha_dft (default N<N>_s<seed>)")
     args = parser.parse_args()
@@ -146,6 +148,7 @@ def main():
         minim.set_minimization_step(args.step)
         minim.meaningful_factor = args.meaningful
         minim.kong_liu_ratio = args.kong_liu
+        minim.max_ka = args.max_ka
         minim.minim_struct = False
         minim.init()
         minim.run()
