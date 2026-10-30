@@ -161,7 +161,7 @@ def rule_under(widths, start=2):
     """Rules under consecutive column groups of the given widths."""
     segs = []
     for w in widths:
-        segs.append(rf"\cline{{{start}-{start + w - 1}}}")
+        segs.append(rf"\cmidrule(lr){{{start}-{start + w - 1}}}")
         start += w
     return "".join(segs)
 
@@ -489,8 +489,8 @@ def sc_surrogate_table(budgets=("8", "16", "32", "64")):
         r" populations of $N=8$--128 configurations until convergence (5"
         r" repetitions), listed at the median total number of force calls (the better population size where two need the same number).}",
         r"\label{tab:sc_surrogate}",
-        r"\begin{ruledtabular}", r"\footnotesize", r"\setlength{\tabcolsep}{2.5pt}",
-        r"\begin{tabular}{l" + "c" * len(budgets) * len(data) + "}",
+        r"\begin{ruledtabular}", r"\footnotesize", r"\setlength{\tabcolsep}{2pt}",
+        r"\begin{tabular}{l" + r"@{\hspace{9pt}}".join(["c" * len(budgets)] * len(data)) + "}",
         " & " + " & ".join(r"\multicolumn{" + f"{len(budgets)}" + "}{c}{" + LABELS[m] + "}"
                            for m in data) + r"\\",
         rule_under([len(budgets)] * len(data)),
