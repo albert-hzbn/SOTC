@@ -131,6 +131,8 @@ SCALING_CELLS = {"al_108": "al", "al_256": "al", "si_128": "si", "si_216": "si",
                  "nacl_128": "nacl", "nacl_216": "nacl"}
 for _key, _base in SCALING_CELLS.items():
     MATERIALS[_key] = {**MATERIALS[_base], "key": _key}
+# Davidson fails (Cholesky) in the 216-atom NaCl cell; conjugate gradients work.
+MATERIALS["nacl_216"]["extra"] = {"electrons": {"diagonalization": "cg"}}
 
 # HSE06 variants (exact-exchange q mesh 1x1x1; same pseudopotentials,
 # cutoffs, and k meshes as the PBE runs).
