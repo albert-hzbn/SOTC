@@ -127,6 +127,9 @@ manuscript/jap/*
 !manuscript/jap/refs_jap.bib
 !manuscript/jap/tables/
 !manuscript/jap/figures/
+!manuscript/jap/reviews/
+manuscript/jap/reviews/*
+!manuscript/jap/reviews/reviewer_gap_map.md
 manuscript/jap/figures/*
 !manuscript/jap/figures/*.pdf
 
