@@ -296,3 +296,48 @@ def thermal_rattle(rng, phonon, temperature: float, n_configurations: int):
     var = np.einsum("m,mia->ia", sigma ** 2, patterns ** 2)
     rms = np.sqrt(var.mean(axis=1))
     return rng.standard_normal((n_configurations, len(rms), 3)) * rms[None, :, None]
+
+
+def d_optimal_fc3_pairs(
+    patterns: np.ndarray,
+    sigma: np.ndarray,
+    fc3_rows,
+    n_pairs: int,
+    n_candidates: int = 64,
+    seed: int = 0,
+    prior_information: np.ndarray | None = None,
+    eps: float = 1.0e-8,
+) -> Tuple[np.ndarray, Dict]:
+    """Sequential stochastic D-optimal design of +-u pairs for the FC3.
+
+    A +-u pair determines the FC2 (and FC4) from its force difference and
+    the FC3 from its force sum, F(u) + F(-u) = -Phi3:uu + O(u^4), with
+    exactly zero cross-information between the two. Each new pair keeps
+    every mode at its thermal amplitude (as SOTC-D) and takes, among
+    ``n_candidates`` random sign patterns, the one that maximizes
+    log det(I_prev + X3(u)^T X3(u)), where ``fc3_rows(u)`` returns the FC3
+    design rows (3N, P3) of a configuration u (N, 3) in any FC3 basis and
+    ``prior_information`` is the FC3 information of earlier configurations
+    (e.g. the SOTC-D pairs designed for the FC2), so that the set is
+    complementary to them. Every prefix of the sequence is itself a design.
+    """
+    rng = np.random.default_rng(seed)
+    n_modes = len(sigma)
+    info = None if prior_information is None else np.array(prior_information, dtype=float)
+    chosen, gains = [], []
+    for _ in range(n_pairs):
+        best = None
+        for _ in range(n_candidates):
+            s = rng.choice([-1.0, 1.0], size=n_modes)
+            rows = np.asarray(fc3_rows(configurations(s[None, :], patterns, sigma)[0]))
+            cand = rows.T @ rows
+            total = cand if info is None else info + cand
+            ridge = eps * np.trace(total) / len(total) * np.eye(len(total))
+            sign, value = np.linalg.slogdet(total + ridge)
+            value = value if sign > 0 else -np.inf
+            if best is None or value > best[0]:
+                best = (value, s, cand)
+        chosen.append(best[1])
+        gains.append(float(best[0]))
+        info = best[2] if info is None else info + best[2]
+    return np.asarray(chosen), {"logdet": gains, "information": info}

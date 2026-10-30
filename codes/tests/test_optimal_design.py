@@ -276,3 +276,47 @@ def test_zg_reproduces_canonical_bond_fluctuations_with_a_basis():
     u = configurations(walsh_signs(len(zs), 4), zp, zs)
     zg = np.mean(np.einsum("spa,pa->sp", u[:, j] - u[:, i], rhat) ** 2)
     np.testing.assert_allclose(zg, canonical, rtol=0.05)
+
+
+def _toy_fc3_rows(n_atoms=6, n_par=10, seed=3):
+    """Quadratic toy FC3 features: rows_r(u) = sum_ij A_rij u_i u_j."""
+    rng = np.random.default_rng(seed)
+    tensor = rng.normal(size=(3 * n_atoms, n_par, 3 * n_atoms, 3 * n_atoms))
+    tensor = 0.5 * (tensor + tensor.transpose(0, 1, 3, 2))
+    return lambda u: np.einsum("rpij,i,j->rp", tensor, u.ravel(), u.ravel())
+
+
+def test_fc3_pair_design_beats_random_signs():
+    from sotc.optimal_design import configurations, d_optimal_fc3_pairs
+
+    rng = np.random.default_rng(0)
+    n_atoms, n_modes = 6, 12
+    patterns = rng.normal(size=(n_modes, n_atoms, 3))
+    sigma = rng.uniform(0.5, 1.5, n_modes)
+    rows = _toy_fc3_rows(n_atoms)
+    signs, meta = d_optimal_fc3_pairs(patterns, sigma, rows, n_pairs=3, n_candidates=32, seed=1)
+    assert signs.shape == (3, n_modes)
+    assert np.all(np.abs(signs) == 1.0)
+    designed = np.linalg.slogdet(meta["information"])[1]
+    random = []
+    for k in range(20):
+        s = rng.choice([-1.0, 1.0], size=(3, n_modes))
+        info = sum(rows(u).T @ rows(u) for u in configurations(s, patterns, sigma))
+        random.append(np.linalg.slogdet(info)[1])
+    assert designed > np.median(random)
+    # nested: the log-determinant grows with every added pair
+    assert np.all(np.diff(meta["logdet"]) > 0)
+
+
+def test_fc3_pair_design_uses_prior_information():
+    from sotc.optimal_design import d_optimal_fc3_pairs
+
+    rng = np.random.default_rng(4)
+    patterns = rng.normal(size=(8, 4, 3))
+    sigma = np.ones(8)
+    rows = _toy_fc3_rows(4, 6)
+    prior = 10.0 * np.eye(6)
+    _, a = d_optimal_fc3_pairs(patterns, sigma, rows, 1, n_candidates=8, seed=2)
+    _, b = d_optimal_fc3_pairs(patterns, sigma, rows, 1, n_candidates=8, seed=2,
+                               prior_information=prior)
+    assert np.allclose(b["information"] - prior, a["information"])
