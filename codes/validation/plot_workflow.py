@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 """Schematic of the SOTC-D workflow (Fig. 1 of the JAP manuscript).
 
-The insets are computed for a two-dimensional square lattice with
-nearest- and next-nearest-neighbor springs (4x4 cell, unit masses), using
-the same construction as the method: commensurate modes of a harmonic
-trial, a canonical draw with Gaussian mode coordinates, and an SOTC-D
-configuration with every mode at exactly its rms amplitude and its
-inverse. The dispersions of panels (a) and (e) are those of the toy trial
-and of the same lattice with stiffened springs; they illustrate, not
-quantify, the thermal renormalization.
+Panels (b) and (c) are computed for a two-dimensional square lattice with
+nearest- and next-nearest-neighbor springs (4x4 cell, unit masses), with
+the construction of the method: commensurate modes of a harmonic trial,
+a canonical draw with Gaussian mode coordinates, and an SOTC-D
+configuration with every mode at exactly its rms amplitude, together with
+its inverse. Panel (d) shows a one-dimensional anharmonic force
+F(u) = -k u - c u^2 - d u^3: the slope of the secant through a +-u pair is
+k + d u^2, independent of the cubic coefficient c. The dispersions of
+panels (a) and (e) are those of the toy lattice before and after
+stiffening its springs; they illustrate, not quantify, the thermal
+renormalization.
 
 Writes manuscript/jap/figures/fig_workflow.pdf.
 """
@@ -21,7 +24,7 @@ import sys
 import matplotlib
 
 matplotlib.use("Agg")
-from matplotlib.patches import FancyArrowPatch, FancyBboxPatch  # noqa: E402
+from matplotlib.patches import FancyArrowPatch  # noqa: E402
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 
@@ -34,6 +37,8 @@ OUT = ROOT / "manuscript" / "jap" / "figures"
 L = 4  # cell edge (atoms)
 K1, K2 = 1.0, 0.35  # nearest- and next-nearest-neighbor springs of the trial
 KT = 0.02  # thermal energy of the illustration (classical amplitudes)
+N_SHOWN = 12  # modes shown in panel (b)
+LIGHT = "#c9c7c1"
 
 
 def lattice_fc(k1, k2):
@@ -54,7 +59,7 @@ def lattice_fc(k1, k2):
 
 
 def branches(k1, k2, q):
-    """Two branches along Gamma-X of the infinite lattice."""
+    """Longitudinal and transverse branches along Gamma-X of the infinite lattice."""
     w = []
     for qx in q:
         d = np.zeros((2, 2))
@@ -72,151 +77,166 @@ def configurations(seed=3):
     w2, vec = w2[keep], vec[:, keep]
     sigma = np.sqrt(KT / w2)
     rng = np.random.default_rng(seed)
-    q_canon = rng.normal(size=len(sigma))  # Gaussian mode coordinates / sigma
+    q_canon = rng.normal(size=len(sigma)) * sigma
     signs = np.where(rng.random(len(sigma)) < 0.5, -1.0, 1.0)
     u = (vec @ (signs * sigma)).reshape(-1, 2)
-    return pos, u, q_canon, signs, np.sqrt(w2)
+    return pos, u, q_canon, signs * sigma, sigma
 
 
-def panel_box(fig, x, y, w, h, title, color):
-    fig.patches.append(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.004,rounding_size=0.012",
-                                      transform=fig.transFigure, facecolor="#f6f5f2",
-                                      edgecolor=color, linewidth=0.8, zorder=-5))
-    fig.text(x + 0.008, y + h - 0.012, title, fontsize=7.2, color=INK, va="top",
-             fontweight="bold")
-
-
-def arrow(fig, p, q, text=None, rad=0.0, color=MUTED, text_xy=None):
-    fig.patches.append(FancyArrowPatch(p, q, transform=fig.transFigure, arrowstyle="-|>",
-                                       mutation_scale=9, linewidth=1.0, color=color,
-                                       connectionstyle=f"arc3,rad={rad}"))
-    if text:
-        tx, ty = text_xy or ((p[0] + q[0]) / 2, (p[1] + q[1]) / 2)
-        fig.text(tx, ty, text, fontsize=6.3, color=color, ha="center", va="center")
-
-
-def add_axes(fig, rect):
-    ax = fig.add_axes(rect)
-    ax.patch.set_alpha(0.0)
-    return ax
+def clean(ax):
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.tick_params(length=2, pad=1.5)
 
 
 def main():
-    plt.rcParams.update({"font.size": 6.0, "axes.labelsize": 6.5, "xtick.labelsize": 6.0,
-                         "ytick.labelsize": 5.6, "axes.linewidth": 0.6,
-                         "xtick.major.width": 0.5, "ytick.major.width": 0.5})
-    pos, u, q_canon, signs, freqs = configurations()
-    fig = plt.figure(figsize=(7.0, 2.75))
+    plt.rcParams.update({"font.size": 7.5, "axes.labelsize": 7.5, "xtick.labelsize": 7,
+                         "ytick.labelsize": 7, "axes.linewidth": 0.6,
+                         "xtick.major.width": 0.6, "ytick.major.width": 0.6,
+                         "mathtext.fontset": "dejavusans"})
+    pos, u, q_canon, q_sotc, sigma = configurations()
+    fig = plt.figure(figsize=(7.0, 2.9))
 
-    xs = [0.008, 0.205, 0.402, 0.599, 0.796]
-    w, y0, h = 0.188, 0.235, 0.735
-    titles = ["(a) Harmonic trial", "(b) Mode amplitudes", "(c) Designed $\\pm$ pair",
-              "(d) DFT forces and fit", "(e) Effective FC2"]
-    colors = [GRAY, BLUE, BLUE, MUTED, ORANGE]
-    for x, t, c in zip(xs, titles, colors):
-        panel_box(fig, x, y0, w, h, t, c)
+    # panel geometry (figure fractions)
+    xs = [0.035, 0.235, 0.41, 0.65, 0.85]
+    wid = [0.13, 0.14, 0.175, 0.13, 0.13]
+    y_ax, h_ax = 0.42, 0.43
+    titles = ["(a) harmonic trial", "(b) mode amplitudes", "(c) designed $\\pm$ pair",
+              "(d) force fit", "(e) effective FC2"]
+    notes = ["modes $\\omega_m$, $\\mathbf{e}_m$,\nrms amplitudes $\\sigma_m$",
+             "every mode at $\\pm\\sigma_m$;\nsigns maximize $\\det\\mathbf{X}^{\\rm T}\\mathbf{X}$",
+             "$\\mathbf{u}$ and $-\\mathbf{u}$:\ntwo force calls",
+             "pair slope is free\nof the cubic force",
+             "$\\Phi_{\\rm eff}(T)=\\langle\\nabla\\nabla V\\rangle$"]
+    axes = []
+    for x, w, t, n in zip(xs, wid, titles, notes):
+        ax = fig.add_axes([x, y_ax, w, h_ax])
+        ax.set_title(t, fontsize=7.8, loc="center", pad=7, color=INK)
+        fig.text(x + w / 2, y_ax - 0.095, n, ha="center", va="top", fontsize=7,
+                 color=MUTED, linespacing=1.3)
+        axes.append(ax)
 
-    # (a) trial dispersion and mode amplitudes
-    q = np.linspace(0, np.pi, 80)
-    ax = add_axes(fig, [xs[0] + 0.03, y0 + 0.25, w - 0.045, 0.33])
-    for b in branches(K1, K2, q).T:
-        ax.plot(q, b, color=GRAY, lw=1.1)
+    # (a) trial dispersion with the commensurate wave vectors
+    ax = axes[0]
+    q = np.linspace(0, np.pi, 120)
+    qc = np.pi * np.arange(0, L // 2 + 1) / (L // 2)
+    for b, bc in zip(branches(K1, K2, q).T, branches(K1, K2, qc).T):
+        ax.plot(q, b, color=GRAY, lw=1.4)
+        ax.plot(qc, bc, "o", color=BLUE, ms=3.6, zorder=3, clip_on=False)
     ax.set_xticks([0, np.pi], ["$\\Gamma$", "X"])
     ax.set_yticks([])
-    ax.set_ylabel("$\\omega$", labelpad=1)
-    ax.spines[["top", "right"]].set_visible(False)
-    fig.text(xs[0] + w / 2, y0 + 0.13,
-             "modes $\\omega_m$, $\\mathbf{e}_m$; rms amplitude\n"
-             "$\\sigma_m^2=\\frac{\\hbar}{2\\omega_m}\\coth\\frac{\\hbar\\omega_m}{2k_BT}$",
-             fontsize=5.6, ha="center", va="center", color=INK, linespacing=1.35)
+    ax.set_ylabel("$\\omega$", labelpad=2)
+    ax.set_xlim(0, np.pi)
+    ax.set_ylim(0, None)
+    clean(ax)
 
-    # (b) mode coordinates: canonical draw versus SOTC-D
-    ax = add_axes(fig, [xs[1] + 0.05, y0 + 0.25, w - 0.062, 0.33])
-    m = np.arange(len(signs))
+    # (b) mode coordinates of a canonical draw and of SOTC-D, with the +-sigma envelope
+    ax = axes[1]
+    order = np.argsort(sigma)[::-1][:N_SHOWN]
+    m = np.arange(N_SHOWN)
+    s = sigma[order]
+    ax.fill_between(m, -s, s, step="mid", color=BLUE, alpha=0.08, lw=0)
+    ax.step(m, s, where="mid", color=BLUE, lw=0.6, alpha=0.6)
+    ax.step(m, -s, where="mid", color=BLUE, lw=0.6, alpha=0.6)
     ax.axhline(0, color=MUTED, lw=0.5)
-    for lev in (-1, 1):
-        ax.axhline(lev, color=BLUE, lw=0.5, ls=":")
-    ax.vlines(m - 0.18, 0, q_canon, color=GRAY, lw=1.6, label="canonical draw")
-    ax.vlines(m + 0.18, 0, signs, color=BLUE, lw=1.6, label="SOTC-D")
-    ax.set_ylim(-2.6, 2.6)
-    ax.set_yticks([-1, 0, 1], ["$-\\sigma_m$", "0", "$\\sigma_m$"])
-    ax.set_xticks([])
-    ax.set_xlabel("mode $m$", labelpad=1)
-    ax.spines[["top", "right"]].set_visible(False)
-    ax.legend(loc="upper right", fontsize=5.4, frameon=False, handlelength=0.8,
-              borderaxespad=0.0, bbox_to_anchor=(1.02, 1.12), ncol=2, columnspacing=0.6)
-    fig.text(xs[1] + w / 2, y0 + 0.13,
-             "each mode at exactly $\\pm\\sigma_m$;\nsigns $s_m$ maximize "
-             "$\\det\\mathbf{X}^{\\rm T}\\mathbf{X}$",
-             fontsize=5.6, ha="center", va="center", color=INK, linespacing=1.35)
-
-    # (c) the configuration and its inverse
-    scale = 2.2 / np.abs(u).max() * 0.18
-    for k, (sgn, label) in enumerate([(1, "$+\\mathbf{u}$"), (-1, "$-\\mathbf{u}$")]):
-        ax = add_axes(fig, [xs[2] + 0.012 + k * 0.088, y0 + 0.25, 0.082, 0.36])
-        ax.scatter(pos[:, 0], pos[:, 1], s=7, color="#c9c7c1", zorder=1)
-        disp = pos + sgn * scale * u
-        ax.scatter(disp[:, 0], disp[:, 1], s=9, color=BLUE, zorder=3)
-        ax.quiver(pos[:, 0], pos[:, 1], sgn * scale * u[:, 0], sgn * scale * u[:, 1],
-                  angles="xy", scale_units="xy", scale=1, width=0.012, color=BLUE, zorder=2)
-        ax.set_xlim(-0.7, L - 0.3)
-        ax.set_ylim(-0.7, L - 0.3)
-        ax.set_aspect("equal")
-        ax.axis("off")
-        ax.set_title(label, fontsize=6.8, pad=1)
-    fig.text(xs[2] + w / 2, y0 + 0.13,
-             "$u_i=M_i^{-1/2}\\sum_m s_m\\sigma_m e_{im}$\n"
-             "$\\pm$ pair cancels the cubic force",
-             fontsize=5.6, ha="center", va="center", color=INK, linespacing=1.35)
-
-    # (d) forces and least-squares fit
-    rng = np.random.default_rng(1)
-    x = rng.uniform(-1, 1, 40)
-    ax = add_axes(fig, [xs[3] + 0.03, y0 + 0.25, w - 0.045, 0.33])
-    ax.scatter(x, -1.2 * x + 0.08 * rng.normal(size=x.size), s=4, color=MUTED, lw=0)
-    ax.plot([-1, 1], [1.2, -1.2], color=ORANGE, lw=1.1)
+    ax.vlines(m + 0.17, 0, q_sotc[order], color=BLUE, lw=2.4, label="SOTC-D")
+    ax.plot(m - 0.17, q_canon[order], "o", color=GRAY, ms=3.0, label="canonical")
+    ax.vlines(m - 0.17, 0, q_canon[order], color=GRAY, lw=0.8)
+    lim = 1.1 * max(np.abs(q_canon[order]).max(), s.max())
+    ax.set_ylim(-lim, 1.55 * lim)
+    ax.set_xlim(-0.6, N_SHOWN - 0.4)
     ax.set_xticks([])
     ax.set_yticks([])
-    ax.set_xlabel("$u$", labelpad=1)
-    ax.set_ylabel("$\\Delta F$", labelpad=1)
-    ax.spines[["top", "right"]].set_visible(False)
-    fig.text(xs[3] + w / 2, y0 + 0.13,
-             "$\\Delta\\mathbf{F}=\\mathbf{F}(\\mathbf{u})-\\mathbf{F}(\\mathbf{0})$ by DFT;\n"
-             "least squares in the\nspace-group basis",
-             fontsize=5.6, ha="center", va="center", color=INK, linespacing=1.35)
+    ax.set_xlabel("mode $m$", labelpad=2)
+    ax.set_ylabel("$Q_m$", labelpad=2)
+    clean(ax)
+    ax.legend(loc="upper right", fontsize=6.5, frameon=False, handlelength=1.0,
+              borderaxespad=0.1, bbox_to_anchor=(1.03, 1.02))
+
+    # (c) the configuration and its inverse (displacements exaggerated)
+    ax = axes[2]
+    ax.axis("off")
+    scale = 0.42 / np.abs(u).max()
+    gap = L + 0.6
+    for k, (sgn, label) in enumerate([(1, "$+\\mathbf{u}$"), (-1, "$-\\mathbf{u}$")]):
+        off = np.array([k * gap, 0.0])
+        p0 = pos + off
+        d = sgn * scale * u
+        ax.scatter(p0[:, 0], p0[:, 1], s=12, facecolor="white", edgecolor=LIGHT,
+                   linewidth=0.8, zorder=1)
+        ax.quiver(p0[:, 0], p0[:, 1], d[:, 0], d[:, 1], angles="xy", scale_units="xy",
+                  scale=1, width=0.008, headwidth=0, headlength=0, headaxislength=0,
+                  color=BLUE, zorder=2)
+        ax.scatter(p0[:, 0] + d[:, 0], p0[:, 1] + d[:, 1], s=7, color=BLUE, zorder=3,
+                   linewidth=0)
+        ax.text(off[0] + (L - 1) / 2, L - 0.15, label, ha="center", va="bottom", fontsize=8)
+    ax.set_xlim(-0.6, gap + L - 0.4)
+    ax.set_ylim(-0.6, L + 0.4)
+    ax.set_aspect("equal", adjustable="datalim")
+
+    # (d) anharmonic force of one coordinate and the +-u secant
+    ax = axes[3]
+    k, c, d3, a = 1.0, 0.55, 0.35, 0.9
+    x = np.linspace(-1.25, 1.25, 200)
+    ax.plot(x, -k * x - c * x ** 2 - d3 * x ** 3, color=GRAY, lw=1.4, label="DFT force")
+    fp, fm = (-k * a - c * a ** 2 - d3 * a ** 3), (k * a - c * a ** 2 + d3 * a ** 3)
+    slope = (fp - fm) / (2 * a)
+    ax.plot(x, slope * x, color=ORANGE, lw=1.2, label="fit")
+    ax.plot([a, -a], [fp, fm], "o", color=BLUE, ms=4.2, zorder=3)
+    ax.axhline(0, color=MUTED, lw=0.4)
+    ax.axvline(0, color=MUTED, lw=0.4)
+    ax.text(a - 0.12, fp, "$+u$", ha="right", va="center", fontsize=7, color=BLUE)
+    ax.text(-a + 0.12, fm, "$-u$", ha="left", va="center", fontsize=7, color=BLUE)
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_xlabel("$u$", labelpad=2)
+    ax.set_ylabel("$F$", labelpad=2)
+    ax.set_xlim(-1.3, 1.3)
+    clean(ax)
+    ax.legend(loc="upper right", fontsize=6.5, frameon=False, handlelength=1.2,
+              borderaxespad=0.1, bbox_to_anchor=(1.05, 1.02))
 
     # (e) effective dispersion against the trial
-    ax = add_axes(fig, [xs[4] + 0.03, y0 + 0.25, w - 0.045, 0.33])
+    ax = axes[4]
     for b in branches(K1, K2, q).T:
-        ax.plot(q, b, color=GRAY, lw=0.9, ls="--")
+        ax.plot(q, b, color=GRAY, lw=1.0, ls=(0, (3, 2)))
     for b in branches(1.12 * K1, 1.25 * K2, q).T:
-        ax.plot(q, b, color=ORANGE, lw=1.1)
+        ax.plot(q, b, color=ORANGE, lw=1.5)
+    ax.plot([], [], color=GRAY, lw=1.0, ls=(0, (3, 2)), label="trial")
+    ax.plot([], [], color=ORANGE, lw=1.5, label="effective")
     ax.set_xticks([0, np.pi], ["$\\Gamma$", "X"])
     ax.set_yticks([])
-    ax.set_ylabel("$\\omega$", labelpad=1)
-    ax.spines[["top", "right"]].set_visible(False)
-    fig.text(xs[4] + w / 2, y0 + 0.13,
-             "$\\Phi_{\\rm eff}(T)=\\langle\\nabla\\nabla V\\rangle$\n"
-             "(gray dashed: trial)",
-             fontsize=5.6, ha="center", va="center", color=INK, linespacing=1.35)
+    ax.set_ylabel("$\\omega$", labelpad=2)
+    ax.set_xlim(0, np.pi)
+    ax.set_ylim(0, None)
+    clean(ax)
+    ax.legend(loc="lower right", fontsize=6.5, frameon=False, handlelength=1.4,
+              borderaxespad=0.1)
 
     # forward arrows between panels
+    yc = y_ax + h_ax / 2
     for k in range(4):
-        arrow(fig, (xs[k] + w + 0.001, y0 + h / 2), (xs[k + 1] - 0.001, y0 + h / 2))
+        x0 = xs[k] + wid[k] + 0.01
+        x1 = xs[k + 1] - (0.008 if k == 1 else 0.032)
+        fig.patches.append(FancyArrowPatch((x0, yc), (x1, yc), transform=fig.transFigure,
+                                           arrowstyle="-|>", mutation_scale=10, lw=1.1,
+                                           color=MUTED))
 
-    # self-consistent loop: (e) back to (a)
-    arrow(fig, (xs[4] + w / 2, y0 - 0.01), (xs[0] + w / 2, y0 - 0.01), rad=-0.06,
-          color=ORANGE)
-    fig.text(0.5, 0.035,
-             "SOTC-D-SC: the fitted model becomes the trial for the next $\\pm$ pair; "
-             "all forces are kept and refitted. Fixed point: "
-             "$\\Phi_{\\rm SC}=\\Phi_{\\rm eff}"
-             "[\\mathbf{C}(\\Phi_{\\rm SC},T)]$ (SCHA / sTDEP)",
-             fontsize=5.9, ha="center", va="center", color=ORANGE)
+    # self-consistent loop from (e) back to (a), drawn below the notes
+    y_top, y_bot = 0.205, 0.115
+    xa, xe = xs[0] + wid[0] / 2, xs[4] + wid[4] / 2
+    fig.add_artist(plt.Line2D([xe, xe, xa], [y_top, y_bot, y_bot], transform=fig.transFigure,
+                              color=ORANGE, lw=1.3, solid_joinstyle="round"))
+    fig.patches.append(FancyArrowPatch((xa, y_bot), (xa, y_top + 0.005),
+                                       transform=fig.transFigure, arrowstyle="-|>",
+                                       mutation_scale=11, lw=1.3, color=ORANGE))
+    fig.text(0.5, y_bot - 0.05,
+             "SOTC-D-SC: the fitted model is the trial of the next pair and all forces are "
+             "refitted; fixed point = SCHA / sTDEP effective FC2",
+             ha="center", va="center", fontsize=7.2, color=ORANGE)
 
     OUT.mkdir(parents=True, exist_ok=True)
     fig.savefig(OUT / "fig_workflow.pdf")
-    fig.savefig(OUT / "fig_workflow.png", dpi=200)
+    fig.savefig(OUT / "fig_workflow.png", dpi=300)
 
 
 if __name__ == "__main__":
