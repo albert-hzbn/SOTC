@@ -81,58 +81,6 @@ submit_*.sh
 # Theory
 Theory/
 
-# Manuscripts: public sources, figures, tables and compiled PDFs only.
-# Referee reports, internal checklists and LaTeX build output stay local.
-!manuscript/
-manuscript/*
-!manuscript/README.md
-
-# PRB submission (manuscript/prb) with its point-by-point response
-!manuscript/prb/
-manuscript/prb/*
-!manuscript/prb/manuscript_original.tex
-!manuscript/prb/manuscript_original.pdf
-!manuscript/prb/refs_original.bib
-!manuscript/prb/manuscript_clean.tex
-!manuscript/prb/manuscript_clean.pdf
-!manuscript/prb/manuscript_updated.tex
-!manuscript/prb/manuscript_updated.pdf
-!manuscript/prb/cover_letter.tex
-!manuscript/prb/cover_letter.pdf
-!manuscript/prb/FILE_MAP.md
-!manuscript/prb/refs.bib
-!manuscript/prb/figures/
-manuscript/prb/figures/*
-!manuscript/prb/figures/fig2_phonons_all.pdf
-!manuscript/prb/figures/fig_nacl_loto.pdf
-!manuscript/prb/figures/fig_ifc34_diagnostics.pdf
-!manuscript/prb/figures/fig_dispersion_controls.pdf
-!manuscript/prb/figures/fig_matched_sampling.pdf
-!manuscript/prb/figures/fig_polar_sotc_nac.pdf
-!manuscript/prb/reviews/
-manuscript/prb/reviews/*
-!manuscript/prb/reviews/response_to_reviewers.tex
-!manuscript/prb/reviews/response_to_reviewers.pdf
-
-# JAP submission (manuscript/jap)
-!manuscript/jap/
-manuscript/jap/*
-!manuscript/jap/Makefile
-!manuscript/jap/sotc_jap.tex
-!manuscript/jap/sotc_jap.pdf
-!manuscript/jap/sotc_jap_supplementary.tex
-!manuscript/jap/sotc_jap_supplementary.pdf
-!manuscript/jap/cover_letter_jap.tex
-!manuscript/jap/cover_letter_jap.pdf
-!manuscript/jap/refs_jap.bib
-!manuscript/jap/tables/
-!manuscript/jap/figures/
-!manuscript/jap/reviews/
-manuscript/jap/reviews/*
-!manuscript/jap/reviews/reviewer_gap_map.md
-manuscript/jap/figures/*
-!manuscript/jap/figures/*.pdf
-
 # Compact validation results are public; transient QE/HPC artifacts stay local
 validation_results/**/*.out
 validation_results/**/*.err

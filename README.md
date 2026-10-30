@@ -73,12 +73,11 @@ codes/
 validation_results/        ← Compact QE/IFC validation outputs and summaries
 
 pseudopotentials/          ← Bundled SSSP efficiency + ONCV UPF files for QE
-manuscript/                ← Paper sources: jap/ (current) and prb/ (earlier submission); see manuscript/README.md
 requirements.txt           ← Python dependencies
 README.md                  ← this file
 ```
 
-`manuscript/jap/` holds the Journal of Applied Physics version (`sotc_jap.tex`, `sotc_jap_supplementary.tex`, `cover_letter_jap.tex`, generated `tables/` and `figures/`; build with `make` in that folder). The earlier Physical Review B submission, with its referee response, is in `manuscript/prb/` (see `manuscript/README.md`). The JAP validation pipeline is:
+The validation pipeline is:
 
 ```bash
 python codes/validation/run_fd_references.py <mat> [--large]      # converged harmonic FD references
