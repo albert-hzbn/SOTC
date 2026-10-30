@@ -33,7 +33,7 @@ from analyze_primary_archives import PRIMARY, symfc_fc2_basis  # noqa: E402
 from run_primary_cell_controls import overrides, primary_spec  # noqa: E402
 from run_real_anharmonic_ifcs import run_one_state  # noqa: E402
 from sotc.optimal_design import (  # noqa: E402
-    configurations, information_matrix, sequential_d_optimal,
+    configurations, information_matrix, moment_matched_factors, sequential_d_optimal,
 )
 from surrogate_design_study import paired  # noqa: E402
 from surrogate_self_consistent import fit_coefficients, modes, to_fc  # noqa: E402
@@ -64,10 +64,12 @@ def main():
     parser.add_argument("--budget", type=int, default=8)
     parser.add_argument("--common-seed", action="store_true",
                         help="same design seed at every volume (correlated sampling)")
+    parser.add_argument("--moment-matched", action="store_true",
+                        help="moment-matched amplitudes (Sec. V H) instead of fixed ones")
     args = parser.parse_args()
 
     material = args.material
-    grid_dir = "qha_common" if args.common_seed else "qha"
+    grid_dir = ("qha_common" if args.common_seed else "qha") + ("_mm" if args.moment_matched else "")
     out = ROOT / "validation_results" / material / "primary_cell" / grid_dir / f"a{args.a:.4f}"
     out.mkdir(parents=True, exist_ok=True)
     spec = primary_spec(material)
@@ -110,8 +112,14 @@ def main():
         coef, fc = c_harm, to_fc(basis, c_harm)
         us, fs, es, coefs = [], [], [], []
         prior = np.zeros((len(basis), len(basis)))
+        factors = None
         for k in range(args.budget // 2):
             patterns, sigma = modes(fc, masses, temperature)
+            if args.moment_matched:
+                if factors is None:
+                    factors = moment_matched_factors(args.budget // 2, len(sigma),
+                                                     np.random.default_rng(SEED0 + seed + 7))
+                sigma = sigma * factors[k][:len(sigma)]
             signs, _ = sequential_d_optimal(patterns, sigma, basis, 1,
                                             seed=int(rng.integers(1 << 30)),
                                             prior_information=prior)
