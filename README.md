@@ -23,6 +23,18 @@ reproducing phonon properties to within a few percent of experiment.
 
 ---
 
+## Where calculations run (Viper)
+
+The home file system (`/viper/u1`) has a quota. All DFT calculations run from
+`/viper/ptmp1/alli/sotc_work`, a clone of this repository on the Viper scratch
+file system: every Slurm wrapper sets `#SBATCH -D` to it, and
+`sotc.qe_io.check_scratch` refuses to write QE output under `/viper/u1` or
+`/u` (override with `SOTC_ALLOW_HOME=1`). Code is edited and committed here and
+pulled into the scratch clone (`git -C /viper/ptmp1/alli/sotc_work pull home main`);
+the compact summaries in `validation_results/summaries/` are copied back here
+for version control. Scratch files unused for a long time may be purged by the
+centre, so copy anything that must be kept to `summaries/`.
+
 ## Method Summary
 
 1. **Correlator design** — target displacement–displacement correlations

@@ -147,6 +147,8 @@ def main() -> None:
     if args.lattice is not None:
         spec["a"] = float(args.lattice)
     cell, positions = primitive_rocksalt(spec["a"])
+    from sotc.qe_io import check_scratch
+    check_scratch(ROOT / "validation_results")
     pw_cmd = os.environ["QE_PW_CMD"]
     ph_cmd = os.environ.get("QE_PH_CMD") or derive_ph_command(pw_cmd)
     output = args.output or (ROOT / "validation_results" / args.material / "dfpt_nac")

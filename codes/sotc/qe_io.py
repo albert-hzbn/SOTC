@@ -65,6 +65,18 @@ from typing import Dict, List, Optional, Sequence, Tuple, Union
 
 import numpy as np
 
+SCRATCH_ROOT = "/viper/ptmp1/alli/sotc_work"
+
+
+def check_scratch(path) -> None:
+    """Refuse DFT output under the home file system (/viper/u1, /u), which has
+    a quota; calculations run from SCRATCH_ROOT, a clone of the repository on
+    the Viper scratch file system. SOTC_ALLOW_HOME=1 overrides."""
+    resolved = str(Path(path).expanduser().resolve())
+    if resolved.startswith(("/viper/u1/", "/u/")) and os.environ.get("SOTC_ALLOW_HOME") != "1":
+        raise RuntimeError(f"refusing to write DFT output under the home file system "
+                           f"({resolved}); run from {SCRATCH_ROOT}")
+
 
 class QEForceCalculator:
     """
@@ -156,6 +168,7 @@ class QEForceCalculator:
         self.conv_thr = float(conv_thr)
         self.pw_cmd = pw_cmd or self._find_pw()
         self.workdir = Path(workdir).expanduser()
+        check_scratch(self.workdir)
         self.prefix = prefix
         self.extra_input_data = extra_input_data or {}
 

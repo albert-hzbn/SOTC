@@ -159,7 +159,7 @@ def fit():
             fcp = ForceConstantPotential(cs, params)
             fcs = fcp.get_force_constants(atoms)
             path = OUT / f"fc3_{name}_{b}.hdf5"
-            fcs.write_to_phono3py(str(path), order=3)
+            fcs.write_to_phono3py(str(path))
             written.append(path.name)
     print("written", written, flush=True)
 
@@ -196,8 +196,19 @@ def kappa():
         for i in range(len(pos)):
             with np.load(BASE / "fc3_fd_qe" / f"state_{i:04d}" / "result.npz") as r:
                 forces.append(np.asarray(r["forces_ev_ang"]) - f0)
-        p3.forces = np.asarray(forces)
-        p3.produce_fc3()
+        # phono3py expects forces for every supercell of its dataset, including
+        # the pairs excluded by the cutoff (zeros, not used).
+        full, k = [], 0
+        for c in p3.supercells_with_displacements:
+            if c is None:
+                full.append(np.zeros_like(forces[0]))
+            else:
+                full.append(forces[k])
+                k += 1
+        p3.forces = np.asarray(full)
+        # translational and permutation symmetrization (acoustic sum rule), as in
+        # the constrained fits; without it the acoustic scattering is spurious
+        p3.produce_fc3(is_compact_fc=False, symmetrize_fc3r=True)
         report["kappa_w_mk"]["finite_difference"] = run(p3.fc3)
     for path in sorted(OUT.glob("fc3_*_*.hdf5")):
         with h5py.File(path) as hf:

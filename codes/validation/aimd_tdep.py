@@ -76,6 +76,8 @@ def main():
     }
     for section, extra in (spec.get("extra") or {}).items():
         input_data.setdefault(section, {}).update(extra)
+    from sotc.qe_io import check_scratch
+    check_scratch(out)
     pwi, pwo = out / "md.pwi", out / "md.pwo"
     write(pwi, atoms, format="espresso-in", input_data=input_data,
           pseudopotentials=spec["pseudos"], kpts=tuple(spec["kpts"]))

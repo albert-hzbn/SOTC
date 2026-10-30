@@ -164,6 +164,9 @@ def checkpoint_result(path, positions, cell):
         return {name: np.array(data[name]) for name in data.files}
 
 
+from sotc.qe_io import check_scratch  # noqa: E402  (DFT output only on scratch)
+
+
 def run_one_state(index, positions, cell, symbols, spec, args, stage, overrides=None):
     state = stage / f"state_{index:04d}"
     result_path = state / "result.npz"
@@ -172,6 +175,7 @@ def run_one_state(index, positions, cell, symbols, spec, args, stage, overrides=
         return cached
     if args.fit_only:
         raise FileNotFoundError(f"Missing DFT checkpoint required by --fit-only: {result_path}")
+    check_scratch(stage)
     state.mkdir(parents=True, exist_ok=True)
     calc = QEForceCalculator(**calculation_settings(
         spec, args, symbols, state / "qe_scratch", f"{args.material}_{stage.name}_{index}",
