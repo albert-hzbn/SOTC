@@ -16,8 +16,10 @@ against the DFT finite-difference FC2, and the stability of 2-ps Langevin
 MD at the design temperature (fraction of runs without an atom moving more
 than 1 A from its site or the temperature exceeding 5 T).
 
-Stages (run with the MLIP venv): export <m>; train <m> <design> <N> [--seed];
-evaluate <m>. Writes validation_results/<m>/mlip_study/ and
+Stages (run with the MLIP venv): export <m>; train <m> <design> <N> [--seed]
+[--steps S]; evaluate <m>. With ``--steps`` every model gets the same number
+of optimizer steps (epochs = S * batch / N, directory suffix ``_st``), so
+that small training sets are not also under-trained. Writes validation_results/<m>/mlip_study/ and
 validation_results/summaries/<m>/robustness/mlip_study.json.
 """
 
@@ -100,7 +102,7 @@ def export(m):
     print(m, "test", len(test), flush=True)
 
 
-def train(m, design, n, seed):
+def train(m, design, n, seed, steps=None):
     from ase.io import read, write
 
     out = ROOT / "validation_results" / m / "mlip_study"
@@ -108,7 +110,8 @@ def train(m, design, n, seed):
     if len(configs) < n:
         print(f"{m} {design}: only {len(configs)} configurations", flush=True)
         return
-    name = f"{design}_N{n}_s{seed}"
+    name = f"{design}_N{n}_s{seed}" + ("_st" if steps else "")
+    epochs = 150 if not steps else int(np.ceil(steps * 2 / n))
     work = out / name
     work.mkdir(exist_ok=True)
     write(work / "train.xyz", configs[:n], format="extxyz")
@@ -116,9 +119,9 @@ def train(m, design, n, seed):
            f"--name={name}", f"--train_file={work / 'train.xyz'}",
            f"--valid_file={work / 'train.xyz'}", "--energy_key=REF_energy",
            "--forces_key=REF_forces", "--model=MACE", "--num_channels=32", "--max_L=0",
-           "--correlation=2", "--r_max=5.0", "--batch_size=2", "--max_num_epochs=150",
+           "--correlation=2", "--r_max=5.0", "--batch_size=2", f"--max_num_epochs={epochs}",
            "--energy_weight=1", "--forces_weight=100", "--E0s=average", "--device=cpu",
-           "--default_dtype=float64", f"--seed={seed}", "--eval_interval=50",
+           "--default_dtype=float64", f"--seed={seed}", f"--eval_interval={max(1, epochs // 3)}",
            f"--model_dir={work}", f"--checkpoints_dir={work / 'ckpt'}",
            f"--results_dir={work / 'results'}", f"--log_dir={work / 'logs'}"]
     res = subprocess.run(cmd, cwd=work, capture_output=True, text=True)
@@ -206,11 +209,12 @@ def main():
     parser.add_argument("design", nargs="?")
     parser.add_argument("n", nargs="?", type=int)
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--steps", type=int)
     args = parser.parse_args()
     if args.stage == "export":
         export(args.material)
     elif args.stage == "train":
-        train(args.material, args.design, args.n, args.seed)
+        train(args.material, args.design, args.n, args.seed, args.steps)
     else:
         evaluate(args.material)
 
