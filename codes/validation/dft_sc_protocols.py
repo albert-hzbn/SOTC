@@ -101,7 +101,9 @@ def main():
         else:
             phonon.force_constants = fc
             _, zp, zs = zg_modes(phonon, temperature)
-            u = paired(configurations(walsh_signs(len(zs), 1), zp, zs))
+            # The seed selects the Walsh sign pattern (0: the alternating ZG pattern;
+            # k: alternation in blocks of 2**k modes), so ZG-SC replicates differ.
+            u = paired(configurations(walsh_signs(len(zs), args.seed + 1)[args.seed:], zp, zs))
         u -= u.mean(axis=1, keepdims=True)
         f = forces(u, sum(len(x) for x in us))
         us.append(u)

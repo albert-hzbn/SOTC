@@ -14,7 +14,16 @@ Writes validation_results/<m>/primary_cell/sscha_dft/N<N>_s<seed>/history.npz
 with the auxiliary FC2 after every population and the cumulative number of
 force calls.
 
-Usage: dft_sscha.py <material> <N> <seed> [--max-pop 12]
+Usage: dft_sscha.py <material> <N> <seed> [--max-pop 12] [--min-pop 1]
+       [--meaningful 0.2] [--step 0.1] [--kong-liu 0.5] [--name TAG]
+
+With the defaults, python-sscha ends the run as soon as the free-energy
+gradient falls below meaningful_factor times its statistical error, which
+for DFT populations of 16--256 happens after the first population. A
+converged run uses a small --meaningful (e.g. 1e-3), so that each
+population is minimized until the Kong--Liu ratio drops below --kong-liu,
+and --min-pop to iterate over several populations; convergence is then
+judged from the change of the FC2 between populations.
 """
 
 from __future__ import annotations
@@ -73,6 +82,12 @@ def main():
     parser.add_argument("seed", type=int)
     parser.add_argument("--max-pop", type=int, default=12)
     parser.add_argument("--n-parallel", type=int, default=4)
+    parser.add_argument("--min-pop", type=int, default=1)
+    parser.add_argument("--meaningful", type=float, default=0.2)
+    parser.add_argument("--step", type=float, default=0.1)
+    parser.add_argument("--kong-liu", type=float, default=0.5)
+    parser.add_argument("--name", default=None,
+                        help="subdirectory of sscha_dft (default N<N>_s<seed>)")
     args = parser.parse_args()
 
     import phonopy
@@ -81,7 +96,7 @@ def main():
 
     material = args.material
     base = ROOT / "validation_results" / material / "primary_cell"
-    out = base / "sscha_dft" / f"N{args.n_configs}_s{args.seed}"
+    out = base / "sscha_dft" / (args.name or f"N{args.n_configs}_s{args.seed}")
     out.mkdir(parents=True, exist_ok=True)
     phonon = phonopy.load(base / "fd" / "phonopy_harmonic.yaml")
     with np.load(base / "fd" / "harmonic_reference.npz") as h:
@@ -128,9 +143,9 @@ def main():
         ensemble.compute_ensemble(calc, compute_stress=False, verbose=False)
         total += args.n_configs
         minim = sscha.SchaMinimizer.SSCHA_Minimizer(ensemble)
-        minim.set_minimization_step(0.1)
-        minim.meaningful_factor = 0.2
-        minim.kong_liu_ratio = 0.5
+        minim.set_minimization_step(args.step)
+        minim.meaningful_factor = args.meaningful
+        minim.kong_liu_ratio = args.kong_liu
         minim.minim_struct = False
         minim.init()
         minim.run()
@@ -139,10 +154,11 @@ def main():
         calls.append(total)
         converged.append(bool(minim.is_converged()))
         np.savez_compressed(out / "history.npz", force_constants=np.asarray(fcs),
-                            force_calls=np.asarray(calls), converged=np.asarray(converged))
+                            force_calls=np.asarray(calls), converged=np.asarray(converged),
+                            settings=np.asarray([args.meaningful, args.step, args.kong_liu]))
         print(f"{material} N={args.n_configs} seed={args.seed} population {pop}: "
               f"{total} calls, converged={converged[-1]}", flush=True)
-        if converged[-1]:
+        if converged[-1] and pop + 1 >= args.min_pop:
             break
 
 

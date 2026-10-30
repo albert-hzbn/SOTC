@@ -1,0 +1,81 @@
+{
+ "material": "al",
+ "rc2_ang": 4.5,
+ "rc3_ang": 4.0,
+ "sets": {
+  "canonical": {
+   "n_configurations": 40,
+   "vs_reference_thz": {
+    "ours_fc2": 0.05567737197564226,
+    "tdep_fc2": 0.1713573495756845,
+    "ours_fc2_tdep_rc": 0.10921652638985083,
+    "ours_crystal_tdep_rc": 0.17135734957562812,
+    "tdep_fc2_noinv": 0.1713573495756845
+   },
+   "mean_frequency_thz": {
+    "ours_fc2": 6.1140061694317644,
+    "tdep_fc2": 6.11128856726934,
+    "ours_fc2_tdep_rc": 6.119010649381983,
+    "ours_crystal_tdep_rc": 6.111288567272158,
+    "tdep_fc2_noinv": 6.11128856726934
+   },
+   "pairwise_thz": {
+    "ours_fc2|tdep_fc2": 0.17105103070882446,
+    "ours_fc2|ours_fc2_tdep_rc": 0.1015139503797312,
+    "ours_fc2|ours_crystal_tdep_rc": 0.1710510307088498,
+    "ours_fc2|tdep_fc2_noinv": 0.17105103070882446,
+    "tdep_fc2|ours_fc2_tdep_rc": 0.1442788945360724,
+    "tdep_fc2|ours_crystal_tdep_rc": 9.23379745468741e-12,
+    "tdep_fc2|tdep_fc2_noinv": 0.0,
+    "ours_fc2_tdep_rc|ours_crystal_tdep_rc": 0.14427889453641027,
+    "ours_fc2_tdep_rc|tdep_fc2_noinv": 0.1442788945360724,
+    "ours_crystal_tdep_rc|tdep_fc2_noinv": 9.23379745468741e-12
+   }
+  },
+  "aimd": {
+   "n_configurations": 4370,
+   "vs_reference_thz": {
+    "ours_fc2": 0.28541763461133834,
+    "tdep_fc2": 0.33946240336767486,
+    "ours_fc2_tdep_rc": 0.30006423849884734,
+    "ours_crystal_tdep_rc": 0.3394624033674358,
+    "tdep_fc2_noinv": 0.33946240336767486,
+    "ours_fc23": 0.08105703867201233,
+    "tdep_fc23": 0.33946240336767486
+   },
+   "mean_frequency_thz": {
+    "ours_fc2": 5.837026823145428,
+    "tdep_fc2": 5.827654738223276,
+    "ours_fc2_tdep_rc": 5.840074313628347,
+    "ours_crystal_tdep_rc": 5.8276547382235355,
+    "tdep_fc2_noinv": 5.827654738223276,
+    "ours_fc23": 6.0535068021395,
+    "tdep_fc23": 5.827654738223276
+   },
+   "pairwise_thz": {
+    "ours_fc2|tdep_fc2": 0.1880343941236777,
+    "ours_fc2|ours_fc2_tdep_rc": 0.1136984098142911,
+    "ours_fc2|ours_crystal_tdep_rc": 0.18803439412365697,
+    "ours_fc2|tdep_fc2_noinv": 0.1880343941236777,
+    "ours_fc2|ours_fc23": 0.22095528266493944,
+    "ours_fc2|tdep_fc23": 0.1880343941236777,
+    "tdep_fc2|ours_fc2_tdep_rc": 0.16232211807906646,
+    "tdep_fc2|ours_crystal_tdep_rc": 2.9524634871327087e-13,
+    "tdep_fc2|tdep_fc2_noinv": 0.0,
+    "tdep_fc2|ours_fc23": 0.3011511551257326,
+    "tdep_fc2|tdep_fc23": 0.0,
+    "ours_fc2_tdep_rc|ours_crystal_tdep_rc": 0.16232211807904925,
+    "ours_fc2_tdep_rc|tdep_fc2_noinv": 0.16232211807906646,
+    "ours_fc2_tdep_rc|ours_fc23": 0.24405366511170526,
+    "ours_fc2_tdep_rc|tdep_fc23": 0.16232211807906646,
+    "ours_crystal_tdep_rc|tdep_fc2_noinv": 2.9524634871327087e-13,
+    "ours_crystal_tdep_rc|ours_fc23": 0.3011511551255228,
+    "ours_crystal_tdep_rc|tdep_fc23": 2.9524634871327087e-13,
+    "tdep_fc2_noinv|ours_fc23": 0.3011511551257326,
+    "tdep_fc2_noinv|tdep_fc23": 0.0,
+    "ours_fc23|tdep_fc23": 0.3011511551257326
+   }
+  }
+ },
+ "tdep_effective_rc2_ang": 2.863782463858435
+}

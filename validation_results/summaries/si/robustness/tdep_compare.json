@@ -1,0 +1,81 @@
+{
+ "material": "si",
+ "rc2_ang": 5.0,
+ "rc3_ang": 4.0,
+ "sets": {
+  "canonical": {
+   "n_configurations": 40,
+   "vs_reference_thz": {
+    "ours_fc2": 0.04464355664204169,
+    "tdep_fc2": 0.0446435566456761,
+    "ours_fc2_tdep_rc": 0.04464355664204169,
+    "ours_crystal_tdep_rc": 0.044643556642052946,
+    "tdep_fc2_noinv": 0.0446435566456761
+   },
+   "mean_frequency_thz": {
+    "ours_fc2": 9.728475700455391,
+    "tdep_fc2": 9.728475700453277,
+    "ours_fc2_tdep_rc": 9.728475700455391,
+    "ours_crystal_tdep_rc": 9.72847570045538,
+    "tdep_fc2_noinv": 9.728475700453277
+   },
+   "pairwise_thz": {
+    "ours_fc2|tdep_fc2": 1.146267741763313e-11,
+    "ours_fc2|ours_fc2_tdep_rc": 0.0,
+    "ours_fc2|ours_crystal_tdep_rc": 1.3413449675430808e-14,
+    "ours_fc2|tdep_fc2_noinv": 1.146267741763313e-11,
+    "tdep_fc2|ours_fc2_tdep_rc": 1.146267741763313e-11,
+    "tdep_fc2|ours_crystal_tdep_rc": 1.1459937926247218e-11,
+    "tdep_fc2|tdep_fc2_noinv": 0.0,
+    "ours_fc2_tdep_rc|ours_crystal_tdep_rc": 1.3413449675430808e-14,
+    "ours_fc2_tdep_rc|tdep_fc2_noinv": 1.146267741763313e-11,
+    "ours_crystal_tdep_rc|tdep_fc2_noinv": 1.1459937926247218e-11
+   }
+  },
+  "aimd": {
+   "n_configurations": 2233,
+   "vs_reference_thz": {
+    "ours_fc2": 0.27188970224702147,
+    "tdep_fc2": 0.2718897022468215,
+    "ours_fc2_tdep_rc": 0.27188970224702147,
+    "ours_crystal_tdep_rc": 0.2718897022470244,
+    "tdep_fc2_noinv": 0.2718897022468215,
+    "ours_fc23": 0.055457950696603746,
+    "tdep_fc23": 0.2718897022468215
+   },
+   "mean_frequency_thz": {
+    "ours_fc2": 9.523012612613742,
+    "tdep_fc2": 9.523012612613917,
+    "ours_fc2_tdep_rc": 9.523012612613742,
+    "ours_crystal_tdep_rc": 9.523012612613735,
+    "tdep_fc2_noinv": 9.523012612613917,
+    "ours_fc23": 9.716605748727583,
+    "tdep_fc23": 9.523012612613917
+   },
+   "pairwise_thz": {
+    "ours_fc2|tdep_fc2": 1.296548786802146e-12,
+    "ours_fc2|ours_fc2_tdep_rc": 0.0,
+    "ours_fc2|ours_crystal_tdep_rc": 1.2784390630567092e-14,
+    "ours_fc2|tdep_fc2_noinv": 1.296548786802146e-12,
+    "ours_fc2|ours_fc23": 0.22909566718616872,
+    "ours_fc2|tdep_fc23": 1.296548786802146e-12,
+    "tdep_fc2|ours_fc2_tdep_rc": 1.296548786802146e-12,
+    "tdep_fc2|ours_crystal_tdep_rc": 1.2962153561269462e-12,
+    "tdep_fc2|tdep_fc2_noinv": 0.0,
+    "tdep_fc2|ours_fc23": 0.22909566718594784,
+    "tdep_fc2|tdep_fc23": 0.0,
+    "ours_fc2_tdep_rc|ours_crystal_tdep_rc": 1.2784390630567092e-14,
+    "ours_fc2_tdep_rc|tdep_fc2_noinv": 1.296548786802146e-12,
+    "ours_fc2_tdep_rc|ours_fc23": 0.22909566718616872,
+    "ours_fc2_tdep_rc|tdep_fc23": 1.296548786802146e-12,
+    "ours_crystal_tdep_rc|tdep_fc2_noinv": 1.2962153561269462e-12,
+    "ours_crystal_tdep_rc|ours_fc23": 0.2290956671861712,
+    "ours_crystal_tdep_rc|tdep_fc23": 1.2962153561269462e-12,
+    "tdep_fc2_noinv|ours_fc23": 0.22909566718594784,
+    "tdep_fc2_noinv|tdep_fc23": 0.0,
+    "ours_fc23|tdep_fc23": 0.22909566718594784
+   }
+  }
+ },
+ "tdep_effective_rc2_ang": 4.503147309157963
+}
