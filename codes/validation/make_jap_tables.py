@@ -483,31 +483,34 @@ def sc_surrogate_table(budgets=("8", "16", "32", "64")):
         r"\begin{table*}[t]",
         r"\caption{Self-consistent protocols on the anharmonic surrogates."
         r" Median mesh RMSE (THz) against the self-consistent effective FC2"
-        r" (= SCHA auxiliary FC2) at " + "/".join(budgets) + r" force calls (12"
+        r" (= SCHA auxiliary FC2) at " + ", ".join(budgets[:-1]) + ", and " + budgets[-1]
+        + r" force calls (12"
         r" repetitions). SSCHA: python-sscha with the surrogate as calculator,"
         r" populations of $N=8$--128 configurations until convergence (5"
         r" repetitions), listed at the median total number of force calls (the better population size where two need the same number).}",
         r"\label{tab:sc_surrogate}",
-        r"\begin{ruledtabular}", r"\footnotesize",
-        r"\begin{tabular}{l" + "c" * len(data) + "}",
-        "Protocol & " + " & ".join(LABELS[m] for m in data) + r"\\",
-        r" & \multicolumn{" + f"{len(data)}" + r"}{c}{8/16/32/64 force calls in each column}\\",
+        r"\begin{ruledtabular}", r"\footnotesize", r"\setlength{\tabcolsep}{2.5pt}",
+        r"\begin{tabular}{l" + "c" * len(budgets) * len(data) + "}",
+        " & " + " & ".join(r"\multicolumn{" + f"{len(budgets)}" + "}{c}{" + LABELS[m] + "}"
+                           for m in data) + r"\\",
+        rule_under([len(budgets)] * len(data)),
+        "Force calls & " + " & ".join(b for _ in data for b in budgets) + r"\\",
         r"\hline",
     ]
     for key, label in protocols:
         cells = [label]
         for m, r in data.items():
             rows = r["results"][key]
-            cells.append("/".join(f"{np.median([x['mesh_rmse_thz'] for x in rows[b]]):.3f}"[1:]
-                                  for b in budgets))
+            cells += [f"{np.median([x['mesh_rmse_thz'] for x in rows[b]]):.3f}"[1:]
+                      for b in budgets]
         lines.append(" & ".join(cells) + r"\\")
     cells, notes = ["SSCHA"], []
     for m, r in data.items():
         err = dict(sscha_curve(r))
-        text = "/".join(f"{err[int(b)]:.3f}"[1:] if int(b) in err else "--" for b in budgets)
+        text = [f"{err[int(b)]:.3f}"[1:] if int(b) in err else "--" for b in budgets]
         extra = [f"{c} calls, {e:.3f}" for c, e in sorted(err.items()) if c > int(budgets[-1])
                  or (str(c) not in budgets and c > int(budgets[0]))]
-        cells.append(text)
+        cells += text
         if extra:
             notes.append(f"{LABELS[m]} " + "; ".join(extra))
     lines.append(" & ".join(cells) + r"\\")
@@ -515,7 +518,8 @@ def sc_surrogate_table(budgets=("8", "16", "32", "64")):
         lines[1] = lines[1][:-1] + " Other SSCHA budgets: " + "; ".join(notes) + " THz.}"
     lines.append(r"\hline")
     lines.append("Harmonic vs self-consistent & " + " & ".join(
-        f"{r['harmonic_vs_sc_mesh_thz']:.3f}" for r in data.values()) + r"\\")
+        r"\multicolumn{" + f"{len(budgets)}" + "}{c}{" + f"{r['harmonic_vs_sc_mesh_thz']:.3f}" + "}"
+        for r in data.values()) + r"\\")
     lines += [r"\end{tabular}", r"\end{ruledtabular}", r"\end{table*}"]
     return "\n".join(lines)
 
