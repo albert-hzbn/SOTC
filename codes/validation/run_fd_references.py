@@ -132,6 +132,12 @@ SCALING_CELLS = {"al_108": "al", "al_256": "al", "si_128": "si", "si_216": "si",
 for _key, _base in SCALING_CELLS.items():
     MATERIALS[_key] = {**MATERIALS[_base], "key": _key}
 
+# HSE06 variants (exact-exchange q mesh 1x1x1; same pseudopotentials,
+# cutoffs, and k meshes as the PBE runs).
+_HSE = {"system": {"input_dft": "hse", "nqx1": 1, "nqx2": 1, "nqx3": 1}}
+for _key, _base in {"si_hse": "si", "nacl_hse": "nacl"}.items():
+    MATERIALS[_key] = {**MATERIALS[_base], "key": _key, "extra": _HSE}
+
 # Experimental room-temperature lattice parameters (Angstrom).
 ROOM_LATTICE = {"al": 4.0495, "cu": 3.6149, "au": 4.0782}
 

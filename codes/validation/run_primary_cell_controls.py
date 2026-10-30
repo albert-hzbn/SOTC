@@ -53,7 +53,7 @@ PRIMARY_KPTS = {"si": (2, 2, 2), "mg": (3, 3, 3),
                 # scaling cells: k density at least that of the base SOTC cell
                 "al_108": (2, 2, 2), "al_256": (1, 1, 1), "si_128": (2, 2, 2),
                 "si_216": (2, 2, 2), "nacl_128": (1, 1, 1), "nacl_216": (1, 1, 1),
-                "zr": (3, 3, 3)}
+                "zr": (3, 3, 3), "si_hse": (2, 2, 2), "nacl_hse": (1, 1, 1)}
 
 
 def primary_spec(material):
@@ -75,8 +75,10 @@ def primary_phonon(material):
         unit = phonopy_atoms(structure_symbols(spec, positions), cell, positions)
         return Phonopy(unit, np.asarray(spec["supercell_matrix"]).T)
 
+    # Variants of an archived crystal (e.g. HSE runs) reuse its exact cell.
+    source = PRIMARY[material].get("cell_from", material)
     data = np.load(
-        ROOT / "validation_results" / material / "primary_audit"
+        ROOT / "validation_results" / source / "primary_audit"
         / "primary_force_dataset.npz"
     )
     pos = np.asarray(data["equilibrium_positions_ang"])

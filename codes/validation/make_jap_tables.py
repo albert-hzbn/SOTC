@@ -953,6 +953,10 @@ def dft_sc_table(budgets=(4, 8, 16, 32), materials=("al", "si")):
         return {b: [rows[-1]["mesh_rmse_thz"] for rows in v["sscha"].values()
                     if rows[-1]["force_calls"] == b] for b in budgets}
 
+    def sscha_iterated(v, n_conf):
+        rows = v.get("sscha_converged", {}).get(f"conv_N{n_conf}_s1", [])
+        return {b: [r["mesh_rmse_thz"] for r in rows if r["force_calls"] == b] for b in budgets}
+
     def refit(v):
         return {b: [e for n, e in v["sscha_refit"].items() if int(n[1:].split("_")[0]) == b]
                 for b in budgets}
@@ -976,7 +980,9 @@ def dft_sc_table(budgets=(4, 8, 16, 32), materials=("al", "si")):
         ("sTDEP, last iteration", lambda r: curve(r["iterated"]["stdep_last"])),
         ("sTDEP, pooled", lambda r: curve(r["iterated"]["stdep_pooled"])),
         ("ZG-SC (pooled)", lambda r: curve(r["iterated"]["zgsc_pooled"])),
-        ("SSCHA", lambda r: sscha(r["vs_sc"])),
+        ("SSCHA, default stopping", lambda r: sscha(r["vs_sc"])),
+        ("SSCHA, iterated ($N=16$)", lambda r: sscha_iterated(r["vs_sc"], 16)),
+        ("SSCHA, iterated ($N=32$)", lambda r: sscha_iterated(r["vs_sc"], 32)),
         ("SOTC-D-SC", lambda r: sotcd_sc(r["vs_sc"])),
     ]
     head = " & ".join(f"\\multicolumn{{{len(budgets)}}}{{c}}{{{LABELS[m]}}}" for m in data)
@@ -985,11 +991,14 @@ def dft_sc_table(budgets=(4, 8, 16, 32), materials=("al", "si")):
         r"\caption{Protocols with DFT forces in the SOTC cells of Al (300~K) and Si"
         r" (600~K). Mesh RMSE (THz) against the converged self-consistent effective"
         r" FC2 at " + "/".join(str(b) for b in budgets) + r" force calls; medians over"
-        r" seeds where several were run (sTDEP and SOTC-D-SC: 3; canonical: 20 random"
+        r" seeds where several were run (sTDEP and SOTC-D-SC: 3; ZG-SC: 3 Walsh sign"
+        r" patterns; canonical: 20 random"
         r" subsets of pairs). sTDEP draws 4 canonical configurations per iteration"
         r" and fits the last iteration or all of them; ZG-SC adds one special-displacement"
-        r" $\pm$ pair per iteration and refits all of them. SSCHA (python-sscha) stops"
-        r" after its first population; SSCHA force constants are projected onto"
+        r" $\pm$ pair per iteration and refits all of them. SSCHA (python-sscha) with"
+        r" its default stopping criterion stops after the first population; iterated"
+        r" runs use a meaningful factor of $10^{-3}$ and 10 ($N=16$) or 8 ($N=32$)"
+        r" populations of $N$ configurations. SSCHA force constants are projected onto"
         r" the supercell basis in the metric of the thermal displacement covariance."
         r" ``Canonical, SSCHA population'': the same SSCHA configurations and DFT"
         r" forces refitted by the regression of Sec.~\ref{sec:fit}.}",
