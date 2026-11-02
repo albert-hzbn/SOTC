@@ -128,7 +128,7 @@ MATERIALS = {**CAMPAIGN_MATERIALS, **EXTRA_MATERIALS}
 # the base material; the cell and k mesh are set in analyze_primary_archives
 # and run_primary_cell_controls.
 SCALING_CELLS = {"al_108": "al", "al_256": "al", "si_128": "si", "si_216": "si",
-                 "nacl_128": "nacl", "nacl_216": "nacl"}
+                 "nacl_128": "nacl", "nacl_216": "nacl", "zr_64": "zr"}
 for _key, _base in SCALING_CELLS.items():
     MATERIALS[_key] = {**MATERIALS[_base], "key": _key}
 # Davidson occasionally fails (Cholesky, "charge is wrong") in the large

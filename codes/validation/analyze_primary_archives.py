@@ -68,6 +68,9 @@ PRIMARY = {
 PRIMARY["zr"] = dict(a=3.606, bravais="bcc", elements=["Zr"], masses=[91.224],
                      T=1188.0, cutoff=5.0, n_iter=0, n_ens=0,
                      supercell_matrix=[[0, 3, 3], [3, 0, 3], [3, 3, 0]])
+# The 54-atom cell has no N or P point; the 64-atom 4x4x4 primitive cell
+# contains N, P, and H, where the harmonic trial is unstable.
+PRIMARY["zr_64"] = dict(PRIMARY["zr"], supercell_matrix=[[4, 0, 0], [0, 4, 0], [0, 0, 4]])
 # HSE06 variants in exactly the cells of the PBE runs.
 PRIMARY["si_hse"] = dict(PRIMARY["si"])
 PRIMARY["nacl_hse"] = dict(PRIMARY["nacl"], cell_from="nacl")
