@@ -1,0 +1,427 @@
+{
+ "material": "si",
+ "temperature_k": 600.0,
+ "n_test": 100,
+ "models": {
+  "aimd_N16_s0": {
+   "force_rmse_ev_ang": 0.04371840128906567,
+   "phonon_rmse_thz": 0.20297036822746067,
+   "md_stable_runs": 3
+  },
+  "aimd_N16_s0_st": {
+   "force_rmse_ev_ang": 0.03768455866726663,
+   "phonon_rmse_thz": 0.18020889392092623,
+   "md_stable_runs": 3
+  },
+  "aimd_N16_s1_st": {
+   "force_rmse_ev_ang": 0.03548496339493263,
+   "phonon_rmse_thz": 0.16420305069469843,
+   "md_stable_runs": 3
+  },
+  "aimd_N16_s2_st": {
+   "force_rmse_ev_ang": 0.040768631520158895,
+   "phonon_rmse_thz": 0.17511759566416477,
+   "md_stable_runs": 3
+  },
+  "aimd_N32_s0": {
+   "force_rmse_ev_ang": 0.04231699706076522,
+   "phonon_rmse_thz": 0.1954566915950529,
+   "md_stable_runs": 3
+  },
+  "aimd_N32_s0_st": {
+   "force_rmse_ev_ang": 0.03520670471242976,
+   "phonon_rmse_thz": 0.17402208066967773,
+   "md_stable_runs": 3
+  },
+  "aimd_N32_s1_st": {
+   "force_rmse_ev_ang": 0.03783995140953423,
+   "phonon_rmse_thz": 0.1776192492771087,
+   "md_stable_runs": 3
+  },
+  "aimd_N32_s2_st": {
+   "force_rmse_ev_ang": 0.0372154269755598,
+   "phonon_rmse_thz": 0.1554174728962858,
+   "md_stable_runs": 3
+  },
+  "aimd_N4_s0": {
+   "force_rmse_ev_ang": 0.047674252881786804,
+   "phonon_rmse_thz": 0.23918612071131742,
+   "md_stable_runs": 3
+  },
+  "aimd_N4_s0_st": {
+   "force_rmse_ev_ang": 0.044309928152438074,
+   "phonon_rmse_thz": 0.20516687190609806,
+   "md_stable_runs": 3
+  },
+  "aimd_N4_s1": {
+   "force_rmse_ev_ang": 0.047986848150694164,
+   "phonon_rmse_thz": 0.20408050783227796,
+   "md_stable_runs": 3
+  },
+  "aimd_N4_s1_st": {
+   "force_rmse_ev_ang": 0.044660750375495405,
+   "phonon_rmse_thz": 0.2059847126086823,
+   "md_stable_runs": 3
+  },
+  "aimd_N4_s2_st": {
+   "force_rmse_ev_ang": 0.04438943366728441,
+   "phonon_rmse_thz": 0.19881563851778855,
+   "md_stable_runs": 3
+  },
+  "aimd_N64_s0": {
+   "force_rmse_ev_ang": 0.03011904912038984,
+   "phonon_rmse_thz": 0.16189865541366238,
+   "md_stable_runs": 3
+  },
+  "aimd_N64_s0_st": {
+   "force_rmse_ev_ang": 0.03011904912038984,
+   "phonon_rmse_thz": 0.16189865541366238,
+   "md_stable_runs": 3
+  },
+  "aimd_N64_s1_st": {
+   "force_rmse_ev_ang": 0.04226986992992512,
+   "phonon_rmse_thz": 0.2027752185280724,
+   "md_stable_runs": 3
+  },
+  "aimd_N64_s2_st": {
+   "force_rmse_ev_ang": 0.0304420883217955,
+   "phonon_rmse_thz": 0.14558943855815207,
+   "md_stable_runs": 3
+  },
+  "aimd_N8_s0": {
+   "force_rmse_ev_ang": 0.04497586218437694,
+   "phonon_rmse_thz": 0.21156891665358019,
+   "md_stable_runs": 3
+  },
+  "aimd_N8_s0_st": {
+   "force_rmse_ev_ang": 0.04129513185647072,
+   "phonon_rmse_thz": 0.19585590754435314,
+   "md_stable_runs": 3
+  },
+  "aimd_N8_s1": {
+   "force_rmse_ev_ang": 0.044945112869032834,
+   "phonon_rmse_thz": 0.20392399437883343,
+   "md_stable_runs": 3
+  },
+  "aimd_N8_s1_st": {
+   "force_rmse_ev_ang": 0.03978236750679781,
+   "phonon_rmse_thz": 0.18936857824380893,
+   "md_stable_runs": 3
+  },
+  "aimd_N8_s2_st": {
+   "force_rmse_ev_ang": 0.042512884732775605,
+   "phonon_rmse_thz": 0.21764873273791557,
+   "md_stable_runs": 3
+  },
+  "canonical_N16_s0": {
+   "force_rmse_ev_ang": 0.0468633578483896,
+   "phonon_rmse_thz": 0.24631170251247939,
+   "md_stable_runs": 3
+  },
+  "canonical_N16_s0_st": {
+   "force_rmse_ev_ang": 0.0388352610155357,
+   "phonon_rmse_thz": 0.17702530244670994,
+   "md_stable_runs": 3
+  },
+  "canonical_N16_s1_st": {
+   "force_rmse_ev_ang": 0.038698762524523,
+   "phonon_rmse_thz": 0.20042230873713907,
+   "md_stable_runs": 3
+  },
+  "canonical_N16_s2_st": {
+   "force_rmse_ev_ang": 0.039835865953365794,
+   "phonon_rmse_thz": 0.21831627357591718,
+   "md_stable_runs": 3
+  },
+  "canonical_N32_s0": {
+   "force_rmse_ev_ang": 0.040786606490381475,
+   "phonon_rmse_thz": 0.19553713139203585,
+   "md_stable_runs": 3
+  },
+  "canonical_N32_s0_st": {
+   "force_rmse_ev_ang": 0.04117415765082762,
+   "phonon_rmse_thz": 0.19740361694768033,
+   "md_stable_runs": 3
+  },
+  "canonical_N32_s1_st": {
+   "force_rmse_ev_ang": 0.025410542206992803,
+   "phonon_rmse_thz": 0.12344170701854104,
+   "md_stable_runs": 3
+  },
+  "canonical_N32_s2_st": {
+   "force_rmse_ev_ang": 0.03311177697892574,
+   "phonon_rmse_thz": 0.15996012241597493,
+   "md_stable_runs": 3
+  },
+  "canonical_N4_s0": {
+   "force_rmse_ev_ang": 0.050185495539908545,
+   "phonon_rmse_thz": 0.26215478062244113,
+   "md_stable_runs": 3
+  },
+  "canonical_N4_s0_st": {
+   "force_rmse_ev_ang": 0.04471408973874951,
+   "phonon_rmse_thz": 0.2198366544863317,
+   "md_stable_runs": 3
+  },
+  "canonical_N4_s1": {
+   "force_rmse_ev_ang": 0.049432150680181,
+   "phonon_rmse_thz": 0.2612961900564548,
+   "md_stable_runs": 3
+  },
+  "canonical_N4_s1_st": {
+   "force_rmse_ev_ang": 0.04496320573710723,
+   "phonon_rmse_thz": 0.21761928732510888,
+   "md_stable_runs": 3
+  },
+  "canonical_N4_s2_st": {
+   "force_rmse_ev_ang": 0.044680227984160034,
+   "phonon_rmse_thz": 0.2022110549174576,
+   "md_stable_runs": 3
+  },
+  "canonical_N8_s0": {
+   "force_rmse_ev_ang": 0.04676257931320686,
+   "phonon_rmse_thz": 0.2121457072825319,
+   "md_stable_runs": 3
+  },
+  "canonical_N8_s0_st": {
+   "force_rmse_ev_ang": 0.04049646195728607,
+   "phonon_rmse_thz": 0.20345768421698796,
+   "md_stable_runs": 3
+  },
+  "canonical_N8_s1": {
+   "force_rmse_ev_ang": 0.04481623302358312,
+   "phonon_rmse_thz": 0.20682701443431656,
+   "md_stable_runs": 3
+  },
+  "canonical_N8_s1_st": {
+   "force_rmse_ev_ang": 0.04276626736908319,
+   "phonon_rmse_thz": 0.22091289839597164,
+   "md_stable_runs": 3
+  },
+  "canonical_N8_s2_st": {
+   "force_rmse_ev_ang": 0.042065925988853434,
+   "phonon_rmse_thz": 0.20836345619944818,
+   "md_stable_runs": 3
+  },
+  "rattle_N16_s0": {
+   "force_rmse_ev_ang": 0.04943575025855773,
+   "phonon_rmse_thz": 0.23397002312676313,
+   "md_stable_runs": 3
+  },
+  "rattle_N16_s0_st": {
+   "force_rmse_ev_ang": 0.026616248999661998,
+   "phonon_rmse_thz": 0.10964467251412707,
+   "md_stable_runs": 3
+  },
+  "rattle_N16_s1_st": {
+   "force_rmse_ev_ang": 0.027938303113937562,
+   "phonon_rmse_thz": 0.08872716469894003,
+   "md_stable_runs": 3
+  },
+  "rattle_N16_s2_st": {
+   "force_rmse_ev_ang": 0.03144747446777078,
+   "phonon_rmse_thz": 0.2338142465056322,
+   "md_stable_runs": 3
+  },
+  "rattle_N32_s0": {
+   "force_rmse_ev_ang": 0.04801365672652105,
+   "phonon_rmse_thz": 0.18876751167839606,
+   "md_stable_runs": 3
+  },
+  "rattle_N32_s0_st": {
+   "force_rmse_ev_ang": 0.02655194705895282,
+   "phonon_rmse_thz": 0.10235775729352767,
+   "md_stable_runs": 3
+  },
+  "rattle_N32_s1_st": {
+   "force_rmse_ev_ang": 0.03176772104073891,
+   "phonon_rmse_thz": 0.11365056649812667,
+   "md_stable_runs": 3
+  },
+  "rattle_N32_s2_st": {
+   "force_rmse_ev_ang": 0.0436010095904553,
+   "phonon_rmse_thz": 0.18416018909829143,
+   "md_stable_runs": 3
+  },
+  "rattle_N4_s0": {
+   "force_rmse_ev_ang": 0.07030325819491605,
+   "phonon_rmse_thz": 0.32233348412971263,
+   "md_stable_runs": 3
+  },
+  "rattle_N4_s0_st": {
+   "force_rmse_ev_ang": 0.047632090545604515,
+   "phonon_rmse_thz": 0.20545314681433094,
+   "md_stable_runs": 3
+  },
+  "rattle_N4_s1": {
+   "force_rmse_ev_ang": 0.08115855483200866,
+   "phonon_rmse_thz": 0.42537110159014524,
+   "md_stable_runs": 3
+  },
+  "rattle_N4_s1_st": {
+   "force_rmse_ev_ang": 0.045966076740862255,
+   "phonon_rmse_thz": 0.21953561770909064,
+   "md_stable_runs": 3
+  },
+  "rattle_N4_s2_st": {
+   "force_rmse_ev_ang": 0.04118921684629241,
+   "phonon_rmse_thz": 0.16199439896081264,
+   "md_stable_runs": 3
+  },
+  "rattle_N64_s0": {
+   "force_rmse_ev_ang": 0.03821058264229581,
+   "phonon_rmse_thz": 0.18525564050673116,
+   "md_stable_runs": 3
+  },
+  "rattle_N64_s0_st": {
+   "force_rmse_ev_ang": 0.03821058264229581,
+   "phonon_rmse_thz": 0.18525564050673116,
+   "md_stable_runs": 3
+  },
+  "rattle_N64_s1_st": {
+   "force_rmse_ev_ang": 0.024770185129199006,
+   "phonon_rmse_thz": 0.0992314659651432,
+   "md_stable_runs": 3
+  },
+  "rattle_N64_s2_st": {
+   "force_rmse_ev_ang": 0.04313575554814154,
+   "phonon_rmse_thz": 0.1977276567259864,
+   "md_stable_runs": 3
+  },
+  "rattle_N8_s0": {
+   "force_rmse_ev_ang": 0.06799716119193629,
+   "phonon_rmse_thz": 0.30936375506072117,
+   "md_stable_runs": 3
+  },
+  "rattle_N8_s0_st": {
+   "force_rmse_ev_ang": 0.03439106671684208,
+   "phonon_rmse_thz": 0.10779315412081784,
+   "md_stable_runs": 3
+  },
+  "rattle_N8_s1": {
+   "force_rmse_ev_ang": 0.06896393019865883,
+   "phonon_rmse_thz": 0.3414165279439104,
+   "md_stable_runs": 3
+  },
+  "rattle_N8_s1_st": {
+   "force_rmse_ev_ang": 0.04262497206239171,
+   "phonon_rmse_thz": 0.18231230959866063,
+   "md_stable_runs": 3
+  },
+  "rattle_N8_s2_st": {
+   "force_rmse_ev_ang": 0.04542118522302128,
+   "phonon_rmse_thz": 0.19729344738387014,
+   "md_stable_runs": 3
+  },
+  "sotcd_N16_s0": {
+   "force_rmse_ev_ang": 0.04296456059458022,
+   "phonon_rmse_thz": 0.19924848060585756,
+   "md_stable_runs": 3
+  },
+  "sotcd_N16_s0_st": {
+   "force_rmse_ev_ang": 0.040323404027926744,
+   "phonon_rmse_thz": 0.1767435213974735,
+   "md_stable_runs": 3
+  },
+  "sotcd_N16_s1_st": {
+   "force_rmse_ev_ang": 0.03316874203114132,
+   "phonon_rmse_thz": 0.13491273054542235,
+   "md_stable_runs": 3
+  },
+  "sotcd_N16_s2_st": {
+   "force_rmse_ev_ang": 0.04213735399404792,
+   "phonon_rmse_thz": 0.18674584278607062,
+   "md_stable_runs": 3
+  },
+  "sotcd_N32_s0": {
+   "force_rmse_ev_ang": 0.042740885573260445,
+   "phonon_rmse_thz": 0.19119972872509694,
+   "md_stable_runs": 3
+  },
+  "sotcd_N32_s0_st": {
+   "force_rmse_ev_ang": 0.03267668159725834,
+   "phonon_rmse_thz": 0.13662637779671222,
+   "md_stable_runs": 3
+  },
+  "sotcd_N32_s1_st": {
+   "force_rmse_ev_ang": 0.023235058062424298,
+   "phonon_rmse_thz": 0.0908675743757781,
+   "md_stable_runs": 3
+  },
+  "sotcd_N32_s2_st": {
+   "force_rmse_ev_ang": 0.042684089550494936,
+   "phonon_rmse_thz": 0.2073562502876466,
+   "md_stable_runs": 3
+  },
+  "sotcd_N4_s0": {
+   "force_rmse_ev_ang": 0.049802056957596395,
+   "phonon_rmse_thz": 0.219463724270857,
+   "md_stable_runs": 3
+  },
+  "sotcd_N4_s0_st": {
+   "force_rmse_ev_ang": 0.04345092140835512,
+   "phonon_rmse_thz": 0.18641899073249565,
+   "md_stable_runs": 3
+  },
+  "sotcd_N4_s1": {
+   "force_rmse_ev_ang": 0.04676000932435449,
+   "phonon_rmse_thz": 0.2090889698335006,
+   "md_stable_runs": 3
+  },
+  "sotcd_N4_s1_st": {
+   "force_rmse_ev_ang": 0.04459003048387804,
+   "phonon_rmse_thz": 0.1958169671970848,
+   "md_stable_runs": 3
+  },
+  "sotcd_N4_s2_st": {
+   "force_rmse_ev_ang": 0.04407820144739942,
+   "phonon_rmse_thz": 0.19747726094376622,
+   "md_stable_runs": 3
+  },
+  "sotcd_N64_s0": {
+   "force_rmse_ev_ang": 0.02880112709952543,
+   "phonon_rmse_thz": 0.11331649880881729,
+   "md_stable_runs": 3
+  },
+  "sotcd_N64_s0_st": {
+   "force_rmse_ev_ang": 0.02880112709952543,
+   "phonon_rmse_thz": 0.11331649880881729,
+   "md_stable_runs": 3
+  },
+  "sotcd_N64_s1_st": {
+   "force_rmse_ev_ang": 0.046295165591373415,
+   "phonon_rmse_thz": 0.23401733345415116,
+   "md_stable_runs": 3
+  },
+  "sotcd_N64_s2_st": {
+   "force_rmse_ev_ang": 0.04358960221912919,
+   "phonon_rmse_thz": 0.1852571028663441,
+   "md_stable_runs": 3
+  },
+  "sotcd_N8_s0": {
+   "force_rmse_ev_ang": 0.04488444483219841,
+   "phonon_rmse_thz": 0.19914741596093516,
+   "md_stable_runs": 3
+  },
+  "sotcd_N8_s0_st": {
+   "force_rmse_ev_ang": 0.04282176968253194,
+   "phonon_rmse_thz": 0.16829052211259177,
+   "md_stable_runs": 3
+  },
+  "sotcd_N8_s1": {
+   "force_rmse_ev_ang": 0.04564661922594175,
+   "phonon_rmse_thz": 0.20353395018396042,
+   "md_stable_runs": 3
+  },
+  "sotcd_N8_s1_st": {
+   "force_rmse_ev_ang": 0.04255761533103341,
+   "phonon_rmse_thz": 0.17773551589119765,
+   "md_stable_runs": 3
+  },
+  "sotcd_N8_s2_st": {
+   "force_rmse_ev_ang": 0.04413799119855537,
+   "phonon_rmse_thz": 0.18112052871015977,
+   "md_stable_runs": 3
+  }
+ }
+}
