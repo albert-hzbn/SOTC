@@ -142,13 +142,20 @@ for _key in ("al_256", "nacl_128", "nacl_216"):
 _HSE = {"system": {"input_dft": "hse", "nqx1": 1, "nqx2": 1, "nqx3": 1}}
 for _key, _base in {"si_hse": "si", "nacl_hse": "nacl"}.items():
     MATERIALS[_key] = {**MATERIALS[_base], "key": _key, "extra": _HSE}
-# NaCl (ultrasoft, 60/480 Ry, Gamma only): with the default Fock cutoff
-# (4 ecutwfc) one ACE build takes 3 h on 128 cores, with a 120 Ry Fock
-# cutoff 4 min. The reduced Fock grid is incompatible with the symmetry
-# operations of the undisplaced cell (nosym); real-space augmentation (tqr)
-# gives a wrong charge in the exact-exchange loop and is not used.
-MATERIALS["nacl_hse"]["extra"] = {"system": {**_HSE["system"], "ecutfock": 120.0,
-                                             "nosym": True}}
+# NaCl: with the ultrasoft pseudopotentials (60/480 Ry, Gamma only) one ACE
+# build takes 3 h on 128 cores, and QE ignores a reduced Fock cutoff unless
+# real-space augmentation (tqr) is used, which gives a wrong charge in the
+# exact-exchange loop. The HSE runs therefore use norm-conserving SG15
+# pseudopotentials with a 160 Ry Fock cutoff; ``nacl_nc`` is the PBE run with
+# the same pseudopotentials, so that the HSE - PBE harmonic correction is
+# taken at fixed pseudopotentials. The reduced Fock grid is incompatible with
+# the symmetry operations of the undisplaced cell (nosym).
+_NC = {"pseudos": {"Na": "Na_ONCV_PBE-1.2.upf", "Cl": "Cl_ONCV_PBE-1.2.upf"},
+       "ecutwfc": 80.0, "ecutrho": 320.0}
+MATERIALS["nacl_nc"] = {**MATERIALS["nacl"], **_NC, "key": "nacl_nc",
+                        "extra": {"system": {"nosym": True}}}
+MATERIALS["nacl_hse"].update(_NC, extra={"system": {**_HSE["system"], "ecutfock": 160.0,
+                                                    "nosym": True}})
 
 # Experimental room-temperature lattice parameters (Angstrom).
 ROOM_LATTICE = {"al": 4.0495, "cu": 3.6149, "au": 4.0782}

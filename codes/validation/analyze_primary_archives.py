@@ -74,6 +74,7 @@ PRIMARY["zr_64"] = dict(PRIMARY["zr"], supercell_matrix=[[4, 0, 0], [0, 4, 0], [
 # HSE06 variants in exactly the cells of the PBE runs.
 PRIMARY["si_hse"] = dict(PRIMARY["si"])
 PRIMARY["nacl_hse"] = dict(PRIMARY["nacl"], cell_from="nacl")
+PRIMARY["nacl_nc"] = dict(PRIMARY["nacl_hse"])
 # Larger cells of Al, Si, and NaCl for the scaling study (same temperature,
 # cutoff, and electronic settings as the base material).
 _CONV = np.array([[-1, 1, 1], [1, -1, 1], [1, 1, -1]])

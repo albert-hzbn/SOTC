@@ -53,7 +53,8 @@ PRIMARY_KPTS = {"si": (2, 2, 2), "mg": (3, 3, 3),
                 # scaling cells: k density at least that of the base SOTC cell
                 "al_108": (2, 2, 2), "al_256": (1, 1, 1), "si_128": (2, 2, 2),
                 "si_216": (2, 2, 2), "nacl_128": (1, 1, 1), "nacl_216": (1, 1, 1),
-                "zr": (3, 3, 3), "zr_64": (3, 3, 3), "si_hse": (2, 2, 2), "nacl_hse": (1, 1, 1)}
+                "zr": (3, 3, 3), "zr_64": (3, 3, 3), "si_hse": (2, 2, 2), "nacl_hse": (1, 1, 1),
+                "nacl_nc": (1, 1, 1)}
 
 
 def primary_spec(material):
