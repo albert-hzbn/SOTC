@@ -145,6 +145,7 @@ def calculation_settings(spec, args, symbols, workdir, prefix, overrides=None):
         "pw_cmd": os.environ.get("QE_PW_CMD"),
         "workdir": workdir, "prefix": prefix, "n_parallel": 1,
         "extra_input_data": spec.get("extra"),
+        "fallback_input_data": spec.get("fallback"),
     }
     if overrides:
         settings.update(overrides)

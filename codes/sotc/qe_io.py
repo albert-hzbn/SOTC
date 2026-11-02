@@ -138,6 +138,10 @@ class QEForceCalculator:
         ``{'electrons': {'mixing_beta': 0.3}}``.  Keys in the top-level QE
         namelists (control, system, electrons, ions, cell) will be merged
         with (and override) the defaults computed from the other parameters.
+    fallback_input_data : dict, optional
+        Overrides (merged on top of ``extra_input_data``) for one retry of a
+        snapshot whose pw.x run fails, e.g. ``{'electrons':
+        {'diagonalization': 'cg'}}`` when Davidson fails occasionally.
     """
 
     def __init__(
@@ -156,6 +160,7 @@ class QEForceCalculator:
         prefix: str = "sqtc",
         n_parallel: int = 1,
         extra_input_data: Optional[Dict] = None,
+        fallback_input_data: Optional[Dict] = None,
     ):
         self.species = list(species)
         self.pseudopotentials = dict(pseudopotentials)
@@ -171,6 +176,7 @@ class QEForceCalculator:
         check_scratch(self.workdir)
         self.prefix = prefix
         self.extra_input_data = extra_input_data or {}
+        self.fallback_input_data = fallback_input_data or {}
 
         self.workdir.mkdir(parents=True, exist_ok=True)
 
@@ -225,7 +231,7 @@ class QEForceCalculator:
                 + f"\nSet pseudo_dir to the directory containing the UPF files."
             )
 
-    def _build_input_data(self) -> Dict:
+    def _build_input_data(self, fallback: bool = False) -> Dict:
         """Construct the QE input_data dict (namelist sections)."""
         system: Dict = {
             "ecutwfc": self.ecutwfc,
@@ -254,11 +260,13 @@ class QEForceCalculator:
         }
 
         # Merge user overrides (deep-merge at the section level).
-        for section, overrides in self.extra_input_data.items():
-            if section in data:
-                data[section].update(overrides)
-            else:
-                data[section] = dict(overrides)
+        layers = [self.extra_input_data] + ([self.fallback_input_data] if fallback else [])
+        for layer in layers:
+            for section, overrides in layer.items():
+                if section in data:
+                    data[section].update(overrides)
+                else:
+                    data[section] = dict(overrides)
 
         return data
 
@@ -283,7 +291,7 @@ class QEForceCalculator:
 
         return Atoms(symbols=symbols, positions=positions, cell=cell, pbc=True)
 
-    def _make_calculator(self, snap_dir: Path):
+    def _make_calculator(self, snap_dir: Path, fallback: bool = False):
         """Return a fresh ASE Espresso calculator for one snapshot."""
         try:
             from ase.calculators.espresso import Espresso, EspressoProfile
@@ -303,7 +311,7 @@ class QEForceCalculator:
         return Espresso(
             profile=profile,
             pseudopotentials=self.pseudopotentials,
-            input_data=self._build_input_data(),
+            input_data=self._build_input_data(fallback),
             kpts=self.kpts,
             koffset=(0, 0, 0),
             directory=str(snap_dir),
@@ -330,7 +338,14 @@ class QEForceCalculator:
         atoms.calc = self._make_calculator(snap_dir)
 
         with self._sem:
-            energy = float(atoms.get_potential_energy())
+            try:
+                energy = float(atoms.get_potential_energy())
+            except Exception:
+                if not self.fallback_input_data:
+                    raise
+                atoms.calc = self._make_calculator(snap_dir.with_name(snap_dir.name + "_retry"),
+                                                   fallback=True)
+                energy = float(atoms.get_potential_energy())
             forces = np.array(atoms.get_forces(), dtype=float)
             stress = np.array(atoms.get_stress(voigt=False), dtype=float)
 
