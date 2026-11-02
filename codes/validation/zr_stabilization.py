@@ -8,8 +8,11 @@ For every FC2 in the histories of SOTC-D-SC (``sotcd_sc_dft``), sTDEP
 * the lowest frequency on a 10^3 mesh (Gamma excluded) and the call count
   after which every later FC2 of the run is stable (lowest frequency above
   -0.05 THz);
-* the mesh RMSE against the converged chunked sTDEP reference
-  (``stdep_reference``) and the calls to reach 0.1 and 0.05 THz (the first
+* the mesh RMSE against the chunked sTDEP reference (``stdep_reference``,
+  4 x 64 calls), pooled over all its iterations: the single-iteration fits
+  still scatter by 0.1-0.3 THz (mesh RMSE between consecutive iterations,
+  reported), the noise of the overdamped soft modes, so the pooled fit is
+  the best estimate; and the calls to reach 0.1 and 0.05 THz (the first
   call count after which the error stays below the threshold);
 * the frequencies at H, N, P, and L 2/3(1,1,1), compared with the inelastic
   neutron scattering energies of Heiming et al., PRB 43, 10948 (1991),
@@ -102,7 +105,7 @@ def main():
     report["harmonic"] = {"min_thz": float(harm_mesh.min()), "points_thz": harm_pts}
     if ref_path.exists():
         h = np.load(ref_path)
-        reference = h["force_constants_last"][-1]
+        reference = h["force_constants_pooled"][-1]
         ref_mesh, ref_pts = spectrum(reference)
         lasts = [spectrum(f)[0] for f in h["force_constants_last"]]
         report["reference"] = {
@@ -110,7 +113,8 @@ def main():
             "iterations": len(h["force_calls"]),
             "min_thz": float(ref_mesh.min()), "points_thz": ref_pts,
             "last_iteration_change_thz": [float(np.sqrt(np.mean((x - y) ** 2)))
-                                          for x, y in zip(lasts[1:], lasts[:-1])]}
+                                          for x, y in zip(lasts[1:], lasts[:-1])],
+            "iteration_points_thz": [spectrum(f)[1] for f in h["force_constants_last"]]}
     for name, (calls, fcs) in runs.items():
         mins, rmses, pts = [], [], []
         for fc in fcs:
