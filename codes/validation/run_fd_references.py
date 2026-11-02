@@ -134,7 +134,7 @@ for _key, _base in SCALING_CELLS.items():
 # Davidson occasionally fails (Cholesky, "charge is wrong") in the large
 # Gamma-only cells; conjugate gradients work but are 5-10x slower, so they are
 # used only to retry a failed snapshot.
-for _key in ("al_256", "nacl_128", "nacl_216"):
+for _key in ("al_256", "nacl_128", "nacl_216", "zr_64"):
     MATERIALS[_key]["fallback"] = {"electrons": {"diagonalization": "cg"}}
 
 # HSE06 variants (exact-exchange q mesh 1x1x1; same pseudopotentials,
