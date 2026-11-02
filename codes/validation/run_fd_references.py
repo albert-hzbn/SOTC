@@ -142,6 +142,11 @@ for _key in ("al_256", "nacl_128", "nacl_216"):
 _HSE = {"system": {"input_dft": "hse", "nqx1": 1, "nqx2": 1, "nqx3": 1}}
 for _key, _base in {"si_hse": "si", "nacl_hse": "nacl"}.items():
     MATERIALS[_key] = {**MATERIALS[_base], "key": _key, "extra": _HSE}
+# NaCl (ultrasoft, 60/480 Ry, Gamma only): with the default Fock cutoff
+# (4 ecutwfc) one ACE build takes 3 h on 128 cores; a 120 Ry Fock cutoff and
+# real-space augmentation make it affordable.
+MATERIALS["nacl_hse"]["extra"] = {"system": {**_HSE["system"], "ecutfock": 120.0},
+                                  "electrons": {"tqr": True}}
 
 # Experimental room-temperature lattice parameters (Angstrom).
 ROOM_LATTICE = {"al": 4.0495, "cu": 3.6149, "au": 4.0782}
