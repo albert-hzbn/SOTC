@@ -41,7 +41,7 @@ from surrogate_design_study import mesh_frequencies  # noqa: E402
 
 # HSE material -> (PBE material of the self-consistent reference and runs,
 # PBE material of the harmonic FD with the HSE pseudopotentials)
-PBE = {"si_hse": ("si", "si"), "nacl_hse": ("nacl", "nacl_nc")}
+PBE = {"si_hse": ("si", "si"), "nacl_hse": ("nacl_nc", "nacl_nc")}
 BUDGETS = (4, 8, 16)
 THRESHOLDS = (0.1, 0.05)
 
