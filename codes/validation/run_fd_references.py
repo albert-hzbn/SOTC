@@ -131,12 +131,13 @@ SCALING_CELLS = {"al_108": "al", "al_256": "al", "si_128": "si", "si_216": "si",
                  "nacl_128": "nacl", "nacl_216": "nacl", "zr_64": "zr"}
 for _key, _base in SCALING_CELLS.items():
     MATERIALS[_key] = {**MATERIALS[_base], "key": _key}
-# Davidson occasionally fails (Cholesky, "charge is wrong") in the large
-# cells; a failed snapshot is retried with PPCG and then with conjugate
-# gradients (robust but 5-10x slower than Davidson).
+# Davidson fails intermittently (Cholesky, "charge is wrong") in the large
+# cells inside the ScaLAPACK subspace diagonalization; the same input converges
+# when rerun or with serial subspace diagonalization (pw.x -nd 1, set through
+# QE_FLAGS). A failed snapshot is retried once unchanged and then with
+# conjugate gradients (robust but 5-10x slower). PPCG is no longer in QE 7.5.
 for _key in ("al_256", "nacl_128", "nacl_216", "zr_64"):
-    MATERIALS[_key]["fallback"] = [{"electrons": {"diagonalization": "ppcg"}},
-                                   {"electrons": {"diagonalization": "cg"}}]
+    MATERIALS[_key]["fallback"] = [{}, {"electrons": {"diagonalization": "cg"}}]
 
 # HSE06 variants (exact-exchange q mesh 1x1x1; same pseudopotentials,
 # cutoffs, and k meshes as the PBE runs).
