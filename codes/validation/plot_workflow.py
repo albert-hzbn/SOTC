@@ -1,17 +1,22 @@
 #!/usr/bin/env python3
 """Schematic of the SOTC-D workflow (Fig. 1 of the JAP manuscript).
 
-Panels (b) and (c) are computed for a two-dimensional square lattice with
-nearest- and next-nearest-neighbor springs (4x4 cell, unit masses), with
-the construction of the method: commensurate modes of a harmonic trial,
-a canonical draw with Gaussian mode coordinates, and an SOTC-D
-configuration with every mode at exactly its rms amplitude, together with
-its inverse. Panel (d) shows a one-dimensional anharmonic force
+Panels (a)-(c) and (e) are computed for a two-dimensional square lattice
+with nearest- and next-nearest-neighbor springs (4x4 cell, unit masses):
+
+* (a) the dispersion of the harmonic trial along Gamma-X-M-Gamma with the
+  wave vectors commensurate with the 4x4 cell;
+* (b) the mode coordinates of a canonical draw (Gaussian) and of the SOTC-D
+  configuration (every mode at exactly +-sigma), whose signs maximize
+  log det X^T X in a four-parameter FC2 basis (longitudinal and transverse
+  first- and second-neighbor constants) by greedy single flips;
+* (c) the D-optimal configuration and its inverse;
+* (e) the dispersion before and after stiffening the springs, which
+  illustrates, but does not quantify, the thermal renormalization.
+
+Panel (d) shows a one-dimensional anharmonic force
 F(u) = -k u - c u^2 - d u^3: the slope of the secant through a +-u pair is
-k + d u^2, independent of the cubic coefficient c. The dispersions of
-panels (a) and (e) are those of the toy lattice before and after
-stiffening its springs; they illustrate, not quantify, the thermal
-renormalization.
+k + d u^2, independent of the cubic coefficient c.
 
 Writes manuscript/jap/figures/fig_workflow.pdf.
 """
@@ -37,202 +42,264 @@ OUT = ROOT / "manuscript" / "jap" / "figures"
 L = 4  # cell edge (atoms)
 K1, K2 = 1.0, 0.35  # nearest- and next-nearest-neighbor springs of the trial
 KT = 0.02  # thermal energy of the illustration (classical amplitudes)
-N_SHOWN = 12  # modes shown in panel (b)
+N_SHOWN = 14  # modes shown in panel (b)
 LIGHT = "#c9c7c1"
+BONDS = [((1, 0), 0), ((0, 1), 0), ((1, 1), 1), ((1, -1), 1)]  # (vector, shell)
 
 
-def lattice_fc(k1, k2):
-    """Force constants of the periodic L x L square lattice with central springs."""
+def lattice_basis():
+    """Supercell FC2 basis: longitudinal and transverse constants of shells 1, 2.
+
+    Returns the four (2n, 2n) basis matrices and the site positions; the
+    trial FC2 with central springs is K1 * B[0] + K2 * B[2].
+    """
     n = L * L
-    phi = np.zeros((n, 2, n, 2))
     pos = np.array([(i, j) for i in range(L) for j in range(L)], float)
+    basis = np.zeros((4, n, 2, n, 2))
     for a in range(n):
-        for d, k in [((1, 0), k1), ((0, 1), k1), ((1, 1), k2), ((1, -1), k2)]:
+        for d, shell in BONDS:
             b = int(((pos[a, 0] + d[0]) % L) * L + (pos[a, 1] + d[1]) % L)
             e = np.array(d, float) / np.linalg.norm(d)
-            block = k * np.outer(e, e)
-            phi[a, :, b, :] -= block
-            phi[b, :, a, :] -= block
-            phi[a, :, a, :] += block
-            phi[b, :, b, :] += block
-    return phi.reshape(2 * n, 2 * n), pos
+            for kind, block in ((0, np.outer(e, e)), (1, np.eye(2) - np.outer(e, e))):
+                p = 2 * shell + kind
+                basis[p, a, :, b, :] -= block
+                basis[p, b, :, a, :] -= block
+                basis[p, a, :, a, :] += block
+                basis[p, b, :, b, :] += block
+    return basis.reshape(4, 2 * n, 2 * n), pos
 
 
-def branches(k1, k2, q):
-    """Longitudinal and transverse branches along Gamma-X of the infinite lattice."""
+def dispersion(k1, k2, qpath):
+    """Branches of the infinite lattice with central springs at wave vectors qpath."""
     w = []
-    for qx in q:
+    for q in qpath:
         d = np.zeros((2, 2))
-        for dv, k in [((1, 0), k1), ((0, 1), k1), ((1, 1), k2), ((1, -1), k2)]:
+        for dv, shell in BONDS:
             e = np.array(dv, float) / np.linalg.norm(dv)
-            d += 2 * k * np.outer(e, e) * (1 - np.cos(qx * dv[0]))
+            k = k1 if shell == 0 else k2
+            d += 2 * k * np.outer(e, e) * (1 - np.cos(q @ np.array(dv, float)))
         w.append(np.sqrt(np.clip(np.linalg.eigvalsh(d), 0, None)))
     return np.array(w)
 
 
+def path(n=60):
+    """Gamma-X-M-Gamma path, its cumulative length, and the commensurate points."""
+    corners = np.array([[0, 0], [np.pi, 0], [np.pi, np.pi], [0, 0]], float)
+    pts, dist, ticks = [], [], [0.0]
+    s = 0.0
+    for a, b in zip(corners[:-1], corners[1:]):
+        seg = np.linspace(0, 1, n)[:, None] * (b - a) + a
+        lens = np.linalg.norm(seg - a, axis=1) + s
+        pts.append(seg)
+        dist.append(lens)
+        s += np.linalg.norm(b - a)
+        ticks.append(s)
+    # commensurate wave vectors 2 pi (n1, n2) / L on the path
+    comm = []
+    s = 0.0
+    for a, b in zip(corners[:-1], corners[1:]):
+        steps = int(round(np.abs(b - a).max() / (2 * np.pi / L)))
+        for k in range(steps + 1):
+            comm.append((a + (b - a) * k / steps, s + np.linalg.norm(b - a) * k / steps))
+        s += np.linalg.norm(b - a)
+    return np.concatenate(pts), np.concatenate(dist), ticks, comm
+
+
+def log_det(basis, u):
+    x = -np.einsum("pij,j->ip", basis, u)
+    return np.linalg.slogdet(x.T @ x)[1]
+
+
 def configurations(seed=3):
-    phi, pos = lattice_fc(K1, K2)
+    basis, pos = lattice_basis()
+    phi = K1 * basis[0] + K2 * basis[2]
     w2, vec = np.linalg.eigh(phi)
     keep = w2 > 1e-8  # drop the two translations
     w2, vec = w2[keep], vec[:, keep]
     sigma = np.sqrt(KT / w2)
     rng = np.random.default_rng(seed)
+    patterns = vec * sigma  # columns: sigma_m e_m
+
     q_canon = rng.normal(size=len(sigma)) * sigma
+    # greedy single-flip D-optimal search from a random start
     signs = np.where(rng.random(len(sigma)) < 0.5, -1.0, 1.0)
-    u = (vec @ (signs * sigma)).reshape(-1, 2)
+    best = log_det(basis, patterns @ signs)
+    for _ in range(6):
+        improved = False
+        for m in range(len(signs)):
+            signs[m] *= -1
+            trial = log_det(basis, patterns @ signs)
+            if trial > best + 1e-12:
+                best, improved = trial, True
+            else:
+                signs[m] *= -1
+        if not improved:
+            break
+    u = (patterns @ signs).reshape(-1, 2)
     return pos, u, q_canon, signs * sigma, sigma
 
 
 def clean(ax):
+    ax.set_facecolor("none")
     ax.spines[["top", "right"]].set_visible(False)
-    ax.tick_params(length=2, pad=1.5)
+    ax.tick_params(direction="in", length=2.5, pad=2)
 
 
 def main():
-    plt.rcParams.update({"font.size": 7.5, "axes.labelsize": 7.5, "xtick.labelsize": 7,
-                         "ytick.labelsize": 7, "axes.linewidth": 0.6,
-                         "xtick.major.width": 0.6, "ytick.major.width": 0.6,
-                         "mathtext.fontset": "dejavusans"})
+    plt.rcParams.update({
+        "font.family": "STIXGeneral", "mathtext.fontset": "stix", "font.size": 8,
+        "axes.labelsize": 8.5, "xtick.labelsize": 7.5, "ytick.labelsize": 7.5,
+        "axes.linewidth": 0.6, "xtick.major.width": 0.6, "ytick.major.width": 0.6,
+        "axes.edgecolor": INK, "pdf.fonttype": 42, "legend.fontsize": 7,
+        "legend.frameon": False, "legend.handlelength": 1.5,
+    })
     pos, u, q_canon, q_sotc, sigma = configurations()
-    fig = plt.figure(figsize=(7.0, 2.9))
+    fig = plt.figure(figsize=(7.0, 1.95))
+    xs = [0.035, 0.245, 0.435, 0.68, 0.87]
+    wid = [0.14, 0.145, 0.165, 0.12, 0.125]
+    y0, h = 0.2, 0.62
+    axes = [fig.add_axes([x, y0, w, h]) for x, w in zip(xs, wid)]
+    for ax, letter in zip(axes, "abcde"):
+        ax.text(-0.02, 1.13, f"({letter})", transform=ax.transAxes, fontsize=9,
+                va="bottom", ha="right")
+    titles = ["harmonic trial", "mode coordinates", r"designed $\pm\mathbf{u}$ pair",
+              "force fit", "effective FC2"]
+    for ax, t in zip(axes, titles):
+        ax.text(0.0, 1.13, t, transform=ax.transAxes, fontsize=8.5, va="bottom",
+                ha="left")
 
-    # panel geometry (figure fractions)
-    xs = [0.035, 0.235, 0.41, 0.65, 0.85]
-    wid = [0.13, 0.14, 0.175, 0.13, 0.13]
-    y_ax, h_ax = 0.42, 0.43
-    titles = ["(a) harmonic trial", "(b) mode amplitudes", "(c) designed $\\pm$ pair",
-              "(d) force fit", "(e) effective FC2"]
-    notes = ["modes $\\omega_m$, $\\mathbf{e}_m$,\nrms amplitudes $\\sigma_m$",
-             "every mode at $\\pm\\sigma_m$;\nsigns maximize $\\det\\mathbf{X}^{\\rm T}\\mathbf{X}$",
-             "$\\mathbf{u}$ and $-\\mathbf{u}$:\ntwo force calls",
-             "pair slope is free\nof the cubic force",
-             "$\\Phi_{\\rm eff}(T)=\\langle\\nabla\\nabla V\\rangle$"]
-    axes = []
-    for x, w, t, n in zip(xs, wid, titles, notes):
-        ax = fig.add_axes([x, y_ax, w, h_ax])
-        ax.set_title(t, fontsize=7.8, loc="center", pad=7, color=INK)
-        fig.text(x + w / 2, y_ax - 0.095, n, ha="center", va="top", fontsize=7,
-                 color=MUTED, linespacing=1.3)
-        axes.append(ax)
-
-    # (a) trial dispersion with the commensurate wave vectors
+    # (a) trial dispersion along Gamma-X-M-Gamma with the commensurate wave vectors
+    qpts, dist, ticks, comm = path()
     ax = axes[0]
-    q = np.linspace(0, np.pi, 120)
-    qc = np.pi * np.arange(0, L // 2 + 1) / (L // 2)
-    for b, bc in zip(branches(K1, K2, q).T, branches(K1, K2, qc).T):
-        ax.plot(q, b, color=GRAY, lw=1.4)
-        ax.plot(qc, bc, "o", color=BLUE, ms=3.6, zorder=3, clip_on=False)
-    ax.set_xticks([0, np.pi], ["$\\Gamma$", "X"])
+    for b in dispersion(K1, K2, qpts).T:
+        ax.plot(dist, b, color=INK, lw=0.9)
+    cq = np.array([c[0] for c in comm])
+    cd = np.array([c[1] for c in comm])
+    for b in dispersion(K1, K2, cq).T:
+        ax.plot(cd, b, "o", color=BLUE, ms=3.2, mec=BLUE, zorder=3, clip_on=False)
+    for t in ticks[1:-1]:
+        ax.axvline(t, color=LIGHT, lw=0.5, zorder=0)
+    ax.set_xticks(ticks, [r"$\Gamma$", "X", "M", r"$\Gamma$"])
     ax.set_yticks([])
-    ax.set_ylabel("$\\omega$", labelpad=2)
-    ax.set_xlim(0, np.pi)
+    ax.set_ylabel(r"$\omega$", labelpad=2)
+    ax.set_xlim(0, ticks[-1])
     ax.set_ylim(0, None)
     clean(ax)
 
-    # (b) mode coordinates of a canonical draw and of SOTC-D, with the +-sigma envelope
+    # (b) mode coordinates: canonical draw against SOTC-D (every mode at +-sigma)
     ax = axes[1]
     order = np.argsort(sigma)[::-1][:N_SHOWN]
     m = np.arange(N_SHOWN)
     s = sigma[order]
-    ax.fill_between(m, -s, s, step="mid", color=BLUE, alpha=0.08, lw=0)
-    ax.step(m, s, where="mid", color=BLUE, lw=0.6, alpha=0.6)
-    ax.step(m, -s, where="mid", color=BLUE, lw=0.6, alpha=0.6)
-    ax.axhline(0, color=MUTED, lw=0.5)
-    ax.vlines(m + 0.17, 0, q_sotc[order], color=BLUE, lw=2.4, label="SOTC-D")
-    ax.plot(m - 0.17, q_canon[order], "o", color=GRAY, ms=3.0, label="canonical")
-    ax.vlines(m - 0.17, 0, q_canon[order], color=GRAY, lw=0.8)
+    ax.step(m, s, where="mid", color=MUTED, lw=0.6, ls=(0, (2, 1.5)))
+    ax.step(m, -s, where="mid", color=MUTED, lw=0.6, ls=(0, (2, 1.5)))
+    ax.axhline(0, color=INK, lw=0.5)
+    ax.vlines(m - 0.15, 0, q_canon[order], color=GRAY, lw=0.6)
+    ax.plot(m - 0.15, q_canon[order], "o", mfc="white", mec=GRAY, ms=2.8, mew=0.7,
+            label="canonical")
+    ax.vlines(m + 0.15, 0, q_sotc[order], color=BLUE, lw=0.6)
+    ax.plot(m + 0.15, q_sotc[order], "s", color=BLUE, ms=2.6, label="SOTC-D")
     lim = 1.1 * max(np.abs(q_canon[order]).max(), s.max())
-    ax.set_ylim(-lim, 1.55 * lim)
-    ax.set_xlim(-0.6, N_SHOWN - 0.4)
+    ax.set_ylim(-lim, 1.45 * lim)
+    ax.set_xlim(-0.7, N_SHOWN - 0.3)
     ax.set_xticks([])
     ax.set_yticks([])
-    ax.set_xlabel("mode $m$", labelpad=2)
-    ax.set_ylabel("$Q_m$", labelpad=2)
+    ax.set_ylabel(r"$Q_m$", labelpad=2)
+    ax.set_xlabel(r"mode $m$", labelpad=2)
     clean(ax)
-    ax.legend(loc="upper right", fontsize=6.5, frameon=False, handlelength=1.0,
-              borderaxespad=0.1, bbox_to_anchor=(1.03, 1.02))
+    ax.legend(loc="upper center", ncol=2, handletextpad=0.2, borderaxespad=0,
+              columnspacing=0.8)
 
-    # (c) the configuration and its inverse (displacements exaggerated)
+    # (c) the configuration and its inverse with springs (displacements exaggerated)
     ax = axes[2]
     ax.axis("off")
-    scale = 0.42 / np.abs(u).max()
-    gap = L + 0.6
-    for k, (sgn, label) in enumerate([(1, "$+\\mathbf{u}$"), (-1, "$-\\mathbf{u}$")]):
+    scale = 0.36 / np.abs(u).max()
+    gap = L + 0.8
+    for k, (sgn, label) in enumerate([(1, r"$+\mathbf{u}$"), (-1, r"$-\mathbf{u}$")]):
         off = np.array([k * gap, 0.0])
         p0 = pos + off
-        d = sgn * scale * u
-        ax.scatter(p0[:, 0], p0[:, 1], s=12, facecolor="white", edgecolor=LIGHT,
-                   linewidth=0.8, zorder=1)
-        ax.quiver(p0[:, 0], p0[:, 1], d[:, 0], d[:, 1], angles="xy", scale_units="xy",
-                  scale=1, width=0.008, headwidth=0, headlength=0, headaxislength=0,
-                  color=BLUE, zorder=2)
-        ax.scatter(p0[:, 0] + d[:, 0], p0[:, 1] + d[:, 1], s=7, color=BLUE, zorder=3,
-                   linewidth=0)
-        ax.text(off[0] + (L - 1) / 2, L - 0.15, label, ha="center", va="bottom", fontsize=8)
-    ax.set_xlim(-0.6, gap + L - 0.4)
-    ax.set_ylim(-0.6, L + 0.4)
+        p1 = p0 + sgn * scale * u
+        for a in range(len(pos)):
+            for d, shell in BONDS[:2]:
+                b_ = pos[a] + d
+                if b_[0] >= L or b_[1] >= L:
+                    continue
+                b = int(b_[0] * L + b_[1])
+                ax.plot([p1[a, 0], p1[b, 0]], [p1[a, 1], p1[b, 1]], color=LIGHT, lw=0.6,
+                        zorder=1)
+        ax.scatter(p0[:, 0], p0[:, 1], s=7, facecolor="white", edgecolor=MUTED,
+                   linewidth=0.4, zorder=2)
+        ax.quiver(p0[:, 0], p0[:, 1], p1[:, 0] - p0[:, 0], p1[:, 1] - p0[:, 1],
+                  angles="xy", scale_units="xy", scale=1, width=0.005, headwidth=4,
+                  headlength=4, headaxislength=3.5, color=INK, zorder=3)
+        ax.scatter(p1[:, 0], p1[:, 1], s=13, color=BLUE, linewidth=0, zorder=4)
+        ax.text(off[0] + (L - 1) / 2, -0.85, label, ha="center", va="top", fontsize=9)
+    ax.set_xlim(-0.5, gap + L - 0.5)
+    ax.set_ylim(-1.5, L - 0.4)
     ax.set_aspect("equal", adjustable="datalim")
 
-    # (d) anharmonic force of one coordinate and the +-u secant
+    # (d) anharmonic force of one coordinate, the +-u secant, and the harmonic tangent
     ax = axes[3]
     k, c, d3, a = 1.0, 0.55, 0.35, 0.9
     x = np.linspace(-1.25, 1.25, 200)
-    ax.plot(x, -k * x - c * x ** 2 - d3 * x ** 3, color=GRAY, lw=1.4, label="DFT force")
+    force = -k * x - c * x ** 2 - d3 * x ** 3
     fp, fm = (-k * a - c * a ** 2 - d3 * a ** 3), (k * a - c * a ** 2 + d3 * a ** 3)
     slope = (fp - fm) / (2 * a)
-    ax.plot(x, slope * x, color=ORANGE, lw=1.2, label="fit")
-    ax.plot([a, -a], [fp, fm], "o", color=BLUE, ms=4.2, zorder=3)
-    ax.axhline(0, color=MUTED, lw=0.4)
-    ax.axvline(0, color=MUTED, lw=0.4)
-    ax.text(a - 0.12, fp, "$+u$", ha="right", va="center", fontsize=7, color=BLUE)
-    ax.text(-a + 0.12, fm, "$-u$", ha="left", va="center", fontsize=7, color=BLUE)
+    ax.plot(x, -k * x, color=MUTED, lw=0.7, ls=(0, (3, 2)), label="harmonic")
+    ax.plot(x, force, color=INK, lw=1.0, label=r"$F(u)$")
+    ax.plot(x, slope * x + (fp + fm) / 2, color=ORANGE, lw=1.0, label=r"$\pm u$ fit")
+    ax.plot([a, -a], [fp, fm], "o", color=BLUE, ms=3.6, zorder=4)
+    ax.axhline(0, color=LIGHT, lw=0.5, zorder=0)
+    ax.axvline(0, color=LIGHT, lw=0.5, zorder=0)
+    ax.text(a + 0.1, fp + 0.02, r"$+u$", ha="left", va="bottom", fontsize=8)
+    ax.text(-a + 0.1, fm + 0.08, r"$-u$", ha="left", va="bottom", fontsize=8)
     ax.set_xticks([])
     ax.set_yticks([])
-    ax.set_xlabel("$u$", labelpad=2)
-    ax.set_ylabel("$F$", labelpad=2)
+    ax.set_xlabel(r"$u$", labelpad=2)
+    ax.set_ylabel(r"$F$", labelpad=2)
     ax.set_xlim(-1.3, 1.3)
     clean(ax)
-    ax.legend(loc="upper right", fontsize=6.5, frameon=False, handlelength=1.2,
-              borderaxespad=0.1, bbox_to_anchor=(1.05, 1.02))
+    ax.legend(loc="lower left", borderaxespad=0, labelspacing=0.2, handlelength=1.6)
 
     # (e) effective dispersion against the trial
     ax = axes[4]
-    for b in branches(K1, K2, q).T:
-        ax.plot(q, b, color=GRAY, lw=1.0, ls=(0, (3, 2)))
-    for b in branches(1.12 * K1, 1.25 * K2, q).T:
-        ax.plot(q, b, color=ORANGE, lw=1.5)
-    ax.plot([], [], color=GRAY, lw=1.0, ls=(0, (3, 2)), label="trial")
-    ax.plot([], [], color=ORANGE, lw=1.5, label="effective")
-    ax.set_xticks([0, np.pi], ["$\\Gamma$", "X"])
+    trial = dispersion(K1, K2, qpts)
+    eff = dispersion(1.12 * K1, 1.25 * K2, qpts)
+    for bt, be in zip(trial.T, eff.T):
+        ax.plot(dist, bt, color=MUTED, lw=0.7, ls=(0, (3, 2)))
+        ax.plot(dist, be, color=ORANGE, lw=1.0)
+    for t in ticks[1:-1]:
+        ax.axvline(t, color=LIGHT, lw=0.5, zorder=0)
+    ax.plot([], [], color=MUTED, lw=0.7, ls=(0, (3, 2)), label="trial")
+    ax.plot([], [], color=ORANGE, lw=1.0, label=r"$\Phi_{\rm eff}(T)$")
+    ax.set_xticks(ticks, [r"$\Gamma$", "X", "M", r"$\Gamma$"])
     ax.set_yticks([])
-    ax.set_ylabel("$\\omega$", labelpad=2)
-    ax.set_xlim(0, np.pi)
-    ax.set_ylim(0, None)
+    ax.set_ylabel(r"$\omega$", labelpad=2)
+    ax.set_xlim(0, ticks[-1])
+    ax.set_ylim(0, 1.5 * eff.max())
     clean(ax)
-    ax.legend(loc="lower right", fontsize=6.5, frameon=False, handlelength=1.4,
-              borderaxespad=0.1)
+    ax.legend(loc="upper right", borderaxespad=0, labelspacing=0.2, handlelength=1.4)
 
-    # forward arrows between panels
-    yc = y_ax + h_ax / 2
+    # forward arrows between the panels
+    yc = y0 + h / 2
     for k in range(4):
-        x0 = xs[k] + wid[k] + 0.01
-        x1 = xs[k + 1] - (0.008 if k == 1 else 0.032)
+        # leave room for the y labels of (b), (d), and (e); (c) has no axes
+        x0 = xs[k] + wid[k] + 0.008
+        x1 = xs[k + 1] - (0.004 if k == 1 else 0.03)
         fig.patches.append(FancyArrowPatch((x0, yc), (x1, yc), transform=fig.transFigure,
-                                           arrowstyle="-|>", mutation_scale=10, lw=1.1,
-                                           color=MUTED))
+                                           arrowstyle="-|>", mutation_scale=7, lw=0.7,
+                                           color=INK))
 
-    # self-consistent loop from (e) back to (a), drawn below the notes
-    y_top, y_bot = 0.205, 0.115
+    # self-consistent loop from (e) back to (a), below the panels
+    y_top, y_bot = y0 - 0.115, 0.03
     xa, xe = xs[0] + wid[0] / 2, xs[4] + wid[4] / 2
     fig.add_artist(plt.Line2D([xe, xe, xa], [y_top, y_bot, y_bot], transform=fig.transFigure,
-                              color=ORANGE, lw=1.3, solid_joinstyle="round"))
-    fig.patches.append(FancyArrowPatch((xa, y_bot), (xa, y_top + 0.005),
+                              color=MUTED, lw=0.7))
+    fig.patches.append(FancyArrowPatch((xa, y_bot), (xa, y_top + 0.01),
                                        transform=fig.transFigure, arrowstyle="-|>",
-                                       mutation_scale=11, lw=1.3, color=ORANGE))
-    fig.text(0.5, y_bot - 0.05,
-             "SOTC-D-SC: the fitted model is the trial of the next pair and all forces are "
-             "refitted; fixed point = SCHA / sTDEP effective FC2",
-             ha="center", va="center", fontsize=7.2, color=ORANGE)
+                                       mutation_scale=7, lw=0.7, color=MUTED))
+    fig.text(0.5, y_bot + 0.012, "SOTC-D-SC: refit all forces, update the trial",
+             ha="center", va="bottom", fontsize=7.5, color=INK, style="italic")
 
     OUT.mkdir(parents=True, exist_ok=True)
     fig.savefig(OUT / "fig_workflow.pdf")
