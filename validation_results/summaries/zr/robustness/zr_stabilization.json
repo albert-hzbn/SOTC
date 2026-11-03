@@ -100,6 +100,12 @@
     0.675878518898333
    ],
    "calls_to_stable": 2,
+   "calls_to_stable_point": {
+    "H": 2,
+    "N": 2,
+    "P": 2,
+    "L2/3": 2
+   },
    "final_points_thz": {
     "H": [
      4.917394680907698,
@@ -229,6 +235,12 @@
     -0.26764640052121413
    ],
    "calls_to_stable": null,
+   "calls_to_stable_point": {
+    "H": 2,
+    "N": null,
+    "P": 2,
+    "L2/3": 2
+   },
    "final_points_thz": {
     "H": [
      4.978158751217669,
@@ -358,6 +370,12 @@
     -0.18835378032263042
    ],
    "calls_to_stable": null,
+   "calls_to_stable_point": {
+    "H": 2,
+    "N": null,
+    "P": 2,
+    "L2/3": 2
+   },
    "final_points_thz": {
     "H": [
      4.976787733852455,
@@ -455,6 +473,12 @@
     0.6577735714115264
    ],
    "calls_to_stable": 64,
+   "calls_to_stable_point": {
+    "H": 20,
+    "N": 64,
+    "P": 4,
+    "L2/3": 4
+   },
    "final_points_thz": {
     "H": [
      5.017996312453115,
@@ -536,6 +560,12 @@
     -6.88309536251774
    ],
    "calls_to_stable": null,
+   "calls_to_stable_point": {
+    "H": null,
+    "N": null,
+    "P": 4,
+    "L2/3": 4
+   },
    "final_points_thz": {
     "H": [
      -6.960278389896245,
@@ -617,6 +647,12 @@
     0.6667432649911103
    ],
    "calls_to_stable": 60,
+   "calls_to_stable_point": {
+    "H": 4,
+    "N": 60,
+    "P": 4,
+    "L2/3": 4
+   },
    "final_points_thz": {
     "H": [
      4.918154920421117,
@@ -698,6 +734,12 @@
     0.6401405398695211
    ],
    "calls_to_stable": 4,
+   "calls_to_stable_point": {
+    "H": 4,
+    "N": 4,
+    "P": 4,
+    "L2/3": 4
+   },
    "final_points_thz": {
     "H": [
      4.866793997411754,
@@ -779,6 +821,12 @@
     0.6618231205995244
    ],
    "calls_to_stable": 64,
+   "calls_to_stable_point": {
+    "H": 44,
+    "N": 64,
+    "P": 48,
+    "L2/3": 44
+   },
    "final_points_thz": {
     "H": [
      4.8119947662922185,
@@ -860,6 +908,12 @@
     -4.385510341953711
    ],
    "calls_to_stable": null,
+   "calls_to_stable_point": {
+    "H": 4,
+    "N": 60,
+    "P": 4,
+    "L2/3": 4
+   },
    "final_points_thz": {
     "H": [
      7.0687972523963385,
@@ -921,6 +975,12 @@
     -0.8080077236255596
    ],
    "calls_to_stable": null,
+   "calls_to_stable_point": {
+    "H": 16,
+    "N": null,
+    "P": 16,
+    "L2/3": 16
+   },
    "final_points_thz": {
     "H": [
      4.855574912372979,
@@ -972,6 +1032,12 @@
     0.6132903053442945
    ],
    "calls_to_stable": 64,
+   "calls_to_stable_point": {
+    "H": 32,
+    "N": 32,
+    "P": 32,
+    "L2/3": 32
+   },
    "final_points_thz": {
     "H": [
      4.788613002607815,
@@ -1017,6 +1083,12 @@
     0.5748311369749608
    ],
    "calls_to_stable": 128,
+   "calls_to_stable_point": {
+    "H": 64,
+    "N": 64,
+    "P": 64,
+    "L2/3": 64
+   },
    "final_points_thz": {
     "H": [
      4.87017762765846,

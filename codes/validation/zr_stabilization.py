@@ -7,7 +7,7 @@ For every FC2 in the histories of SOTC-D-SC (``sotcd_sc_dft``), sTDEP
 
 * the lowest frequency on a 10^3 mesh (Gamma excluded) and the call count
   after which every later FC2 of the run is stable (lowest frequency above
-  -0.05 THz);
+  -0.05 THz), on the mesh and separately at H, N, P, and L 2/3;
 * the mesh RMSE against the chunked sTDEP reference (``stdep_reference``,
   4 x 64 calls), pooled over all its iterations: the single-iteration fits
   still scatter by 0.1-0.3 THz (mesh RMSE between consecutive iterations,
@@ -25,7 +25,10 @@ F = -a Q - c Q^2 - b Q^3 (the cubic invariant is allowed because 3q is a
 reciprocal lattice vector); a < 0 means the bcc site is a local maximum
 along Q, i.e. a double (here asymmetric) well.
 
-Writes validation_results/summaries/zr/robustness/zr_stabilization.json.
+Usage: zr_stabilization.py [zr|zr_64]. The 64-atom 4x4x4 primitive cell
+contains N and P (where the harmonic trial is unstable) but not L 2/3(1,1,1),
+so the omega double-well fit is made only in the 54-atom cell.
+Writes validation_results/summaries/<material>/robustness/zr_stabilization.json.
 """
 
 from __future__ import annotations
@@ -43,7 +46,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from analyze_primary_archives import PRIMARY, mesh_points  # noqa: E402
 from surrogate_design_study import mesh_frequencies  # noqa: E402
 
-MATERIAL = "zr"
 MEV_TO_THZ = 0.241799
 # Heiming et al. (1991), Table III: energy (meV), uncertainty, temperature (C)
 INS = {"L2/3": (7.5, 0.5, 960), "H": (19.8, 0.3, 915), "N_T1": (4.48, 0.11, 895),
@@ -64,12 +66,12 @@ def calls_to(calls, values, ok):
     return None
 
 
-def main():
+def main(material="zr"):
     import phonopy
 
-    base = ROOT / "validation_results" / MATERIAL / "primary_cell"
+    base = ROOT / "validation_results" / material / "primary_cell"
     phonon = phonopy.load(base / "fd" / "phonopy_harmonic.yaml")
-    a = PRIMARY[MATERIAL]["a"]
+    a = PRIMARY[material]["a"]
     prim = np.asarray(phonon.primitive.cell)
     reduced = {k: prim @ (np.asarray(q) / a) for k, q in QPOINTS.items()}
     qmesh = mesh_points(10)
@@ -97,7 +99,7 @@ def main():
 
     ref_path = base / "stdep_reference" / "s0" / "history.npz"
     reference = None
-    report = {"material": MATERIAL, "temperature_k": PRIMARY[MATERIAL]["T"],
+    report = {"material": material, "temperature_k": PRIMARY[material]["T"],
               "ins_heiming1991_thz": {k: [v[0] * MEV_TO_THZ, v[1] * MEV_TO_THZ, v[2]]
                                       for k, v in INS.items()},
               "stable_tolerance_thz": STABLE_TOL, "runs": {}}
@@ -125,6 +127,9 @@ def main():
                 rmses.append(float(np.sqrt(np.mean((m - ref_mesh) ** 2))))
         entry = {"calls": [int(c) for c in calls], "min_thz": mins,
                  "calls_to_stable": calls_to(calls, mins, lambda v: v > STABLE_TOL),
+                 "calls_to_stable_point": {
+                     k: calls_to(calls, [p[k][0] for p in pts], lambda v: v > STABLE_TOL)
+                     for k in names},
                  "final_points_thz": pts[-1]}
         if rmses:
             entry["rmse_thz"] = rmses
@@ -134,8 +139,9 @@ def main():
         print(name, entry["calls_to_stable"], entry.get("calls_to_0.1"),
               entry.get("calls_to_0.05"), f"final min {mins[-1]:.3f}",
               f"rmse {rmses[-1]:.3f}" if rmses else "", flush=True)
-    report["double_well"] = omega_double_well(base, phonon, a)
-    out = ROOT / "validation_results" / "summaries" / MATERIAL / "robustness"
+    if material == "zr":
+        report["double_well"] = omega_double_well(base, phonon, a)
+    out = ROOT / "validation_results" / "summaries" / material / "robustness"
     out.mkdir(parents=True, exist_ok=True)
     (out / "zr_stabilization.json").write_text(json.dumps(report, indent=1) + "\n")
 
@@ -196,4 +202,4 @@ def omega_double_well(base, phonon, a):
 
 
 if __name__ == "__main__":
-    main()
+    main(*sys.argv[1:])
