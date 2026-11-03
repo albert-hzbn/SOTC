@@ -661,27 +661,31 @@ def surrogate_table():
 
 
 def iteration_table():
+    # A regular float rather than longtable*, whose rows collapse in the
+    # two-column revtex layout; materials are separated by a small gap.
     lines = [
-        r"\begin{longtable*}{lcccccc}",
+        r"\begin{table*}[t]",
         r"\caption{Individual iterations of the SOTC-C runs: configurations,"
         r" rms displacement, unstable mesh fraction and minimum frequency of"
         r" the axial-prior fit, and normalized condition number of the"
-        r" space-group adapted design.\label{tab:iterations}}\\",
-        r"\hline\hline",
+        r" space-group adapted design. An asterisk marks the iteration selected"
+        r" by the workflow.}",
+        r"\label{tab:iterations}",
+        r"\begin{ruledtabular}",
+        r"\renewcommand{\arraystretch}{1.12}",
+        r"\begin{tabular}{lcccccc}",
         r"Material & iter. & $N_{\rm ens}$ & $u_{\rm rms}$ (\AA) & $f_{\rm unst}$"
         r" & $\omega_{\min}$ (THz) & cond.\\",
         r"\hline",
-        r"\endfirsthead",
-        r"\hline",
-        r"Material & iter. & $N_{\rm ens}$ & $u_{\rm rms}$ (\AA) & $f_{\rm unst}$"
-        r" & $\omega_{\min}$ (THz) & cond.\\",
-        r"\hline",
-        r"\endhead",
     ]
+    first = True
     for m in MATERIALS:
         audit = load(m, "audit")
         if audit is None:
             continue
+        if not first:
+            lines.append(r"\noalign{\smallskip}")
+        first = False
         for it in audit["iterations"]:
             pub = it["variants"]["published_prior"]["mesh"]
             d = it["variants"]["space_group_symfc"]["design"]
@@ -692,7 +696,7 @@ def iteration_table():
                 f"{pub['min_frequency_thz']:.2f}",
                 f"{d['normalized_design_condition_number']:.1f}",
             ]) + r"\\")
-    lines += [r"\hline\hline", r"\end{longtable*}"]
+    lines += [r"\end{tabular}", r"\end{ruledtabular}", r"\end{table*}"]
     return "\n".join(lines)
 
 
