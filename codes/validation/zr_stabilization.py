@@ -30,6 +30,12 @@ contains N and P (where the harmonic trial is unstable) but not L 2/3(1,1,1),
 so the omega double-well fit is made only in the 54-atom cell. Without an
 independent reference (zr_64), runs are scored against the mean pooled sTDEP
 fixed point of the seeds that stay stable over the second half of the budget.
+
+Close contacts: the shortest interatomic distance of every configuration of
+the SOTC-D-SC and sTDEP runs, and the final pooled fit repeated without the
+pairs that contain a distance below CONTACT_CUT (the nearest-neighbor distance
+is 3.1 A). This refit is not self-consistent: the remaining configurations were
+drawn from trials updated with the excluded pairs.
 Writes validation_results/summaries/<material>/robustness/zr_stabilization.json.
 """
 
@@ -45,8 +51,9 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "codes"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from analyze_primary_archives import PRIMARY, mesh_points  # noqa: E402
+from analyze_primary_archives import PRIMARY, mesh_points, symfc_fc2_basis  # noqa: E402
 from surrogate_design_study import mesh_frequencies  # noqa: E402
+from surrogate_self_consistent import fit_coefficients, to_fc  # noqa: E402
 
 MEV_TO_THZ = 0.241799
 # Heiming et al. (1991), Table III: energy (meV), uncertainty, temperature (C)
@@ -57,6 +64,7 @@ QPOINTS = {"H": (1.0, 0.0, 0.0), "N": (0.5, 0.5, 0.0), "P": (0.5, 0.5, 0.5),
            "L2/3": (2 / 3, 2 / 3, 2 / 3)}
 STABLE_TOL = -0.05
 THRESHOLDS = (0.1, 0.05)
+CONTACT_CUT = 2.0  # Angstrom
 
 
 def calls_to(calls, values, ok):
@@ -144,6 +152,7 @@ def main(material="zr"):
               f"rmse {rmses[-1]:.3f}" if rmses else "", flush=True)
     if reference is None:
         score_against_consensus(report, runs, spectrum)
+    report["close_contacts"] = close_contacts(base, phonon, material, spectrum)
     if material == "zr":
         report["double_well"] = omega_double_well(base, phonon, a)
     out = ROOT / "validation_results" / "summaries" / material / "robustness"
@@ -172,6 +181,51 @@ def score_against_consensus(report, runs, spectrum):
         for t in THRESHOLDS:
             entry[f"calls_to_{t}"] = calls_to(calls, rmses, lambda v, t=t: v < t)
         print(name, "vs consensus", [round(x, 3) for x in rmses], flush=True)
+
+
+def close_contacts(base, phonon, material, spectrum):
+    """Shortest distances per configuration and the fit without close pairs."""
+    sup = phonon.supercell
+    eq, cell = np.asarray(sup.positions), np.asarray(sup.cell)
+    inverse = np.linalg.inv(cell)
+    with np.load(base / "fd" / "harmonic_reference.npz") as h:
+        f0 = np.asarray(h["reference_forces_ev_ang"])
+    harmonic = np.asarray(phonon.force_constants)
+    fc2_basis = symfc_fc2_basis(eq, cell, list(sup.symbols), PRIMARY[material]["cutoff"])
+    c_harm, *_ = np.linalg.lstsq(fc2_basis.reshape(len(fc2_basis), -1).T, harmonic.ravel(),
+                                 rcond=None)
+
+    def shortest(u):
+        pos = eq + u
+        frac = (pos[:, None] - pos[None]) @ inverse
+        dist = np.linalg.norm((frac - np.rint(frac)) @ cell, axis=-1)
+        np.fill_diagonal(dist, np.inf)
+        return float(dist.min())
+
+    out = {}
+    for proto in ("sotcd_sc", "stdep"):
+        for path in sorted((base / f"{proto}_dft").glob("s*/history.npz")):
+            u = np.load(path)["displacements_ang"]
+            forces = []
+            for k in range(len(u)):
+                with np.load(path.parent / f"state_{k:04d}" / "result.npz") as r:
+                    f = np.asarray(r["forces_ev_ang"]) - f0
+                forces.append(f - f.mean(axis=0))
+            forces = np.asarray(forces)
+            dmin = np.array([shortest(x) for x in u])
+            # the +u and -u of a pair have consecutive indices
+            keep = np.array([min(dmin[k], dmin[k ^ 1]) >= CONTACT_CUT for k in range(len(u))])
+            mesh, pts = spectrum(to_fc(fc2_basis, fit_coefficients(
+                fc2_basis, u[keep], forces[keep], c_harm)))
+            out[f"{proto}/{path.parent.name}"] = {
+                "shortest_ang": float(dmin.min()),
+                "close_configurations": [int(k) for k in np.flatnonzero(dmin < CONTACT_CUT)],
+                "n_kept": int(keep.sum()), "refit_min_thz": float(mesh.min()),
+                "refit_points_thz": pts}
+            print(proto, path.parent.name, f"shortest {dmin.min():.2f}",
+                  np.flatnonzero(dmin < CONTACT_CUT).tolist(), "refit N",
+                  np.round(pts["N"], 2).tolist(), flush=True)
+    return out
 
 
 def omega_double_well(base, phonon, a):
