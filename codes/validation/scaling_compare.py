@@ -3,7 +3,7 @@
 self-consistent reference in cells of increasing size.
 
 For each cell (Al 300 K: 32/108/256 atoms; Si 600 K: 64/128/216; NaCl
-700 K: 128/216), all scored by the 10^3-mesh frequency RMSE against the
+700 K: 128), all scored by the 10^3-mesh frequency RMSE against the
 chunked sTDEP reference (``stdep_reference``, ``dft_sc_reference_chunked.py``;
 for the base cells the 128-call ``dft_sc_protocols.py`` references), taken as
 the mean of the last-iteration fits of iterations >= 1 (iteration 0 is drawn
@@ -41,7 +41,7 @@ from analyze_primary_archives import (  # noqa: E402
 from surrogate_design_study import mesh_frequencies  # noqa: E402
 
 CELLS = {"al": ["al", "al_108", "al_256"], "si": ["si", "si_128", "si_216"],
-         "nacl": ["nacl_128", "nacl_216"]}
+         "nacl": ["nacl_128"]}
 BUDGETS = (2, 4, 8, 16, 32)
 THRESHOLDS = (0.1, 0.05)
 

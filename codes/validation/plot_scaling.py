@@ -22,12 +22,13 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
+import matplotlib.ticker  # noqa: E402
 import numpy as np  # noqa: E402
 
 from plot_robustness import AQUA, BLUE, MUTED, ORANGE, OUT, ROOT  # noqa: E402
 
 CELLS = {"Al, 300 K": ["al", "al_108", "al_256"], "Si, 600 K": ["si", "si_128", "si_216"],
-         "NaCl, 700 K": ["nacl_128", "nacl_216"]}
+         "NaCl, 700 K": ["nacl_128"]}
 COLORS = {"Al, 300 K": BLUE, "Si, 600 K": ORANGE, "NaCl, 700 K": AQUA}
 SHADES = (0.35, 0.65, 1.0)
 
@@ -65,6 +66,10 @@ def main():
         ax.set_yscale("log")
         ax.set_xticks([2, 4, 8, 16, 32])
         ax.set_xticklabels(["2", "4", "8", "16", "32"])
+        ax.set_ylim(0.008, 0.4)
+        ax.set_yticks([0.01, 0.03, 0.1, 0.3])
+        ax.set_yticklabels(["0.01", "0.03", "0.1", "0.3"])
+        ax.yaxis.set_minor_formatter(matplotlib.ticker.NullFormatter())
         ax.axhline(0.05, color=MUTED, lw=0.5, ls=":")
         ax.set_title(material)
         ax.set_xlabel("DFT force calls")
@@ -98,6 +103,11 @@ def main():
     ax_p.legend(frameon=False)
     ax_m.set_xscale("log")
     ax_m.set_yscale("log")
+    ax_m.set_xticks([100, 200, 400, 800])
+    ax_m.set_xticklabels(["100", "200", "400", "800"])
+    ax_m.set_yticks([0.01, 0.02, 0.05])
+    ax_m.set_yticklabels(["0.01", "0.02", "0.05"])
+    ax_m.minorticks_off()
     ax_m.set_xlabel("modes $M=3N$")
     ax_m.set_ylabel("fixed-point offset (THz)")
     ax_m.legend(frameon=False)
