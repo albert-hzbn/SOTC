@@ -27,7 +27,9 @@ along Q, i.e. a double (here asymmetric) well.
 
 Usage: zr_stabilization.py [zr|zr_64]. The 64-atom 4x4x4 primitive cell
 contains N and P (where the harmonic trial is unstable) but not L 2/3(1,1,1),
-so the omega double-well fit is made only in the 54-atom cell.
+so the omega double-well fit is made only in the 54-atom cell. Without an
+independent reference (zr_64), runs are scored against the mean pooled sTDEP
+fixed point of the seeds that stay stable over the second half of the budget.
 Writes validation_results/summaries/<material>/robustness/zr_stabilization.json.
 """
 
@@ -130,6 +132,7 @@ def main(material="zr"):
                  "calls_to_stable_point": {
                      k: calls_to(calls, [p[k][0] for p in pts], lambda v: v > STABLE_TOL)
                      for k in names},
+                 "soft_n_thz": [p["N"][0] for p in pts],
                  "final_points_thz": pts[-1]}
         if rmses:
             entry["rmse_thz"] = rmses
@@ -139,11 +142,36 @@ def main(material="zr"):
         print(name, entry["calls_to_stable"], entry.get("calls_to_0.1"),
               entry.get("calls_to_0.05"), f"final min {mins[-1]:.3f}",
               f"rmse {rmses[-1]:.3f}" if rmses else "", flush=True)
+    if reference is None:
+        score_against_consensus(report, runs, spectrum)
     if material == "zr":
         report["double_well"] = omega_double_well(base, phonon, a)
     out = ROOT / "validation_results" / "summaries" / material / "robustness"
     out.mkdir(parents=True, exist_ok=True)
     (out / "zr_stabilization.json").write_text(json.dumps(report, indent=1) + "\n")
+
+
+def score_against_consensus(report, runs, spectrum):
+    """Mesh RMSE against the mean fixed point of the stable pooled sTDEP seeds."""
+    finals = []
+    stable = []
+    for name, (calls, fcs) in runs.items():
+        half = [f for f, c in zip(fcs, calls) if c > calls[-1] / 2]
+        if name.startswith("stdep_pooled/") and all(spectrum(f)[0].min() > STABLE_TOL
+                                                    for f in half):
+            finals.append(np.mean(half, axis=0))
+            stable.append(name)
+    consensus, consensus_pts = spectrum(np.mean(finals, axis=0))
+    report["consensus"] = {"seeds": stable, "points_thz": consensus_pts,
+                           "seed_spread_thz": float(np.sqrt(np.mean(
+                               (spectrum(finals[0])[0] - spectrum(finals[-1])[0]) ** 2)))}
+    for name, (calls, fcs) in runs.items():
+        rmses = [float(np.sqrt(np.mean((spectrum(f)[0] - consensus) ** 2))) for f in fcs]
+        entry = report["runs"][name]
+        entry["rmse_vs_consensus_thz"] = rmses
+        for t in THRESHOLDS:
+            entry[f"calls_to_{t}"] = calls_to(calls, rmses, lambda v, t=t: v < t)
+        print(name, "vs consensus", [round(x, 3) for x in rmses], flush=True)
 
 
 def omega_double_well(base, phonon, a):
