@@ -15,29 +15,17 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import matplotlib
+import matplotlib.pyplot as plt
 import matplotlib.ticker
+import numpy as np
 
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt  # noqa: E402
-import numpy as np  # noqa: E402
+from plot_style import AQUA, BLUE, GRAY, INK, MUTED, ORANGE, PAGE, RULE, YELLOW, panel, plain_log, save  # noqa: F401
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "manuscript" / "jap" / "figures"
 MATERIALS = ["al", "ag", "au", "cu", "mo", "w", "nacl", "mgo", "pbte"]
 LABELS = {"al": "Al", "ag": "Ag", "au": "Au", "cu": "Cu", "mo": "Mo",
           "w": "W", "nacl": "NaCl", "mgo": "MgO", "pbte": "PbTe"}
-# Validated categorical slots (blue, orange, aqua, yellow) plus neutral gray.
-BLUE, ORANGE, AQUA, YELLOW = "#2a78d6", "#eb6834", "#1baf7a", "#eda100"
-GRAY, INK, MUTED = "#8a8985", "#0b0b0b", "#52514e"
-
-plt.rcParams.update({
-    "font.size": 8, "axes.labelsize": 8, "axes.titlesize": 8,
-    "xtick.labelsize": 7.5, "ytick.labelsize": 7.5, "legend.fontsize": 7,
-    "axes.edgecolor": MUTED, "axes.labelcolor": INK, "xtick.color": MUTED,
-    "ytick.color": MUTED, "axes.linewidth": 0.6, "pdf.fonttype": 42,
-})
-
 
 def load(material):
     path = ROOT / "validation_results" / material / "robustness" / "robustness_summary.json"
@@ -69,15 +57,15 @@ def canonical_stats(report, label, key, sub="rmse_thz"):
 
 
 def style(ax):
-    ax.spines[["top", "right"]].set_visible(False)
-    ax.yaxis.grid(True, color="#e4e3df", linewidth=0.5)
+    ax.yaxis.grid(True, color=RULE, linewidth=0.4)
+    ax.xaxis.set_tick_params(top=False)
     ax.set_axisbelow(True)
 
 
 def accuracy_figure(reports):
     mats = [m for m in MATERIALS if reports.get(m)]
     x = np.arange(len(mats))
-    fig, axes = plt.subplots(2, 1, figsize=(7.0, 4.6), sharex=True)
+    fig, axes = plt.subplots(2, 1, figsize=(PAGE, 4.4), sharex=True)
     width = 0.2
 
     ax = axes[0]
@@ -89,11 +77,12 @@ def accuracy_figure(reports):
         values = [metric(model(reports[m], name), "mesh_vs_fd_large") for m in mats]
         ax.bar(x + (k - 1.5) * width, values, width * 0.9, color=color,
                hatch=hatch, edgecolor="white", linewidth=0.4, label=label)
-    ax.set_ylabel("RMSE vs converged FD (THz)")
+    ax.set_ylabel("RMSE vs FD (THz)")
     ax.set_title("(a) Harmonic reference: 5$^3$/4$^3$-primitive-cell finite displacement",
                  loc="left")
     style(ax)
-    ax.legend(ncol=2, frameon=False, loc="upper left")
+    ax.set_ylim(0, 1.75)
+    ax.legend(ncol=2, loc="upper left")
 
     ax = axes[1]
     for k, (label, name, color) in enumerate((
@@ -111,16 +100,14 @@ def accuracy_figure(reports):
         ax.errorbar(x + offset + width, stats[:, 0],
                     yerr=[stats[:, 0] - stats[:, 1], stats[:, 2] - stats[:, 0]],
                     fmt="none", ecolor=INK, elinewidth=0.6, capsize=1.5)
-    ax.set_ylabel("RMSE vs effective FC2 (THz)")
+    ax.set_ylabel("RMSE vs effective (THz)")
     ax.set_title("(b) Effective reference: 40 canonical snapshots at $T_{\\rm des}$, "
                  "same cell", loc="left")
     style(ax)
-    ax.legend(ncol=2, frameon=False, loc="upper left")
+    ax.legend(ncol=2, loc="upper right")
     ax.set_xticks(x, [LABELS[m] for m in mats])
-    fig.tight_layout()
-    fig.savefig(OUT / "fig_reference_accuracy.pdf")
-    fig.savefig(OUT / "fig_reference_accuracy.png", dpi=200)
-    plt.close(fig)
+    fig.tight_layout(pad=0.3)
+    save(fig, OUT, "fig_reference_accuracy")
 
 
 def forces_figure(reports):
@@ -154,10 +141,8 @@ def forces_figure(reports):
     ax.set_xticks(x, [LABELS[m] for m in mats])
     style(ax)
     ax.legend(ncol=4, frameon=False, loc="upper left", bbox_to_anchor=(0, 1.18))
-    fig.tight_layout()
-    fig.savefig(OUT / "fig_matched_forces.pdf")
-    fig.savefig(OUT / "fig_matched_forces.png", dpi=200)
-    plt.close(fig)
+    fig.tight_layout(pad=0.3)
+    save(fig, OUT, "fig_matched_forces")
 
 
 def count_figure(reports, fitter="symfc"):
@@ -166,9 +151,9 @@ def count_figure(reports, fitter="symfc"):
             and reports[m]["count_series"][fitter].get("sotcd")]
     ncol = 3
     nrow = int(np.ceil(len(mats) / ncol))
-    fig, axes = plt.subplots(nrow, ncol, figsize=(7.0, 1.9 * nrow + 0.5),
-                             squeeze=False)
-    for ax, m in zip(axes.ravel(), mats):
+    fig, axes = plt.subplots(nrow, ncol, figsize=(PAGE, 1.65 * nrow + 0.35),
+                             sharex=True, squeeze=False)
+    for k, (ax, m) in enumerate(zip(axes.ravel(), mats)):
         cs = reports[m]["count_series"]
         counts = np.asarray(cs["counts"])
         block = cs[fitter]
@@ -180,33 +165,30 @@ def count_figure(reports, fitter="symfc"):
             med = np.median(values, axis=1)
             ax.fill_between(counts, np.percentile(values, 10, axis=1),
                             np.percentile(values, 90, axis=1), color=color,
-                            alpha=0.18, linewidth=0)
-            ax.plot(counts, med, color=color, marker=marker, markersize=4,
-                    linewidth=1.4, label=label)
+                            alpha=0.16, linewidth=0)
+            ax.plot(counts, med, color=color, marker=marker, markersize=3,
+                    linewidth=1.0, label=label)
         sotcd = [row["mesh_vs_disjoint_effective"] for row in block["sotcd"]]
-        ax.plot(counts, sotcd, color=BLUE, marker="o", markersize=4.5,
-                linewidth=2.0, label="SOTC-D")
+        ax.plot(counts, sotcd, color=BLUE, marker="o", markersize=3.5,
+                linewidth=1.4, label="SOTC-D")
         ax.set_xscale("log", base=2)
         ax.set_yscale("log")
-        ax.yaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter("%g"))
-        ax.yaxis.set_minor_locator(matplotlib.ticker.LogLocator(base=10, subs=(2, 3, 5)))
-        ax.yaxis.set_minor_formatter(matplotlib.ticker.FormatStrFormatter("%g"))
-        ax.tick_params(axis="y", which="minor", labelsize=6.5)
+        plain_log(ax)
         ax.set_xticks(counts, [str(c) for c in counts])
-        ax.set_title(LABELS[m], loc="left")
-        style(ax)
+        ax.xaxis.set_minor_locator(matplotlib.ticker.NullLocator())
+        ax.margins(y=0.18)
+        ax.text(0.97, 0.94, f"({chr(97 + k)}) {LABELS[m]}", transform=ax.transAxes,
+                ha="right", va="top")
     for ax in axes.ravel()[len(mats):]:
         ax.axis("off")
     for ax in axes[:, 0]:
-        ax.set_ylabel("Mesh RMSE (THz)")
+        ax.set_ylabel("mesh RMSE (THz)")
     for ax in axes[-1, :]:
-        ax.set_xlabel("Displaced force calls")
+        ax.set_xlabel("displaced force calls")
     handles, labels = axes.ravel()[0].get_legend_handles_labels()
-    fig.legend(handles, labels, ncol=4, frameon=False, loc="upper center")
-    fig.tight_layout(rect=(0, 0, 1, 0.95))
-    fig.savefig(OUT / "fig_count_series.pdf")
-    fig.savefig(OUT / "fig_count_series.png", dpi=200)
-    plt.close(fig)
+    fig.legend(handles, labels, ncol=4, loc="upper center")
+    fig.tight_layout(pad=0.3, rect=(0, 0, 1, 0.965))
+    save(fig, OUT, "fig_count_series")
 
 
 def main():

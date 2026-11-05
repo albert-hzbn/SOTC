@@ -10,6 +10,7 @@ import sys
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from plot_style import BLUE, GRAY, PAGE, RULE
 import numpy as np
 from phonopy import Phonopy
 from phonopy.structure.atoms import PhonopyAtoms
@@ -271,41 +272,37 @@ def serial(value):
 
 def main():
     results = {material: analyze_material(material) for material in MATERIALS}
-    figure, axes = plt.subplots(1, 3, figsize=(7.2, 2.75), constrained_layout=True)
-    for axis, material in zip(axes, MATERIALS):
+    figure, axes = plt.subplots(1, 3, figsize=(PAGE, 2.5))
+    for k, (axis, material) in enumerate(zip(axes, MATERIALS)):
         result = results[material]
         plot = result.pop("plot")
         for branch in range(plot["without"].shape[1]):
             axis.plot(plot["distances"], plot["without"][:, branch],
-                      color="0.55", linestyle="--", linewidth=0.85,
+                      color=GRAY, linestyle="--", linewidth=0.8,
                       label="production SOTC, no NAC" if branch == 0 else None)
             axis.plot(plot["distances"], plot["with"][:, branch],
-                      color="#0057b8", linewidth=1.05,
+                      color=BLUE, linewidth=1.0,
                       label="production SOTC + DFPT NAC" if branch == 0 else None)
         for position in plot["label_positions"]:
-            axis.axvline(position, color="0.85", linewidth=0.5)
-        axis.axhline(0.0, color="0.7", linewidth=0.5)
+            axis.axvline(position, color=RULE, linewidth=0.4, zorder=0)
         axis.set_xticks(plot["label_positions"])
         axis.set_xticklabels([
             "$\\Gamma$" if str(label) in ("G", "Gamma") else str(label)
             for label in plot["labels"]
-        ], fontsize=7)
+        ])
+        axis.xaxis.set_tick_params(top=False)
+        axis.set_ylim(bottom=0)
         axis.set_xlim(plot["distances"][0], plot["distances"][-1])
-        axis.set_title(result["label"], fontsize=9)
-        axis.tick_params(axis="y", labelsize=7)
-        axis.text(0.03, 0.97,
-                  f"TO={result['gamma_to_without_nac_thz']:.3f} THz\n"
-                  f"LO={result['gamma_lo_with_nac_thz']:.3f} THz\n"
-                  f"split={result['gamma_lo_to_split_thz']:.3f} THz",
-                  transform=axis.transAxes, va="top", fontsize=6.5,
-                  bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.8})
-    axes[0].set_ylabel("Frequency (THz)", fontsize=8)
+        axis.set_title(f"({chr(97 + k)}) {result['label']}: "
+                       f"TO {result['gamma_to_without_nac_thz']:.2f}, "
+                       f"LO {result['gamma_lo_with_nac_thz']:.2f} THz", loc="left")
+    axes[0].set_ylabel("frequency (THz)")
     handles, legend_labels = axes[-1].get_legend_handles_labels()
-    figure.legend(handles, legend_labels, loc="upper center", ncol=2,
-                  bbox_to_anchor=(0.5, 1.08), frameon=False, fontsize=7)
+    figure.legend(handles, legend_labels, loc="upper center", ncol=2)
+    figure.tight_layout(pad=0.3, rect=(0, 0, 1, 0.93))
     destination = ROOT / "manuscript" / "jap" / "figures" / "fig_polar_sotc_nac"
-    figure.savefig(destination.with_suffix(".pdf"), bbox_inches="tight")
-    figure.savefig(destination.with_suffix(".png"), dpi=240, bbox_inches="tight")
+    figure.savefig(destination.with_suffix(".pdf"))
+    figure.savefig(destination.with_suffix(".png"))
     plt.close(figure)
     summary = {
         "scope": ("QE-DFPT tensors applied to FC2 refits of the actual selected "

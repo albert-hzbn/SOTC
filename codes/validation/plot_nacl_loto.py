@@ -11,6 +11,7 @@ from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from plot_style import BLUE, GRAY, INK, ORANGE, PAGE, RULE
 import numpy as np
 import phonopy
 
@@ -239,7 +240,7 @@ def main():
     )
 
     figure, axes = plt.subplots(
-        1, 2, figsize=(10.0, 4.0),
+        1, 2, figsize=(PAGE, 2.75),
         gridspec_kw={"width_ratios": [1.65, 1.0]},
     )
     ax = axes[0]
@@ -248,33 +249,33 @@ def main():
         label_yes = "with QE-DFPT NAC" if branch == 0 else None
         ax.plot(
             distance, frequencies_no_nac[:, branch],
-            color="0.55", linestyle="--", linewidth=1.0, label=label_no,
+            color=GRAY, linestyle="--", linewidth=0.8, label=label_no,
         )
         ax.plot(
             distance, frequencies_with_nac[:, branch],
-            color="#0057b8", linewidth=1.35, label=label_yes,
+            color=BLUE, linewidth=1.0, label=label_yes,
         )
     ax.scatter(
         neutron_distance,
         neutron_frequency_thz,
         marker="x",
-        s=18,
-        linewidths=0.8,
-        color="#b21f2d",
+        s=10,
+        linewidths=0.6,
+        color=ORANGE,
         zorder=5,
         label="80 K neutron (Raunio et al.)",
     )
     for tick in ticks:
-        ax.axvline(tick, color="0.82", linewidth=0.7)
-    ax.axhline(0.0, color="black", linewidth=0.7)
-    ax.set_xlim(ticks[0], ticks[-1])
-    ax.set_ylim(-0.3, max(8.2, float(frequencies_with_nac.max()) + 0.3))
+        ax.axvline(tick, color=RULE, linewidth=0.4, zorder=0)
+        ax.set_xlim(ticks[0], ticks[-1])
+    ax.set_ylim(0.0, max(8.2, float(frequencies_with_nac.max()) + 0.3))
     ax.set_xticks(ticks)
     ax.set_xticklabels(
         [r"$\Gamma$", "X", "W", "K", r"$\Gamma$", "L"]
     )
-    ax.set_ylabel("Frequency (THz)")
-    ax.set_title("(a) NaCl phonon dispersion")
+    ax.set_ylabel("frequency (THz)")
+    ax.xaxis.set_tick_params(top=False)
+    ax.set_title("(a) NaCl phonon dispersion", loc="left")
 
     zoom = axes[1]
     n_zoom = max(8, args.points_per_segment // 4)
@@ -283,58 +284,52 @@ def main():
     for branch in range(3, 6):
         zoom.plot(
             q_fraction, frequencies_no_nac[zoom_slice, branch],
-            color="0.55", linestyle="--", linewidth=1.2,
+            color=GRAY, linestyle="--", linewidth=0.8,
         )
         zoom.plot(
             q_fraction, frequencies_with_nac[zoom_slice, branch],
-            color="#0057b8", linewidth=1.6,
+            color=BLUE, linewidth=1.0,
         )
-    zoom.scatter([0.0], [gamma_to], color="0.35", marker="s", zorder=5)
-    zoom.scatter([0.0], [gamma_lo], color="#c23b22", marker="o", zorder=6)
+    zoom.scatter([0.0], [gamma_to], color=BLUE, marker="o", s=14, clip_on=False, zorder=5)
+    zoom.scatter([0.0], [gamma_lo], color=BLUE, marker="o", s=14, clip_on=False, zorder=6)
     zoom.scatter(
-        [0.0, 0.0], [literature_to, literature_lo], marker="D", s=43,
-        facecolors="white", edgecolors="#6a1b9a", linewidths=1.25,
+        [0.0, 0.0], [literature_to, literature_lo], marker="D", s=16,
+        facecolors="white", edgecolors=INK, linewidths=0.7, clip_on=False,
         zorder=7, label="optical $\\Gamma$ limits (NBS, 1969)",
     )
     zoom.annotate(
-        f"TO = {gamma_to:.3f} THz", (0.0, gamma_to),
-        xytext=(0.025, gamma_to - 0.35), fontsize=9,
+        f"TO = {gamma_to:.2f} THz", (0.0, gamma_to),
+        xytext=(0.02, gamma_to - 0.38),
     )
     zoom.annotate(
-        f"LO = {gamma_lo:.3f} THz", (0.0, gamma_lo),
-        xytext=(0.025, gamma_lo + 0.15), fontsize=9,
+        f"LO = {gamma_lo:.2f} THz", (0.0, gamma_lo),
+        xytext=(0.02, gamma_lo + 0.15),
     )
     zoom.annotate(
-        f"lit. TO = {literature_to:.3f}", (0.0, literature_to),
-        xytext=(0.025, literature_to + 0.10), fontsize=8.5,
-        color="#6a1b9a",
+        f"exp. TO = {literature_to:.2f} THz", (0.0, literature_to),
+        xytext=(0.02, literature_to - 0.07),
     )
     zoom.annotate(
-        f"lit. LO = {literature_lo:.3f}", (0.0, literature_lo),
-        xytext=(0.025, literature_lo + 0.10), fontsize=8.5,
-        color="#6a1b9a",
+        f"exp. LO = {literature_lo:.2f} THz", (0.0, literature_lo),
+        xytext=(0.02, literature_lo - 0.07),
     )
     zoom.set_xlim(0.0, float(q_fraction[-1]))
     zoom.set_ylim(3.7, 8.45)
-    zoom.set_xlabel(r"Reduced coordinate along $\Gamma$--X")
-    zoom.set_ylabel("Frequency (THz)")
+    zoom.set_xlabel(r"reduced coordinate along $\Gamma$–X")
+    zoom.set_ylabel("frequency (THz)")
     zoom.set_title(
-        rf"(b) Near-$\Gamma$ splitting: {split:.3f} THz"
+        rf"(b) Near-$\Gamma$ splitting: {split:.3f} THz", loc="left"
     )
-    zoom.grid(alpha=0.2)
 
     handles, labels = [], []
     for axis in axes:
         axis_handles, axis_labels = axis.get_legend_handles_labels()
         handles.extend(axis_handles)
         labels.extend(axis_labels)
-    figure.legend(
-        handles, labels, loc="upper center", bbox_to_anchor=(0.5, 1.015),
-        ncol=3, frameon=False, fontsize=9,
-    )
-    figure.tight_layout(rect=[0.0, 0.0, 1.0, 0.90])
-    figure.savefig(args.figure.with_suffix(".pdf"), bbox_inches="tight")
-    figure.savefig(args.figure.with_suffix(".png"), dpi=300, bbox_inches="tight")
+    figure.legend(handles, labels, loc="upper center", ncol=4)
+    figure.tight_layout(pad=0.3, rect=[0.0, 0.0, 1.0, 0.93])
+    figure.savefig(args.figure.with_suffix(".pdf"))
+    figure.savefig(args.figure.with_suffix(".png"))
     plt.close(figure)
     print(json.dumps(plot_summary, indent=2))
 

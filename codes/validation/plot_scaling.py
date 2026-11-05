@@ -19,16 +19,14 @@ from __future__ import annotations
 import json
 
 import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
 
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt  # noqa: E402
-import matplotlib.ticker  # noqa: E402
-import numpy as np  # noqa: E402
-
-from plot_robustness import AQUA, BLUE, MUTED, ORANGE, OUT, ROOT  # noqa: E402
+from plot_robustness import OUT, ROOT
+from plot_style import AQUA, BLUE, MUTED, ORANGE, PAGE, panel, save
 
 CELLS = {"Al, 300 K": ["al", "al_108", "al_256"], "Si, 600 K": ["si", "si_128", "si_216"],
-         "NaCl, 700 K": ["nacl_128"]}
+         "NaCl, 700 K": ["nacl_128", "nacl_216"]}
 COLORS = {"Al, 300 K": BLUE, "Si, 600 K": ORANGE, "NaCl, 700 K": AQUA}
 SHADES = (0.35, 0.65, 1.0)
 
@@ -48,7 +46,7 @@ def median_calls(runs, proto, key):
 def main():
     data = json.loads((ROOT / "validation_results" / "summaries" / "scaling"
                        / "scaling_compare.json").read_text())
-    fig = plt.figure(figsize=(7.0, 4.6))
+    fig = plt.figure(figsize=(PAGE, 4.5))
     grid = fig.add_gridspec(2, 6)
     top = [fig.add_subplot(grid[0, 2 * i:2 * i + 2]) for i in range(3)]
     ax_p = fig.add_subplot(grid[1, 0:3])
@@ -73,8 +71,13 @@ def main():
         ax.axhline(0.05, color=MUTED, lw=0.5, ls=":")
         ax.set_title(material)
         ax.set_xlabel("DFT force calls")
-        ax.legend(frameon=False, fontsize=6.5, loc="upper right")
+        ax.legend(loc="upper right")
     top[0].set_ylabel("mesh RMSE (THz)")
+    top[1].plot([], [], "-", color=MUTED, label="SOTC-D-SC")
+    top[1].plot([], [], "--", color=MUTED, label="pooled sTDEP")
+    h, l = top[1].get_legend_handles_labels()
+    top[1].add_artist(top[1].legend(h[:-2], l[:-2], loc="upper right"))
+    top[1].legend(h[-2:], l[-2:], loc="lower left")
     for material, cells in CELLS.items():
         color = COLORS[material]
         for k, cell in enumerate(cells):
@@ -100,7 +103,7 @@ def main():
     ax_p.minorticks_off()
     ax_p.set_xlabel("FC2 parameters $P$")
     ax_p.set_ylabel("calls to 0.1 THz (median)")
-    ax_p.legend(frameon=False)
+    ax_p.legend(loc="center right")
     ax_m.set_xscale("log")
     ax_m.set_yscale("log")
     ax_m.set_xticks([100, 200, 400, 800])
@@ -110,12 +113,11 @@ def main():
     ax_m.minorticks_off()
     ax_m.set_xlabel("modes $M=3N$")
     ax_m.set_ylabel("fixed-point offset (THz)")
-    ax_m.legend(frameon=False)
+    ax_m.legend(loc="lower left")
     for ax, letter in zip(top + [ax_p, ax_m], "abcde"):
-        ax.text(0.02, 0.97, f"({letter})", transform=ax.transAxes, va="top", fontsize=8)
-    fig.tight_layout()
-    fig.savefig(OUT / "fig_scaling.pdf")
-    fig.savefig(OUT / "fig_scaling.png", dpi=200)
+        panel(ax, letter)
+    fig.tight_layout(pad=0.3)
+    save(fig, OUT, "fig_scaling")
 
 
 if __name__ == "__main__":

@@ -21,17 +21,15 @@ import json
 from pathlib import Path
 import sys
 
-import matplotlib
-
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt  # noqa: E402
-import numpy as np  # noqa: E402
+import matplotlib.pyplot as plt
+import matplotlib.ticker
+import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "codes"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from plot_robustness import AQUA, BLUE, GRAY, INK, MUTED, ORANGE, YELLOW, style  # noqa: E402
+from plot_style import AQUA, BLUE, GRAY, INK, ORANGE, PAGE, RULE, YELLOW, plain_log, save  # noqa: E402
 
 OUT = ROOT / "manuscript" / "jap" / "figures"
 MATERIALS = ["al", "ag", "au", "cu", "mo", "w", "nacl", "mgo", "pbte", "si", "mg"]
@@ -58,10 +56,10 @@ def selfconsistent_figure():
     mats = [m for m in MATERIALS if report(m) and "iter1" in report(m)["targets"]]
     ncol = 6
     nrow = int(np.ceil(len(mats) / ncol))
-    fig, axes = plt.subplots(nrow, ncol, figsize=(7.0, 1.55 * nrow + 0.75), sharex=True)
+    fig, axes = plt.subplots(nrow, ncol, figsize=(PAGE, 1.5 * nrow + 0.75), sharex=True)
     axes = axes.ravel()
     x = np.asarray(COUNTS)
-    for ax, m in zip(axes, mats):
+    for k, (ax, m) in enumerate(zip(axes, mats)):
         e = report(m)["targets"]["iter1"]["supercell"]
         for kind, color, marker in (("canonical_unpaired", GRAY, "s"),
                                     ("canonical_paired", AQUA, "^")):
@@ -90,9 +88,12 @@ def selfconsistent_figure():
         ax.set_yscale("log")
         ax.set_xticks(COUNTS)
         ax.set_xticklabels([str(c) for c in COUNTS])
-        ax.minorticks_off()
-        ax.set_title(LABELS[m], color=INK, pad=2)
-        style(ax)
+        ax.xaxis.set_minor_locator(matplotlib.ticker.NullLocator())
+        plain_log(ax)
+        ax.margins(y=0.2)
+        ax.tick_params(axis="y", labelsize=7, pad=1.5)
+        ax.text(0.95, 0.94, f"({chr(97 + k)}) {LABELS[m]}", transform=ax.transAxes,
+                ha="right", va="top", fontsize=7.5)
     for ax in axes[len(mats):]:
         ax.axis("off")
     handles = [
@@ -106,14 +107,11 @@ def selfconsistent_figure():
         plt.Line2D([], [], color=YELLOW, linestyle="--", marker="P", markersize=4,
                    markeredgecolor=INK, markeredgewidth=0.4, label="sTDEP, pooled"),
     ]
-    fig.supxlabel("force calls", fontsize=8, color=INK, y=0.09)
-    fig.supylabel("mesh RMSE vs iteration-1 effective FC2 (THz)", fontsize=8, color=INK)
-    fig.legend(handles=handles, loc="lower center", ncol=3, frameon=False,
-               fontsize=6.5, handlelength=2.0, columnspacing=1.2)
-    fig.tight_layout(pad=0.4, w_pad=0.3, h_pad=0.5, rect=(0.0, 0.08, 1.0, 1.0))
-    fig.savefig(OUT / "fig_selfconsistent.pdf")
-    fig.savefig(OUT / "fig_selfconsistent.png", dpi=200)
-    plt.close(fig)
+    fig.supxlabel("force calls", fontsize=8.5, y=0.115)
+    fig.supylabel("mesh RMSE vs iteration-1 effective FC2 (THz)", fontsize=8.5, x=0.006)
+    fig.legend(handles=handles, loc="lower center", ncol=3, handlelength=2.4)
+    fig.tight_layout(pad=0.3, w_pad=0.15, h_pad=0.3, rect=(0.022, 0.135, 1.0, 1.0))
+    save(fig, OUT, "fig_selfconsistent")
 
 
 def band_path(bravais, n_per=40):
@@ -137,8 +135,8 @@ def dispersion_figure():
     from analyze_primary_archives import PRIMARY, phonopy_frequencies, symfc_fc2_basis
 
     mats = [m for m in DISPERSION_MATERIALS if report(m)]
-    fig, axes = plt.subplots(2, 3, figsize=(7.0, 4.4))
-    for ax, m in zip(axes.ravel(), mats):
+    fig, axes = plt.subplots(2, 3, figsize=(PAGE, 4.2))
+    for k_panel, (ax, m) in enumerate(zip(axes.ravel(), mats)):
         spec = PRIMARY[m]
         vr = ROOT / "validation_results" / m
         large = phonopy.load(vr / "fd_references" / "production_large" / "phonopy_harmonic.yaml")
@@ -154,11 +152,11 @@ def dispersion_figure():
         fit = Fitter(symfc_fc2_basis(np.asarray(sup.positions), np.asarray(sup.cell),
                                      list(sup.symbols), spec["cutoff"]))
         data = datasets(m)
-        lines = [(freqs(large), GRAY, "-", 1.6, "harmonic FD, large cell")]
+        lines = [(freqs(large), "#b5b4af", "-", 1.5, "harmonic FD, large cell")]
         for name, n, color, ls, lw, label in (
-                ("canonical1", N_TRAIN, INK, "-", 0.9, "effective FC2, 40 snapshots"),
-                ("sotcd1", 8, BLUE, "--", 1.1, "SOTC-D, 8 calls"),
-                ("boot", 8, ORANGE, ":", 1.3, "bootstrapped SOTC-D, 8 calls")):
+                ("canonical1", N_TRAIN, INK, "-", 0.7, "effective FC2, 40 snapshots"),
+                ("sotcd1", 8, BLUE, "--", 0.9, "SOTC-D, 8 calls"),
+                ("boot", 8, ORANGE, ":", 1.1, "bootstrapped SOTC-D, 8 calls")):
             phonon.force_constants = fit(*[v[:n] for v in data[name]])
             lines.append((freqs(phonon), color, ls, lw, label))
         for f, color, ls, lw, label in lines:
@@ -166,21 +164,20 @@ def dispersion_figure():
                 ax.plot(x, f[:, k], color=color, linestyle=ls, linewidth=lw,
                         label=label if k == 0 else None)
         for t in ticks[1:-1]:
-            ax.axvline(t, color="#d6d5d0", linewidth=0.5)
+            ax.axvline(t, color=RULE, linewidth=0.4, zorder=0)
         ax.set_xticks(ticks)
         ax.set_xticklabels(names)
+        ax.xaxis.set_tick_params(top=False)
         ax.set_xlim(0, ticks[-1])
         ax.set_ylim(bottom=0)
-        ax.set_title(f"{LABELS[m]}, {spec['T']:.0f} K", color=INK, pad=2)
-        ax.spines[["top", "right"]].set_visible(False)
+        ax.yaxis.set_major_locator(matplotlib.ticker.MaxNLocator(nbins=5, integer=True))
+        ax.set_title(f"({chr(97 + k_panel)}) {LABELS[m]}, {spec['T']:.0f} K", loc="left")
     axes[0, 0].set_ylabel("frequency (THz)")
     axes[1, 0].set_ylabel("frequency (THz)")
     handles, labels = axes[0, 0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc="lower center", ncol=4, frameon=False, fontsize=7)
-    fig.tight_layout(pad=0.4, rect=(0, 0.05, 1, 1))
-    fig.savefig(OUT / "fig_dispersions.pdf")
-    fig.savefig(OUT / "fig_dispersions.png", dpi=200)
-    plt.close(fig)
+    fig.legend(handles, labels, loc="lower center", ncol=4, handlelength=2.6)
+    fig.tight_layout(pad=0.3, rect=(0, 0.05, 1, 1))
+    save(fig, OUT, "fig_dispersions")
 
 
 def convergence_dispersion_figure(materials=("al", "au"), counts=COUNTS):
@@ -192,7 +189,7 @@ def convergence_dispersion_figure(materials=("al", "au"), counts=COUNTS):
     from analyze_designs import N_TRAIN, Fitter, datasets
     from analyze_primary_archives import PRIMARY, phonopy_frequencies, symfc_fc2_basis
 
-    fig, axes = plt.subplots(len(materials), len(counts), figsize=(7.0, 2.2 * len(materials)),
+    fig, axes = plt.subplots(len(materials), len(counts), figsize=(PAGE, 2.05 * len(materials) + 0.25),
                              sharey="row")
     for row, m in zip(axes, materials):
         spec = PRIMARY[m]
@@ -210,34 +207,34 @@ def convergence_dispersion_figure(materials=("al", "au"), counts=COUNTS):
                                      list(sup.symbols), spec["cutoff"]))
         data = datasets(m)
         phonon.force_constants = fit(*[v[:N_TRAIN] for v in data["canonical1"]])
-        fixed = [(freqs(large), GRAY, "-", 1.6, "harmonic FD, large cell"),
-                 (freqs(phonon), INK, "-", 0.9, "effective FC2, 40 snapshots")]
+        fixed = [(freqs(large), "#b5b4af", "-", 1.5, "harmonic FD, large cell"),
+                 (freqs(phonon), INK, "-", 0.7, "effective FC2, 40 snapshots")]
         if m == "al":
             q_cart = q @ np.linalg.inv(ref).T
-            fixed += [(bvk_frequencies(q_cart, 10), YELLOW, "-", 1.0, "neutron BvK model, 10 K"),
-                      (bvk_frequencies(q_cart, 300), AQUA, "-", 1.0, "neutron BvK model, 300 K")]
+            fixed += [(bvk_frequencies(q_cart, 10), YELLOW, "-", 0.8, "neutron BvK model, 10 K"),
+                      (bvk_frequencies(q_cart, 300), AQUA, "-", 0.8, "neutron BvK model, 300 K")]
         for ax, n in zip(row, counts):
             phonon.force_constants = fit(*[v[:n] for v in data["sotcd1"]])
-            lines = fixed + [(freqs(phonon), BLUE, "--", 1.1, "SOTC-D, updated trial")]
+            lines = fixed + [(freqs(phonon), BLUE, "--", 0.9, "SOTC-D, updated trial")]
             for f, color, ls, lw, label in lines:
                 for k in range(f.shape[1]):
                     ax.plot(x, f[:, k], color=color, linestyle=ls, linewidth=lw,
                             label=label if k == 0 else None)
             for t in ticks[1:-1]:
-                ax.axvline(t, color="#d6d5d0", linewidth=0.5)
+                ax.axvline(t, color=RULE, linewidth=0.4, zorder=0)
             ax.set_xticks(ticks)
-            ax.set_xticklabels(names)
+            # W and K are too close to label separately in these narrow panels
+            ax.set_xticklabels([("W,K" if name == "W" else "" if name == "K" else name)
+                                for name in names])
+            ax.xaxis.set_tick_params(top=False)
             ax.set_xlim(0, ticks[-1])
             ax.set_ylim(bottom=0)
-            ax.set_title(f"{LABELS[m]}, {spec['T']:.0f} K, {n} calls", color=INK, pad=2)
-            ax.spines[["top", "right"]].set_visible(False)
+            ax.set_title(f"{LABELS[m]}, {spec['T']:.0f} K, {n} calls")
         row[0].set_ylabel("frequency (THz)")
     handles, labels = axes[0, 0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc="lower center", ncol=3, frameon=False, fontsize=7)
-    fig.tight_layout(pad=0.4, rect=(0, 0.09, 1, 1))
-    fig.savefig(OUT / "fig_dispersion_convergence.pdf")
-    fig.savefig(OUT / "fig_dispersion_convergence.png", dpi=200)
-    plt.close(fig)
+    fig.legend(handles, labels, loc="lower center", ncol=3, handlelength=2.6)
+    fig.tight_layout(pad=0.3, w_pad=0.3, rect=(0, 0.09, 1, 1))
+    save(fig, OUT, "fig_dispersion_convergence")
 
 
 def main():
