@@ -64,7 +64,7 @@ def main():
         ax.set_yscale("log")
         ax.set_xticks([2, 4, 8, 16, 32])
         ax.set_xticklabels(["2", "4", "8", "16", "32"])
-        ax.set_ylim(0.008, 0.4)
+        ax.set_ylim(0.008, 0.7)
         ax.set_yticks([0.01, 0.03, 0.1, 0.3])
         ax.set_yticklabels(["0.01", "0.03", "0.1", "0.3"])
         ax.yaxis.set_minor_formatter(matplotlib.ticker.NullFormatter())

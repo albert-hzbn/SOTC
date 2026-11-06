@@ -84,6 +84,8 @@ def main(material="zr"):
 
     base = ROOT / "validation_results" / material / "primary_cell"
     phonon = phonopy.load(base / "fd" / "phonopy_harmonic.yaml")
+    # mesh_frequencies overwrites phonon.force_constants
+    harmonic = np.array(phonon.force_constants)
     a = PRIMARY[material]["a"]
     prim = np.asarray(phonon.primitive.cell)
     reduced = {k: prim @ (np.asarray(q) / a) for k, q in QPOINTS.items()}
@@ -116,7 +118,7 @@ def main(material="zr"):
               "ins_heiming1991_thz": {k: [v[0] * MEV_TO_THZ, v[1] * MEV_TO_THZ, v[2]]
                                       for k, v in INS.items()},
               "stable_tolerance_thz": STABLE_TOL, "runs": {}}
-    harm_mesh, harm_pts = spectrum(np.asarray(phonon.force_constants))
+    harm_mesh, harm_pts = spectrum(harmonic)
     report["harmonic"] = {"min_thz": float(harm_mesh.min()), "points_thz": harm_pts}
     if ref_path.exists():
         h = np.load(ref_path)
@@ -131,8 +133,7 @@ def main(material="zr"):
                                           for x, y in zip(lasts[1:], lasts[:-1])],
             "iteration_points_thz": [spectrum(f)[1] for f in h["force_constants_last"]],
             "trial_unstable_modes": [unstable_modes(phonon, f) for f in
-                                     [np.asarray(phonon.force_constants),
-                                      *h["force_constants_last"][:-1]]]}
+                                     [harmonic, *h["force_constants_last"][:-1]]]}
         if ref_mesh.min() < STABLE_TOL:
             report["reference"]["rejected"] = "unstable: trial-unstable modes are never sampled"
             reference = None
@@ -161,7 +162,7 @@ def main(material="zr"):
               f"rmse {rmses[-1]:.3f}" if rmses else "", flush=True)
     if reference is None:
         score_against_consensus(report, runs, spectrum)
-    report["close_contacts"] = close_contacts(base, phonon, material, spectrum)
+    report["close_contacts"] = close_contacts(base, phonon, harmonic, material, spectrum)
     if material == "zr":
         report["double_well"] = omega_double_well(base, phonon, a)
     out = ROOT / "validation_results" / "summaries" / material / "robustness"
@@ -202,14 +203,13 @@ def score_against_consensus(report, runs, spectrum):
         print(name, "vs consensus", [round(x, 3) for x in rmses], flush=True)
 
 
-def close_contacts(base, phonon, material, spectrum):
+def close_contacts(base, phonon, harmonic, material, spectrum):
     """Shortest distances per configuration and the fit without close pairs."""
     sup = phonon.supercell
     eq, cell = np.asarray(sup.positions), np.asarray(sup.cell)
     inverse = np.linalg.inv(cell)
     with np.load(base / "fd" / "harmonic_reference.npz") as h:
         f0 = np.asarray(h["reference_forces_ev_ang"])
-    harmonic = np.asarray(phonon.force_constants)
     fc2_basis = symfc_fc2_basis(eq, cell, list(sup.symbols), PRIMARY[material]["cutoff"])
     c_harm, *_ = np.linalg.lstsq(fc2_basis.reshape(len(fc2_basis), -1).T, harmonic.ravel(),
                                  rcond=None)
