@@ -27,9 +27,12 @@ along Q, i.e. a double (here asymmetric) well.
 
 Usage: zr_stabilization.py [zr|zr_64]. The 64-atom 4x4x4 primitive cell
 contains N and P (where the harmonic trial is unstable) but not L 2/3(1,1,1),
-so the omega double-well fit is made only in the 54-atom cell. Without an
-independent reference (zr_64), runs are scored against the mean pooled sTDEP
-fixed point of the seeds that stay stable over the second half of the budget.
+so the omega double-well fit is made only in the 54-atom cell. A reference that
+is itself unstable is rejected: the sampler gives trial-unstable modes zero
+amplitude, so a chunked run whose first fit leaves such modes imaginary cannot
+leave them (zr_64, 4 x 32 calls from the harmonic trial; the count per iteration
+is reported). Runs are then scored against the mean pooled sTDEP fixed point of
+the seeds that stay stable over the second half of the budget.
 
 Close contacts: the shortest interatomic distance of every configuration of
 the SOTC-D-SC and sTDEP runs, and the final pooled fit repeated without the
@@ -126,7 +129,13 @@ def main(material="zr"):
             "min_thz": float(ref_mesh.min()), "points_thz": ref_pts,
             "last_iteration_change_thz": [float(np.sqrt(np.mean((x - y) ** 2)))
                                           for x, y in zip(lasts[1:], lasts[:-1])],
-            "iteration_points_thz": [spectrum(f)[1] for f in h["force_constants_last"]]}
+            "iteration_points_thz": [spectrum(f)[1] for f in h["force_constants_last"]],
+            "trial_unstable_modes": [unstable_modes(phonon, f) for f in
+                                     [np.asarray(phonon.force_constants),
+                                      *h["force_constants_last"][:-1]]]}
+        if ref_mesh.min() < STABLE_TOL:
+            report["reference"]["rejected"] = "unstable: trial-unstable modes are never sampled"
+            reference = None
     for name, (calls, fcs) in runs.items():
         mins, rmses, pts = [], [], []
         for fc in fcs:
@@ -158,6 +167,16 @@ def main(material="zr"):
     out = ROOT / "validation_results" / "summaries" / material / "robustness"
     out.mkdir(parents=True, exist_ok=True)
     (out / "zr_stabilization.json").write_text(json.dumps(report, indent=1) + "\n")
+
+
+def unstable_modes(phonon, fc):
+    """Imaginary supercell modes of fc, which the sampler displaces by zero."""
+    masses = np.asarray(phonon.supercell.masses)
+    n = len(masses)
+    weighted = fc / np.sqrt(np.outer(masses, masses))[:, :, None, None]
+    dyn = weighted.transpose(0, 2, 1, 3).reshape(3 * n, 3 * n)
+    w = np.linalg.eigvalsh((dyn + dyn.T) / 2)
+    return int((np.sign(w) * np.sqrt(np.abs(w)) * 15.633 < STABLE_TOL).sum())
 
 
 def score_against_consensus(report, runs, spectrum):
