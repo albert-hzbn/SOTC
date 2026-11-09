@@ -85,7 +85,7 @@ def accuracy_table():
     lines = [
         r"\begin{table*}[t]",
         r"\caption{Phonon-mesh RMSE (THz, $12^3$ mesh) of FC2 models for the"
-        r" nine benchmarks. Columns 2--4 are measured against the converged"
+        r" eleven crystals (Si and Mg: dashes where the model was not computed). Columns 2--4 are measured against the converged"
         r" large-cell harmonic FD reference; columns 5--8 against the effective"
         r" FC2 fitted to 40 canonical snapshots at $T_{\rm des}$ in the SOTC cell."
         r" ``SOTC-C'' is the correlator-matched model (selected iteration, axial prior);"
