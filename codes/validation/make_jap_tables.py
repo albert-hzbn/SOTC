@@ -83,26 +83,28 @@ def runs_table():
 
 def accuracy_table():
     lines = [
-        r"\begin{table*}[t]",
+        r"\begin{table}[t]",
         r"\caption{Phonon-mesh RMSE (THz, $12^3$ mesh) of FC2 models for the"
-        r" eleven crystals (Si and Mg: dashes where the model was not computed). Columns 2--4 are measured against the converged"
-        r" large-cell harmonic FD reference; columns 5--8 against the effective"
-        r" FC2 fitted to 40 canonical snapshots at $T_{\rm des}$ in the SOTC cell."
-        r" ``SOTC-C'' is the correlator-matched model (selected iteration, axial prior);"
-        r" ``SOTC-D'' is the D-optimal antithetic design with the space-group"
-        r" adapted fit at 8 force calls. The last column is the RMSE between"
-        r" the harmonic and effective models (finite-temperature renormalization)."
-        r" Because the reference here is the full 40-snapshot fit, SOTC-D values"
-        r" differ by up to 0.02~THz from those of Table~\ref{tab:matched}, whose"
-        r" reference is disjoint from the scored design.}",
+        r" eleven crystals (dashes: model not computed). Columns 2--4 against the"
+        r" converged large-cell harmonic FD reference, columns 5--7 against the"
+        r" effective FC2 fitted to 40 canonical snapshots at $T_{\rm des}$ in the"
+        r" SOTC cell. FD$_{3^3}$, FD$_{\rm cell}$: harmonic FD in the"
+        r" $3\times3\times3$ and in the SOTC cell; C: correlator-matched SOTC-C"
+        r" model (selected iteration, axial prior), C$_{\rm pool}$: SOTC-C pooled"
+        r" over iterations; D$_8$: SOTC-D with the space-group adapted fit at 8"
+        r" force calls; $\Delta_T$: RMSE between the harmonic and effective models"
+        r" (finite-temperature renormalization). Because the reference here is the"
+        r" full 40-snapshot fit, SOTC-D values differ by up to 0.02~THz from those"
+        r" of Table~\ref{tab:matched}, whose reference is disjoint from the scored"
+        r" design.}",
         r"\label{tab:accuracy}",
         r"\begin{ruledtabular}",
         r"\begin{tabular}{lccccccc}",
-        r" & \multicolumn{3}{c}{vs converged harmonic FD} &"
-        r" \multicolumn{3}{c}{vs same-cell effective FC2} & \\",
+        r" & \multicolumn{3}{c}{vs harmonic FD} &"
+        r" \multicolumn{3}{c}{vs effective FC2} & \\",
         rule_under([3, 3]),
-        r" & FD $3^3$ & FD SOTC cell & SOTC-C & SOTC-C & SOTC-C pooled & SOTC-D (8) &"
-        r" harmonic--effective\\",
+        r" & FD$_{3^3}$ & FD$_{\rm cell}$ & C & C & C$_{\rm pool}$ & D$_8$ &"
+        r" $\Delta_T$\\",
         r"\hline",
     ]
     for m in MATERIALS:
@@ -133,7 +135,7 @@ def accuracy_table():
             LABELS[m], "--", fmt(r["fd_same_cell_vs_fd_large"]), "--", "--", "--",
             fmt(r["sotcd_8_vs_effective_iter0"]), fmt(r["effective_iter0_vs_fd_large"]),
         ]) + r"\\")
-    lines += [r"\end{tabular}", r"\end{ruledtabular}", r"\end{table*}"]
+    lines += [r"\end{tabular}", r"\end{ruledtabular}", r"\end{table}"]
     return "\n".join(lines)
 
 
@@ -423,22 +425,22 @@ def stdep_table(counts=(8, 16), basis="supercell"):
     """DFT forces, equal cost: bootstrapped SOTC-D against two-iteration
     sTDEP and one-shot canonical pairs, all from the harmonic trial."""
     lines = [
-        r"\begin{table*}[t]",
+        r"\begin{table}[t]",
         r"\caption{Self-consistent protocols with DFT forces, equal cost. Mesh"
         r" RMSE (THz) against the 40-snapshot iteration-1 effective FC2 (" + basis +
         r" basis). B: bootstrapped SOTC-D. sTDEP: half of the calls as canonical"
         r" $\pm$ pairs from the harmonic trial, half as canonical $\pm$ pairs"
         r" from the model refitted to them, fitted to the second iteration only"
-        r" (last) or to both (pool); median of three seeds. C$_0$: one-shot"
+        r" (S$_{\rm L}$) or to both (S$_{\rm P}$); median of three seeds. C$_0$: one-shot"
         r" canonical pairs from the harmonic trial (median of 20 subsets). No"
         r" configuration of any protocol enters the reference. The best entry"
         r" of each group is bold.}",
         r"\label{tab:stdep" + ("" if basis == "supercell" else "_" + basis) + "}",
         r"\begin{ruledtabular}",
         r"\begin{tabular}{l" + "cccc" * len(counts) + "}",
-        " & " + " & ".join(r"\multicolumn{4}{c}{" + f"{c} force calls" + "}" for c in counts) + r"\\",
+        " & " + " & ".join(r"\multicolumn{4}{c}{" + f"{c} calls" + "}" for c in counts) + r"\\",
         rule_under([4] * len(counts)),
-        " & " + " & ".join(["B & sTDEP last & sTDEP pool & C$_0$"] * len(counts)) + r"\\",
+        " & " + " & ".join([r"B & S$_{\rm L}$ & S$_{\rm P}$ & C$_0$"] * len(counts)) + r"\\",
         r"\hline",
     ]
     wins = {c: 0 for c in counts}
@@ -464,7 +466,7 @@ def stdep_table(counts=(8, 16), basis="supercell"):
     lines.append(r"\hline")
     lines.append("B best & " + " & ".join(
         r"\multicolumn{4}{c}{" + f"{wins[c]}/{n}" + "}" for c in counts) + r"\\")
-    lines += [r"\end{tabular}", r"\end{ruledtabular}", r"\end{table*}"]
+    lines += [r"\end{tabular}", r"\end{ruledtabular}", r"\end{table}"]
     return "\n".join(lines)
 
 
