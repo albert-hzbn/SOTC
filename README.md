@@ -1,25 +1,78 @@
-# SOTC — Special Optimal Thermal Cell
+# SOTC — Special Optimal Thermal Cells
 
-A first-principles framework for computing high-temperature phonon dispersions,
-density of states, and thermodynamic properties from **purposefully designed
-small supercells** — without large stochastic ensembles or molecular dynamics.
+Designed supercell displacements for finite-temperature (effective harmonic)
+phonons from few first-principles force calculations.
+
+Finite-temperature phonons are usually obtained by fitting effective force
+constants to DFT forces on randomly sampled thermal configurations (TDEP,
+sTDEP, SSCHA). SOTC replaces the random draws by configurations designed from
+a harmonic trial model so that fewer force calls are needed. This repository
+contains the implementation, the drivers of every calculation, and the compact
+data behind the manuscript *Designed atomic displacements for finite-temperature
+phonons from few force calculations*.
 
 ---
 
 ## Overview
 
-Standard high-temperature phonon methods (TDEP, SSCHA, AIMD) require large
-supercells — typically 54–500+ atoms — making DFT prohibitively expensive for
-many systems. SOTC extends the **Special Quasirandom Structures (SQS)**
-philosophy to the thermal problem:
+Two design objectives are implemented:
 
-> Just as an SQS encodes the statistical signature of a random alloy in the
-> smallest possible periodic cell, an SOTC encodes the **thermal
-> displacement–displacement correlations** of a disordered crystal in a small,
-> self-consistently optimised cell.
+- **SOTC-C (correlator matching)** — one cell whose displacements match the
+  thermal displacement–displacement correlators of the trial model
+  (`codes/sotc/runner.py`, the original method). It reproduces effective
+  thermodynamics, but its dispersions are no better than canonical sampling.
+- **SOTC-D (D-optimal antithetic design)** — every commensurate mode at its
+  exact quantum-thermal amplitude, mode signs chosen to maximize the FC2
+  information $\det \mathbf X^{\rm T}\mathbf X$, and every configuration paired
+  with its inverse so that cubic forces cancel (`codes/sotc/optimal_design.py`).
+  Its fourth-order amplitude bias is $O(1/M)$ in the number of modes $M$.
+  - *bootstrapped SOTC-D*: the first pair from the harmonic trial, the rest
+    from the model refitted to it;
+  - *SOTC-D-SC*: the fitted model becomes the trial for every new pair and all
+    forces are refitted; its fixed point is the self-consistent harmonic
+    (SCHA/sTDEP) solution.
 
-A single SOTC with 32–64 atoms replaces hundreds of stochastic snapshots while
-reproducing phonon properties to within a few percent of experiment.
+Force constants are fitted by least squares in a space-group adapted FC2 basis
+(symfc), with a minimum-norm correction of the trial when the data do not
+determine every coefficient.
+
+## Status of the results
+
+Current numbers (all in the manuscript and in `validation_results/summaries/`):
+
+- **Eleven crystals** (fcc Al, Cu, Ag, Au, Ni; bcc Mo, W; rocksalt NaCl, MgO,
+  PbTe; diamond Si; hcp Mg): eight force calls reproduce the same-cell
+  effective dispersions within 0.03–0.31 THz; from the same trial SOTC-D has
+  the lowest error of five designs in 9 of 11 crystals.
+- **Updated trial**: ahead of one-shot canonical sampling in all crystals from
+  4 to 16 calls and of two-iteration sTDEP in all crystals at eight calls
+  (supercell basis).
+- **Model potentials**: SOTC-D-SC needs 2–16 times fewer calls than SSCHA in
+  13 of 14 cases.
+- **HSE06** (Si, NaCl): SOTC-D-SC ahead of pooled sTDEP at 4–16 calls, against a
+  composite reference.
+- **Thermal expansion of Al** within 3% of experiment at 300 K.
+
+Limits found so far:
+
+- **Large cells** (108–256 atoms, `scaling_compare.py`): SOTC-D-SC is within
+  0.1 THz after two calls in Al and Si, but saturates at 0.02–0.08 THz, so that
+  pooled sTDEP is more accurate beyond about 8–16 calls. In 128- and 216-atom
+  NaCl SOTC-D-SC stays ahead up to 16 calls (216 atoms: also at 32 calls, with
+  overlapping seeds). The offset between the two fixed points does not follow
+  the $1/M$ estimate.
+- **Dynamically stabilized bcc Zr** (1188 K, `zr_stabilization.py`): the result
+  depends on the seed; only two of six SOTC-D-SC seeds converge cleanly (two
+  stay on an unstable branch in the 54-atom cell, two are stabilized by close
+  contacts in the 64-atom cell). The 4×32-call sTDEP reference of
+  the 64-atom cell stayed trapped (modes unstable in the trial are given zero
+  amplitude, and 42 of them stayed unstable after the first fit) and is not
+  used; that cell is scored against the stable pooled sTDEP seeds.
+- **Free energies above 400 K**: the statistical noise of the free energy is
+  comparable to its curvature, so the thermal expansion is not resolved there.
+
+Not computed: thermal expansion at 700 K, PbTe at 500–700 K, and a canonical
+pool for 216-atom NaCl.
 
 ---
 
@@ -35,26 +88,17 @@ the compact summaries in `validation_results/summaries/` are copied back here
 for version control. Scratch files unused for a long time may be purged by the
 centre, so copy anything that must be kept to `summaries/`.
 
-## Method Summary
+Two Viper settings matter for every QE job:
 
-1. **Correlator design** — target displacement–displacement correlations
-   $C_2(R, T)$ are computed from a trial phonon model using the quantum
-   $\coth$ formula.
-2. **Cell optimisation** — atomic displacements are optimised (gradient descent
-   on a correlator mismatch cost $\mathcal{Q}$) so that one periodic cell best
-   matches the target correlator hierarchy up to cutoff $r_\text{cut}$.
-3. **DFT forces** — a single DFT call (Quantum ESPRESSO) computes
-   forces on the displaced supercell.
-4. **IFC extraction** — interatomic force constants (IFCs) are fitted by ridge
-   regression with acoustic sum rule enforcement:
-   $\hat{\boldsymbol{\Phi}} = -(\mathbf{G}^T\mathbf{G} + \lambda\mathbf{I})^{-1}\mathbf{G}^T\mathbf{F}$
-5. **Self-consistency** — the new phonon model updates the correlator targets;
-   steps 1–4 repeat until convergence (typically 2–8 DFT calls total).
-6. **Thermodynamics** — phonon DOS → $C_V(T)$, ZPE, $S_\text{vib}(T)$,
-   $F_\text{vib}(T)$, MSD$(T)$, Debye–Waller $B(T)$.  The isochoric heat
-   capacity over an arbitrary temperature range is obtained by applying the
-   harmonic Einstein/Debye formula to the SOTC-renormalised frequencies —
-   no QHA is needed for $C_V(T)$.
+- Viper sets `SBATCH_EXPORT=NONE`, so variables exported in the submitting
+  shell never reach a batch job. Put every setting (e.g. `QE_FLAGS`) in the
+  Slurm wrapper or pass `--export=ALL,VAR=value`, and check the first QE output.
+- QE 7.5 with ScaLAPACK subspace diagonalization fails intermittently in the
+  Cholesky step for the large cells; the wrappers run `pw.x -nd 1` (serial
+  diagonalization; the output then says "a serial algorithm will be used").
+- Cost per call: four calls sharing a 128-core node cost 2--3 times more
+  core-hours each than a single test call (Zr-64 about 34, NaCl-216 about 24
+  core-hours per call). Estimate budgets from earlier packed jobs (`sacct`).
 
 ---
 
@@ -123,6 +167,12 @@ python codes/validation/classical_gaussian_compare.py al      # quantum vs class
 python codes/validation/experimental_bvk_compare.py           # near-neighbour force constants vs neutron Born-von Karman fits
 python codes/validation/dft_qha.py cu 3.6149 --temperatures 300 --budget 8  # SOTC-D at the room-temperature lattice (also au 4.0782)
 python codes/validation/sotc_uiso_room.py                     # U_iso(300 K) of Cu and Au from SOTC models
+# large cells: converged reference split over chunk jobs, then SOTC-D-SC / sTDEP / one-shot runs
+python codes/validation/dft_sc_reference_chunked.py <mat> 0 --iter K --chunk C --nchunks N --per-iter 64
+python codes/validation/dft_sc_reference_chunked.py <mat> 0 --collect   # after all chunks of all iterations
+python codes/validation/scaling_compare.py [al_108 al_256 si_128 si_216 nacl_128 nacl_216]
+python codes/validation/hse_compare.py si_hse nacl_hse                  # HSE06 vs composite reference
+python codes/validation/zr_stabilization.py zr|zr_64                    # bcc Zr: stability, contacts, INS
 python codes/validation/make_jap_tables.py && python codes/validation/plot_robustness.py \
     && python codes/validation/plot_designs.py
 ```
@@ -236,11 +286,23 @@ python3 codes/validation/plot_ifc34_diagnostics.py
 python3 codes/validation/plot_nacl_loto.py
 python3 codes/validation/plot_matched_sampling_ablation.py
 python3 codes/validation/plot_sotc_polar_nac.py
+python3 codes/validation/plot_workflow.py      # Fig. 1 (Au 1200 K data)
+python3 codes/validation/plot_hse.py           # HSE06 figure
+python3 codes/validation/plot_scaling.py       # cell-size scaling figure
 ```
+
+All figure scripts share `codes/validation/plot_style.py` (STIX fonts, one
+validated palette, figures drawn at their printed size: column 3.37 in, page
+7.0 in). Run them with `PYTHONPATH=codes:codes/validation`; on a busy login
+node set `OPENBLAS_NUM_THREADS=1`.
 
 ---
 
-## Quick Start — fcc Al with Quantum ESPRESSO (300 K, harmonic benchmark)
+## Quick Start — SOTC-C runner, fcc Al with Quantum ESPRESSO (300 K)
+
+The examples below use the original correlator-matching runner (`SOTCRunner`,
+SOTC-C). The SOTC-D and SOTC-D-SC calculations of the manuscript are run with the
+validation drivers listed above.
 
 Al at 300 K is weakly anharmonic ($\gamma \approx 2.17$, $T_D \approx 390$ K)
 and converges in 3–4 iterations. It is the standard first test for a new QE

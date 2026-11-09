@@ -36,4 +36,16 @@ python3 codes/validation/plot_ifc34_diagnostics.py
 python3 codes/validation/plot_nacl_loto.py
 python3 codes/validation/plot_matched_sampling_ablation.py
 python3 codes/validation/plot_sotc_polar_nac.py
+python3 codes/validation/scaling_compare.py && python3 codes/validation/plot_scaling.py
+python3 codes/validation/hse_compare.py si_hse nacl_hse && python3 codes/validation/plot_hse.py
+python3 codes/validation/zr_stabilization.py zr && python3 codes/validation/zr_stabilization.py zr_64
+python3 codes/validation/plot_workflow.py
 ```
+
+The analysis scripts read the QE run directories on scratch (the clone in
+`/viper/ptmp1/alli/sotc_work`) and write the JSON files in `summaries/`; the
+plotting scripts read only those JSON files. Summaries of the current state:
+`summaries/scaling/scaling_compare.json` (Al, Si, NaCl cells of 32–256 atoms),
+`summaries/<si_hse|nacl_hse>/robustness/hse_compare.json`, and
+`summaries/<zr|zr_64>/robustness/zr_stabilization.json` (the 64-atom Zr
+reference is recorded but rejected as unstable).
