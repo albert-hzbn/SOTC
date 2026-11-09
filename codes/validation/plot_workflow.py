@@ -34,7 +34,9 @@ sys.path.insert(0, str(ROOT / "codes"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from analyze_designs import N_TRAIN, Fitter, datasets  # noqa: E402
-from analyze_primary_archives import PRIMARY, phonopy_frequencies, symfc_fc2_basis  # noqa: E402
+from analyze_primary_archives import (  # noqa: E402
+    PRIMARY, mesh_points, phonopy_frequencies, symfc_fc2_basis,
+)
 from plot_designs import band_path  # noqa: E402
 from plot_style import AQUA, BLUE, GRAY, INK, MUTED, ORANGE, PAGE, RULE, plain_log, save  # noqa: E402
 from sotc.optimal_design import thermal_modes  # noqa: E402
@@ -155,8 +157,12 @@ def main():
                 clip_on=False)
     ax.plot([], [], "o", color=BLUE, ms=3.2, mec="white", mew=0.3, label=r"commensurate $\mathbf{q}$")
     band_axes(ax, ticks, names)
-    ax.set_ylim(0, 1.2 * trial.max())
+    ax.set_ylim(0, 1.5 * trial.max())
     ax.legend(loc="upper left", borderaxespad=0.3)
+    n_modes = 3 * len(sup.masses) - 3
+    ax.text(0.035, 0.86, f"fcc Au, {spec['T']:.0f} K\n{len(sup.masses)}-atom cell, "
+            f"$M={n_modes}$ modes", transform=ax.transAxes, ha="left", va="top",
+            fontsize=7, color=MUTED, linespacing=1.15)
 
     # (b) coordinates of real configurations against the mode frequency
     ax = axes["b"]
@@ -180,6 +186,8 @@ def main():
     ax.set_ylim(-lim, 1.5 * lim)
     ax.legend(loc="upper center", ncol=3, borderaxespad=0.2, columnspacing=0.8, handlelength=1.2,
               handletextpad=0.3)
+    ax.text(0.97, 0.05, r"$\sigma_m^2=\dfrac{\hbar}{2\omega_m}\coth\dfrac{\hbar\omega_m}{2k_BT}$",
+            transform=ax.transAxes, ha="right", va="bottom", fontsize=7.5, color=MUTED)
 
     # (c) the configuration and its inverse
     ax = axes["c"]
@@ -197,6 +205,10 @@ def main():
     ax.set_aspect("equal", adjustable="box", anchor="C")
     fig.text(XS[2], Y_TOP + HEIGHT + 0.0085, r"(c) Designed $\pm\mathbf{u}$ pair",
              fontsize=8.5, va="bottom")
+    norms = np.linalg.norm(u[0], axis=1)
+    ax.text(0.03, 0.0, f"rms $|u|$ {np.sqrt((norms ** 2).mean()):.2f} Å, "
+            f"max {norms.max():.2f} Å\n(drawn ×{ARROW_SCALE:.0f})", transform=ax.transAxes,
+            ha="left", va="top", fontsize=7, color=MUTED, linespacing=1.1)
 
     # (d) odd and even parts of the pair forces against the effective model
     ax = axes["d"]
@@ -214,11 +226,15 @@ def main():
     ax.plot(model.ravel(), odd.ravel(), "o", color=BLUE, ms=1.4, mew=0, alpha=0.8,
             label=r"odd, $\frac{1}{2}(\mathbf{F}_{+}-\mathbf{F}_{-})$: fitted", zorder=3)
     ax.set_xlim(-span, span)
-    ax.set_ylim(-span, 1.75 * span)
+    ax.set_ylim(-span, 2.15 * span)
     ax.set_xlabel(r"$-\mathbf{\Phi}_{\rm eff}\mathbf{u}$ (eV/Å)", labelpad=1.5)
     ax.set_ylabel("DFT force (eV/Å)", labelpad=1)
     ax.legend(loc="upper left", borderaxespad=0.2, handletextpad=0.1, markerscale=2,
               handlelength=1.0)
+    rms = lambda v: float(np.sqrt((v ** 2).mean()))  # noqa: E731
+    ax.text(0.04, 0.70, f"rms: odd {rms(odd):.2f}, even {rms(even):.2f},\n"
+            f"odd $-$ model {rms(odd - model):.2f} eV/Å", transform=ax.transAxes, ha="left",
+            va="top", fontsize=7, color=MUTED, linespacing=1.15)
 
     # (e) fitted dispersion against the trial and the effective FC2
     ax = axes["e"]
@@ -229,12 +245,22 @@ def main():
     ax.plot(x, trial, color=TRIAL_COLOR, lw=1.3)
     ax.plot(x, effective, color=INK, lw=0.7)
     ax.plot(x, fitted, color=BLUE, lw=0.9, ls=(0, (3, 1.6)))
-    ax.plot([], [], color=TRIAL_COLOR, lw=1.3, label="trial")
+    # mesh RMSE against the effective FC2 (10^3 mesh, Gamma excluded)
+    qm = mesh_points(10)
+    qm = qm[np.linalg.norm(qm, axis=1) > 1e-8]
+    freq = {}
+    for name, fc in (("trial", trial_fc), ("eff", reference), ("fit", fit(uu, ff))):
+        phonon.force_constants = fc
+        freq[name] = np.sort(phonopy_frequencies(phonon, qm), axis=1)
+    err = {k: float(np.sqrt(((freq[k] - freq["eff"]) ** 2).mean())) for k in ("trial", "fit")}
+    ax.plot([], [], color=TRIAL_COLOR, lw=1.3, label=f"trial ({err['trial']:.2f} THz)")
     ax.plot([], [], color=INK, lw=0.7, label=r"$\mathbf{\Phi}_{\rm eff}$, 40 snapshots")
-    ax.plot([], [], color=BLUE, lw=0.9, ls=(0, (3, 1.6)), label=f"SOTC-D, {N_CALLS} calls")
+    ax.plot([], [], color=BLUE, lw=0.9, ls=(0, (3, 1.6)),
+            label=f"SOTC-D, {N_CALLS} calls ({err['fit']:.2f} THz)")
     band_axes(ax, ticks, names)
-    ax.set_ylim(0, 1.45 * effective.max())
-    ax.legend(loc="upper left", borderaxespad=0.3)
+    ax.set_ylim(0, 1.8 * effective.max())
+    ax.legend(loc="upper left", borderaxespad=0.3, title=r"mesh RMSE vs $\mathbf{\Phi}_{\rm eff}$",
+              title_fontsize=7, alignment="left")
 
     # (f) error against force calls
     ax = axes["f"]
@@ -250,11 +276,26 @@ def main():
                         color=color, alpha=0.16, lw=0)
         ax.plot(counts, np.median(vals, axis=1), color=color, marker=marker, ms=3, lw=1.0,
                 label=label)
-    ax.plot(counts, [r["mesh_vs_disjoint_effective"] for r in block["sotcd"]], color=BLUE,
-            marker="o", ms=3.5, lw=1.4, label="SOTC-D")
+    sotcd = np.asarray([r["mesh_vs_disjoint_effective"] for r in block["sotcd"]])
+    ax.plot(counts, sotcd, color=BLUE, marker="o", ms=3.5, lw=1.4, label="SOTC-D")
+    # calls the paired canonical median needs to reach the 2-call SOTC-D error
+    paired = np.median([[t["mesh_vs_disjoint_effective"] for t in trials]
+                        for trials in block["canonical_paired"]], axis=1)
+    target = sotcd[0]
+    below = np.flatnonzero(paired <= target)
+    if len(below) and below[0] > 0:
+        k = below[0]
+        t = (np.log(paired[k - 1]) - np.log(target)) / (np.log(paired[k - 1]) - np.log(paired[k]))
+        n_eq = float(np.exp(np.log(counts[k - 1]) + t * (np.log(counts[k]) - np.log(counts[k - 1]))))
+        ax.plot([counts[0], n_eq], [target, target], color=MUTED, lw=0.6, ls=":", zorder=1)
+        ax.plot([n_eq, n_eq], [target, target * 0.9], color=MUTED, lw=0.6, ls=":", zorder=1)
+        ax.text(2.06, 0.133, f"canonical $\\pm$ needs {n_eq:.1f}\ncalls for this error",
+                ha="left", va="top", fontsize=7, color=MUTED, linespacing=1.1)
+        print("paired canonical reaches the 2-call SOTC-D error after", n_eq, "calls")
     ax.set_xscale("log", base=2)
     ax.set_yscale("log")
     plain_log(ax)
+    ax.set_ylim(0.082, None)
     ax.set_xticks(counts, [str(c) for c in counts])
     ax.xaxis.set_minor_locator(matplotlib.ticker.NullLocator())
     ax.set_xlabel("DFT force calls", labelpad=1.5)
