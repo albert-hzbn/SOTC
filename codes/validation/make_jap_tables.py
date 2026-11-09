@@ -425,7 +425,7 @@ def stdep_table(counts=(8, 16), basis="supercell"):
     """DFT forces, equal cost: bootstrapped SOTC-D against two-iteration
     sTDEP and one-shot canonical pairs, all from the harmonic trial."""
     lines = [
-        r"\begin{table}[t]",
+        r"\begin{table*}[t]",
         r"\caption{Self-consistent protocols with DFT forces, equal cost. Mesh"
         r" RMSE (THz) against the 40-snapshot iteration-1 effective FC2 (" + basis +
         r" basis). B: bootstrapped SOTC-D. sTDEP: half of the calls as canonical"
@@ -466,7 +466,7 @@ def stdep_table(counts=(8, 16), basis="supercell"):
     lines.append(r"\hline")
     lines.append("B best & " + " & ".join(
         r"\multicolumn{4}{c}{" + f"{wins[c]}/{n}" + "}" for c in counts) + r"\\")
-    lines += [r"\end{tabular}", r"\end{ruledtabular}", r"\end{table}"]
+    lines += [r"\end{tabular}", r"\end{ruledtabular}", r"\end{table*}"]
     return "\n".join(lines)
 
 
