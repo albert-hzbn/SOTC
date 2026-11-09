@@ -57,7 +57,7 @@ Limits found so far:
 
 - **Large cells** (108–256 atoms, `scaling_compare.py`): SOTC-D-SC is within
   0.1 THz after two calls in Al and Si, but saturates at 0.02–0.08 THz, so that
-  pooled sTDEP is more accurate beyond about 8–16 calls. In 128- and 216-atom
+  pooled sTDEP is more accurate beyond about 4–16 calls (4 in 128-atom Si). In 128- and 216-atom
   NaCl SOTC-D-SC stays ahead up to 16 calls (216 atoms: also at 32 calls, with
   overlapping seeds). The offset between the two fixed points does not follow
   the $1/M$ estimate.
